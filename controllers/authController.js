@@ -6,9 +6,9 @@ const {promisify} = require("util");
 const AppError = require("../utils/AppError");
 const SendEmail = require("../utils/Email");
 const crypto = require("crypto");
-
 const SECRET_ACCESS = process.env && process.env.SECRET_ACCESS;
 const key = process && process.env && process.env.SECRET_ACCESS;
+
 
 const signToken = async (id) => {
   const token = jwt.sign(
@@ -18,6 +18,7 @@ const signToken = async (id) => {
   );
   return token
 }
+
 
 const signup = catchAsync(async (req, res) => {
   const { name, username, email, avatar, password, confirmPassword } = req.body;
@@ -47,7 +48,6 @@ const signup = catchAsync(async (req, res) => {
 
 
 
-
 const login = catchAsync ( async (req, res, next) => { 
    const { email, password } = req.body;
    if(!email || !password){
@@ -58,7 +58,6 @@ const login = catchAsync ( async (req, res, next) => {
       return next(new AppError("Email or password is invalid !!", 401))
    }
    const token = await signToken(user._id);
-   
    // Send jwt via cookie
    res.cookie('jwt', token, {
     expires:new Date(Date.now() + 30*24*60*60*1000),
@@ -73,10 +72,10 @@ const login = catchAsync ( async (req, res, next) => {
 });
 
 
+
+
 const validateToken = catchAsync ( async (req, res, next) => {
-
   let authHeader = req.headers.Authorization || req.headers.authorization;
-
   if (authHeader && authHeader.startsWith("Bearer")) {
     let token = authHeader.split(" ")[1];
     if (!token) {
@@ -97,7 +96,10 @@ const validateToken = catchAsync ( async (req, res, next) => {
 
 
 const profile = catchAsync ( async (req, res) => {
-    res.json(req.user);
+    res.status(200).json({
+    status:true,
+    user : req.user,
+   });
 });
 
 
@@ -105,7 +107,7 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
   // 1. Check is email valid or not
   const user = await User.findOne({email:req.body.email});
   if(!user){
-     return next(new AppError("no user found associated with this email.", 404));
+     return next(new AppError("No user found associated with this email.", 404));
   } 
   // 2. Generate randow token string
   const resetToken = await user.createPasswordResetToken();
@@ -131,8 +133,6 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
   }
 });
 
-
-
 const resetpassword = catchAsync ( async (req, res, next) => {
   // 1. get user token
   const hashToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
@@ -152,7 +152,6 @@ const resetpassword = catchAsync ( async (req, res, next) => {
   await user.save({validateBeforeSave:false});
 
   // 3. Update changedPassswordAt Property
-  
 
   // 4. login user in send JWT 
   const token = await signToken(user._id);
@@ -161,10 +160,6 @@ const resetpassword = catchAsync ( async (req, res, next) => {
     token
   }); 
 });
-
-
-
-
 
 
 module.exports = {  signup, login, validateToken, profile, forgotPassword,resetpassword };

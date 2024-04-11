@@ -4,9 +4,6 @@ const catchAsync  = require("../utils/catchAsync");
 
 const addproducts = catchAsync ( async (req, res)=>{
    
-    // const decodedToken = jwt.verify(req.headers.authorization.split(' ')[1], JWT_SECRET);
-    // decodedToken.user.username
-    
     const updated = Object.assign( {user_id:5}, req.body );
     const product = await Products.create(updated);
     if(product){ 
@@ -24,9 +21,6 @@ const addproducts = catchAsync ( async (req, res)=>{
 
 
 const listProducts = catchAsync ( async (req, res)=>{
-
-    console.log("req body", req.user);
-    
     const feature = new APIFeatures(Products.find(), req.query).filter().sort().limit_fields().paginate();
     const data = await feature.query;
     if(data){ 
@@ -71,13 +65,8 @@ const productDetail = async (req, res)=>{
 
 const tour_stats = catchAsync ( async (req, res)=>{
     const stats = await Products.aggregate([
-        {
-            $match: {
-                price : { $gte:2000}
-            }
-        },
-        {
-            $group: {
+        {$match: {price : { $gte:2000}}},
+        {$group: {
                     _id: null,
                     averagePrice: { $avg: '$price'},
                     minRating: { $min: '$rating'},

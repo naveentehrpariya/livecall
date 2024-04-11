@@ -8,9 +8,9 @@ const serverError = (err, res) => {
 const devError = (err, res) => { 
    res.status(err.statusCode).json({
       message : err.message,
-      err : err,
-      err : err.stack,
-      error : err.status
+      error : err,
+      error_stack : err.stack,
+      error_status : err.status
    });
 }
 
