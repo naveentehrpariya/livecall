@@ -1,0 +1,233 @@
+{
+  "settings": {
+    "languages": [
+      "en"
+    ],
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "executeActionsBeforeAnswers": false,
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager"
+    },
+    "locales": [
+      "en"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "en": {
+        "settings": {
+          "locale": "en",
+          "trainByDomain": false,
+          "tag": "domain-manager-en",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "about,me,servic,tell,your": {
+            "intent": "Services",
+            "domain": "default"
+          },
+          "ani,are,job,open,there": {
+            "intent": "Job Openings",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "Services": "default",
+          "Job Openings": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "Tell me about your services",
+            "intent": "Services"
+          },
+          {
+            "domain": "default",
+            "utterance": "Are there any job openings?",
+            "intent": "Job Openings"
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "en",
+              "tag": "nlu-en",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "tell": 1,
+              "me": 1,
+              "about": 1,
+              "your": 1,
+              "servic": 1,
+              "are": 1,
+              "there": 1,
+              "ani": 1,
+              "job": 1,
+              "open": 1
+            },
+            "intents": {
+              "Services": 1,
+              "Job Openings": 1
+            },
+            "intentFeatures": {
+              "Services": {
+                "tell": 1,
+                "me": 1,
+                "about": 1,
+                "your": 1,
+                "servic": 1
+              },
+              "Job Openings": {
+                "are": 1,
+                "there": 1,
+                "ani": 1,
+                "job": 1,
+                "open": 1
+              }
+            },
+            "featuresToIntent": {
+              "tell": [
+                "Services"
+              ],
+              "me": [
+                "Services"
+              ],
+              "about": [
+                "Services"
+              ],
+              "your": [
+                "Services"
+              ],
+              "servic": [
+                "Services"
+              ],
+              "are": [
+                "Job Openings"
+              ],
+              "there": [
+                "Job Openings"
+              ],
+              "ani": [
+                "Job Openings"
+              ],
+              "job": [
+                "Job Openings"
+              ],
+              "open": [
+                "Job Openings"
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "en",
+                "tag": "nlu-en",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true,
+                "log": true
+              },
+              "features": [
+                "tell",
+                "me",
+                "about",
+                "your",
+                "servic",
+                "are",
+                "there",
+                "ani",
+                "job",
+                "open"
+              ],
+              "intents": [
+                "Services",
+                "Job Openings"
+              ],
+              "perceptrons": [
+                [
+                  2.618671417236328,
+                  2.618671417236328,
+                  2.618671417236328,
+                  2.618671417236328,
+                  2.618671417236328,
+                  -0.26880815625190735,
+                  -0.26880815625190735,
+                  -0.26880815625190735,
+                  -0.26880815625190735,
+                  -0.26880815625190735,
+                  1.1524244679895521
+                ],
+                [
+                  -0.26870834827423096,
+                  -0.26870834827423096,
+                  -0.26870834827423096,
+                  -0.26870834827423096,
+                  -0.26870834827423096,
+                  2.6186652183532715,
+                  2.6186652183532715,
+                  2.6186652183532715,
+                  2.6186652183532715,
+                  2.6186652183532715,
+                  1.1524577121847261
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "en",
+        "Tell me about your services"
+      ],
+      [
+        "en",
+        "Are there any job openings?"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {}
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {}
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {}
+}
