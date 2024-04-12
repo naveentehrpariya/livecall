@@ -1,13 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/authController');
+const {start_stream, stop_stream} = require('../controllers/streamController');
 
-router.route('/signup').post(authController.signup);
+router.route('/create-stream').post(start_stream);
 
-router.route('/login').post(authController.login); 
-
-router.route('/forgotpassword').post(authController.forgotPassword); 
-
-router.route('/resetpassword/:token').patch(authController.resetpassword); 
+router.route('/kill-stream').post(stop_stream); 
 
 module.exports = router; 

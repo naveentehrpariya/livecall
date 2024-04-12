@@ -1,17 +1,17 @@
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
+const { spawn } = require('child_process');
 
-const activeStreams = {};
-app.post('/start-stream', (req, res) => {
-  
-});
-
-
+const activeStreams = {}; 
 const start_stream = catchAsync ( async (req, res)=>{
-   const { streamKey, video, audio } = req.body;
-   if (activeStreams[streamKey]) {
+  //  const { streamKey, video, audio } = req.body;
+  const streamKey = 'xvmf-zhju-q6gd-p0k4-7veg'
+  const video = "./video.mp4"
+  const audio = "https://stream.zeno.fm/ez4m4918n98uv";
+  if (activeStreams[streamKey]) {
       return res.status(400).send('Stream already active.');
-   }
+  }
+  console.log("ffmped is gooing to start");
   const ffmpegCommand = [
     'ffmpeg',
     '-stream_loop', '-1',
@@ -42,13 +42,16 @@ const start_stream = catchAsync ( async (req, res)=>{
   child.on('close', () => {
     delete activeStreams[streamKey];
   });
-  res.send('Stream started.');
+  console.log("ffmped passed");
+  res.json({
+    status : true,
+    msg: 'Stream started.'
+  });
+
 });
 
-
-app.post('/stop-stream', (req, res) => {
+const stop_stream = catchAsync ( async (req, res)=>{
   const { streamKey } = req.body;
-
   const stream = activeStreams[streamKey];
   if (stream) {
     stream.kill('SIGINT'); // Sends the interrupt signal to ffmpeg, stopping the stream
@@ -58,6 +61,5 @@ app.post('/stop-stream', (req, res) => {
     res.status(404).send('Stream not found.');
   }
 });
-
-
-module.exports = { addproducts, listProducts, productDetail, tour_stats } 
+ 
+module.exports = { start_stream, stop_stream } 

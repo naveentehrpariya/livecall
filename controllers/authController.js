@@ -1,5 +1,5 @@
 const User = require("../db/Users");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
 const {promisify} = require("util");
@@ -47,7 +47,6 @@ const signup = catchAsync(async (req, res) => {
 });
 
 
-
 const login = catchAsync ( async (req, res, next) => { 
    const { email, password } = req.body;
    if(!email || !password){
@@ -70,7 +69,6 @@ const login = catchAsync ( async (req, res, next) => {
     token
    });
 });
-
 
 
 
