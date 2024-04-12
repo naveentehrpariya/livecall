@@ -22,6 +22,9 @@ const schema = new mongoose.Schema({
         lowercase:true,
         validate: [validator.isEmail, 'Please provide a valid email address.']
     },
+    stripe_id: {
+        type:String,
+    },
     avatar: {
         type:String,
     },
