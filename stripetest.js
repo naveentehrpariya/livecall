@@ -17,8 +17,8 @@ app.use(errorHandler);
 app.use(globalErrorHandler); 
 const catchAsync  = require(".//utils/catchAsync");
 
+const stripe = require('stripe')('sk_test_51OOc6oCmFHIIsmOruh6oLBJN6wovOPHpBVdGEMVWALcc3SAcR3nnMCgt9ot6juPR88y9jd3qwRBikBolxUUaz27R00TwiinahX');
 const stripe = require('stripe')('sk_test_51O5itNSIg29rXj3yBHirQ8SqBJljWoFncjyaOhEFRQceT83RK26srCwS88OkzYgSo68C1cOzWlk10VBOrT7k6XlV006Js6CHHl');
-const email = 'naveen@internetbusinesssolutionsindia.com';
 
 // Function to create a Stripe product
 const createStripeProduct = async (name, description) => {
@@ -26,19 +26,17 @@ const createStripeProduct = async (name, description) => {
     name: "TEST PRODUCT __0001",
     description: "This is a test product.",
   });
-  console.log("createStripeProduct();",data)
   return data
-
 };
 createStripeProduct();
 
 // Function to create a Stripe price for the product
-const createStripePrice = async (productId, unitAmount, currency = 'usd', recurring) => {
+const createStripePrice = async (productId, unitAmount, currency = 'usd') => {
   const data = await stripe.prices.create({
     product: productId,
     unit_amount: unitAmount,
     currency: currency,
-    recurring: recurring,
+    recurring: { interval: 'month' },
   });
   console.log("data();",data)
   return data
@@ -48,18 +46,15 @@ const createStripePrice = async (productId, unitAmount, currency = 'usd', recurr
 
 // Enhanced subscribe function to use a priceId directly
 const subscribeToPlan = async (email, paymentMethodId, priceId) => {
-  // Create a new Stripe customer or retrieve existing one
+  const email = 'naveen@internetbusinesssolutionsindia.com';
   let customer = await createStripeCustomer(email, paymentMethodId);
-
-  // Attach the payment method to the customer (if provided)
   if (paymentMethodId) {
     await attachPaymentMethodToCustomer(customer.id, paymentMethodId);
   }
-
-  // Create a subscription for the customer using the priceId
   const subscription = await createStripeSubscription(customer.id, priceId);
-
-  console.log("Subscription successful", subscription);
+  res.json({
+    subscription:subscription
+  });
 };
 
 
