@@ -1,7 +1,15 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const morgan = require('morgan')
 app.use(morgan('dev')); 
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, 
+}; 
+app.use(cors(corsOptions));
+
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -9,12 +17,11 @@ app.use(bodyParser.json());
 
 const globalErrorHandler = require("./middlewares/gobalErrorHandler");
 const errorHandler = require("./middlewares/errorHandler");
-const cors = require('cors');
 const AppError = require('./utils/AppError');
 require('./db/config');
  
-// MIDDLE-WARES 
-app.use(cors()); 
+
+
 app.use(express.json()); 
 app.use(errorHandler);  
 app.use(globalErrorHandler); 
