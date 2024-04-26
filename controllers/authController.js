@@ -1,11 +1,11 @@
 const User = require("../db/Users");
-// const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
 const {promisify} = require("util");
 const AppError = require("../utils/AppError");
 const SendEmail = require("../utils/Email");
 const crypto = require("crypto");
+const JSONerror = require("../utils/jsonErrorHandler");
 const SECRET_ACCESS = process.env && process.env.SECRET_ACCESS;
 const key = process && process.env && process.env.SECRET_ACCESS;
 
@@ -20,30 +20,25 @@ const signToken = async (id) => {
 }
 
 
-const signup = catchAsync(async (req, res) => {
+const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, avatar, password, confirmPassword } = req.body;
   await User.syncIndexes();
-  const result = await User.create({
+  User.create({
     name: name,
     username: username,
     email: email,
     avatar: avatar,
     password: password,
     confirmPassword: confirmPassword
+  }).then(result => {
+    res.send({
+      status: true,
+      user: result,
+      message: "Signup Successfully",
+    });
+  }).catch(err => {
+    JSONerror(res, err, next);
   });
-  if(result){
-    res.send({
-        status: true,
-        user: result,
-        msg: "Signup Successfully",
-    });
-  } else {
-    res.send({
-        status: false,
-        error: result,
-        msg: "Failed to create user.",
-    });
-  }
 });
 
 
@@ -54,16 +49,19 @@ const login = catchAsync ( async (req, res, next) => {
    }
    const user = await User.findOne({email}).select('+password');
    if(!user || !(await user.checkPassword(password, user.password))){
-      return next(new AppError("Email or password is invalid !!", 401))
+    res.status(200).json({
+      status : false,
+      message:"Email or password is invalid !!",
+     });  
    }
    const token = await signToken(user._id);
-   // Send jwt via cookie
    res.cookie('jwt', token, {
     expires:new Date(Date.now() + 30*24*60*60*1000),
     httpOnly:true,
    });
 
    res.status(200).json({
+    status :true,
     message:"Login Successfully !!",
     user : user,
     token
@@ -113,8 +111,6 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
   // 3. send token to email using nodemailer
   const resetTokenUrl = `${req.protocol}://${req.get('host')}/user/resetpassword/${resetToken}`
   const message = `Forgot your password. Click ${resetTokenUrl} the link to reset your password.`
-  console.log("resetTokenUrl", resetTokenUrl);
-  console.log("message", message);
   try {
     const send = await SendEmail({
       email:user.email,

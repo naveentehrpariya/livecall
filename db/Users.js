@@ -6,10 +6,10 @@ const crypto = require('crypto');
 const schema = new mongoose.Schema({
     name: {
         type:String, 
-        required:true,
+        required:[true, 'Please enter your name.'],
     },
     username: {
-        required:[true, 'Please enter your name.'],
+        required:[true, 'Please enter your username.'],
         unique:[true, 'Username is already taken.'], 
         type:String,
         minLength:5,
@@ -30,12 +30,13 @@ const schema = new mongoose.Schema({
     },
     password: {
         type:String,
-        required:true,
+        required:[true, 'Please enter your password.'],
         select:false
     },
     confirmPassword: {
         type:String,
         required:true,
+        required:[true, 'Please re enter your password.'],
         select:false,
         validate : {
             validator : function (val) { return val === this.password },
