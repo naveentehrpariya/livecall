@@ -20,8 +20,6 @@ const errorHandler = require("./middlewares/errorHandler");
 const AppError = require('./utils/AppError');
 require('./db/config');
  
-
-
 app.use(express.json()); 
 app.use(errorHandler);  
 app.use(globalErrorHandler); 
