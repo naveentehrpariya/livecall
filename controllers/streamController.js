@@ -5,7 +5,7 @@ const { spawn } = require('child_process');
 const activeStreams = {}; 
 const start_stream = catchAsync ( async (req, res)=>{
   //  const { streamKey, video, audio } = req.body;
-  const streamKey = 'xvmf-zhju-q6gd-p0k4-7veg'
+  const streamKey = '4zw0-pfpr-u7bm-yemc-5kad'
   const video = "./video.mp4"
   const audio = "https://stream.zeno.fm/ez4m4918n98uv";
   if (activeStreams[streamKey]) {
@@ -51,7 +51,8 @@ const start_stream = catchAsync ( async (req, res)=>{
 });
 
 const stop_stream = catchAsync ( async (req, res)=>{
-  const { streamKey } = req.body;
+  // const { streamKey } = req.body;
+  const streamKey = '4zw0-pfpr-u7bm-yemc-5kad'
   const stream = activeStreams[streamKey];
   if (stream) {
     stream.kill('SIGINT'); // Sends the interrupt signal to ffmpeg, stopping the stream

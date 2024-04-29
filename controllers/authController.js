@@ -69,33 +69,56 @@ const login = catchAsync ( async (req, res, next) => {
 });
 
 
-
 const validateToken = catchAsync ( async (req, res, next) => {
   let authHeader = req.headers.Authorization || req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer")) {
     let token = authHeader.split(" ")[1];
     if (!token) {
-      next( new AppError("User is not authorized or token is missing", 403));
-    }
-    const decode = await promisify(jwt.verify)(token, key);
-    if(decode){ 
-      let result = await User.findById(decode.id);
-      req.user = result;
-      next(); 
-    } else { 
-      next(new AppError('User is not authorized', 401)); 
+      res.status(400).json({
+        status : false,
+        message:"User is not authorized or Token is missing",
+      })
+    } else {
+      try {
+        const decode = await promisify(jwt.verify)(token, key);
+        if(decode){ 
+          let result = await User.findById(decode.id);
+          req.user = result;
+          next();
+        } else { 
+          res.status(401).json({
+            status : false,
+            message:'Uauthorized',
+          })
+        }
+      } catch (err) {
+        res.status(401).json({
+          status : false,
+          message:'Invalid or expired token',
+        })
+      }
     }
   } else { 
-    next( new AppError("Token is missing", 401));
+    res.status(400).json({
+      status : false,
+      message:"User is not authorized or Token is missing",
+    })
   }
 });
 
 
 const profile = catchAsync ( async (req, res) => {
+  if(req.user){
+     res.status(200).json({
+     status:true,
+     user : req.user,
+    });
+  } else {
     res.status(200).json({
-    status:true,
-    user : req.user,
-   });
+     status:false,
+     message:"Unauthorized",
+    });
+  }
 });
 
 
