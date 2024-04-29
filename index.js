@@ -28,7 +28,10 @@ app.use(globalErrorHandler);
 app.use("/user", require('./routes/authRoutes'));
 app.use("/product", require('./routes/productsRoutes'));
 app.use("/user", require('./routes/userRoutes'));
+
 app.use("", require('./routes/streamRoutes'));
+
+app.use("", require('./routes/stripeRoutes'));
 
  
 app.all('*', (req, res, next) => { 

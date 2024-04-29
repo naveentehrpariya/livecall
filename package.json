@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "live": "nodemon live.js"
+    "live": "nodemon live.js",
+    "stripe": "nodemon stripetest.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { validateToken } = require('../controllers/authController');
-const { create } = require('../controllers/stripeController');
+const { create_pricing_plan, subscribe } = require('../controllers/stripeController');
 
-router.route('/update').patch(validateToken, create);
-router.route('/delete').delete(validateToken, create);
+router.route('/create-pricing-plan').post(validateToken, create_pricing_plan);
+router.route('/subscribe').post(validateToken, subscribe);
 
 module.exports = router;
