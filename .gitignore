@@ -4,10 +4,6 @@ node_modules
 backend/node_modules
 /e-com/node_modules
 e-com/node_modules
-/db/config.js
-db/config.js
-/config.js
-config.js
 config.env
 /config.env
 .env
