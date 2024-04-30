@@ -39,6 +39,23 @@ const start_stream = catchAsync ( async (req, res)=>{
   ];
   const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
   activeStreams[streamKey] = child;
+
+  child.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  child.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  child.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+
+  child.on('error', (err) => {
+    console.error(`Child process error: ${err}`);
+  });
+
   child.on('close', () => {
     delete activeStreams[streamKey];
   });
