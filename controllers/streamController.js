@@ -6,7 +6,7 @@ const activeStreams = {};
 const start_stream = catchAsync ( async (req, res)=>{
   //  const { streamKey, video, audio } = req.body;
   const streamKey = '4zw0-pfpr-u7bm-yemc-5kad'
-  const video = "./video.mp4"
+  const video = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
   const audio = "https://stream.zeno.fm/ez4m4918n98uv";
   if (activeStreams[streamKey]) {
       return res.status(400).send('Stream already active.');
@@ -60,6 +60,7 @@ const start_stream = catchAsync ( async (req, res)=>{
     delete activeStreams[streamKey];
   });
   console.log("ffmped passed");
+
   res.json({
     status : true,
     msg: 'Stream started.'
