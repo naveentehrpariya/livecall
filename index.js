@@ -34,17 +34,16 @@ app.use("", require('./routes/streamRoutes'));
 app.use("", require('./routes/stripeRoutes'));
 
  
-app.all('*', (req, res, next) => { 
-    next(new AppError("Endpoint not found !!", 404    ));         
-});
-
-
 app.get('/', (req, res)=>{ 
   res.send({
       status:"Active",  
       Status :200
   });   
 }); 
+
+app.all('*', (req, res, next) => { 
+  next(new AppError("Endpoint not found !!", 404    ));         
+});
 
 const port = 8080;
 app.listen(port, ()=>{ console.log(`On PORT ${port} SERVER RUNNINGGGGG.....`) });
