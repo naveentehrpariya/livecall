@@ -20,6 +20,44 @@ const signToken = async (id) => {
 }
 
 
+const validateToken = catchAsync ( async (req, res, next) => {
+  let authHeader = req.headers.Authorization || req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer")) {
+    let token = authHeader.split(" ")[1];
+    if (!token) {
+      res.status(400).json({
+        status : false,
+        message:"User is not authorized or Token is missing",
+      })
+    } else {
+      try {
+        const decode = await promisify(jwt.verify)(token, key);
+        if(decode){ 
+          let result = await User.findById(decode.id);
+          req.user = result;
+          next();
+        } else { 
+          res.status(401).json({
+            status : false,
+            message:'Uauthorized',
+          })
+        }
+      } catch (err) {
+        res.status(401).json({
+          status : false,
+          message:'Invalid or expired token',
+        })
+      }
+    }
+  } else { 
+    res.status(400).json({
+      status : false,
+      message:"User is not authorized or Token is missing",
+    })
+  }
+});
+
+
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, avatar, password, confirmPassword } = req.body;
   await User.syncIndexes();
@@ -69,42 +107,6 @@ const login = catchAsync ( async (req, res, next) => {
 });
 
 
-const validateToken = catchAsync ( async (req, res, next) => {
-  let authHeader = req.headers.Authorization || req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer")) {
-    let token = authHeader.split(" ")[1];
-    if (!token) {
-      res.status(400).json({
-        status : false,
-        message:"User is not authorized or Token is missing",
-      })
-    } else {
-      try {
-        const decode = await promisify(jwt.verify)(token, key);
-        if(decode){ 
-          let result = await User.findById(decode.id);
-          req.user = result;
-          next();
-        } else { 
-          res.status(401).json({
-            status : false,
-            message:'Uauthorized',
-          })
-        }
-      } catch (err) {
-        res.status(401).json({
-          status : false,
-          message:'Invalid or expired token',
-        })
-      }
-    }
-  } else { 
-    res.status(400).json({
-      status : false,
-      message:"User is not authorized or Token is missing",
-    })
-  }
-});
 
 
 const profile = catchAsync ( async (req, res) => {

@@ -38,7 +38,6 @@ app.all('*', (req, res, next) => {
     next(new AppError("Endpoint not found !!", 404    ));         
 });
 
-
 app.get('/', (req, res)=>{ 
   res.send({
       status:"Active",  
