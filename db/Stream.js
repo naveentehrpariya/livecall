@@ -7,23 +7,30 @@ const schema = new mongoose.Schema({
         required:[true, 'Please enter your stream title.'],
         minLength:5,
     },
+    resolution: {
+        type:String,
+        // required:[true, 'Please choose a resolution for your stream.'],
+    },
+    thumbnail: {
+        type:String,
+    },
+    audio: {
+        type:String,
+    },
+    video: {
+        type:String,
+    },
     streamkey: {
         required:[true, 'Please enter your stream key.'],
         type:String,
         minLength:10,
-    },
-    resolution: {
-        type:String,
-        required:[true, 'Please choose a resolution for your stream.'],
-    },
-    thumbnail: {
-        type:String,
     },
     active : { 
         type:Boolean,
         default:true,
         select:false,
     },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     createdAt: {
          type: Date,
          default: Date.now()     
@@ -33,6 +40,6 @@ const schema = new mongoose.Schema({
 
 
 const Stream = mongoose.model('streams', schema);
-module.exports = User;
+module.exports = Stream;
 
  

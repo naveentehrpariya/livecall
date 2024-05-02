@@ -59,7 +59,6 @@ schema.pre('save', async function(next) {
     this.confirmPassword = undefined;
 });
 
-// To remove all inactive user from search results
 schema.pre(/ˆfind/, async function(next) { 
     this.find({active: {$ne:false}});    
 });
