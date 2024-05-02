@@ -41,6 +41,27 @@ app.get('/', (req, res)=>{
   });   
 }); 
 
+
+
+const startstream = () => { 
+  const input = 'path/to/your/video.mp4';
+  const ffmpegProcess = ffmpeg(input)
+      .outputOptions('-movflags frag_keyframe+empty_moov')
+      .format('mp4')
+      .videoCodec('copy')
+      .audioCodec('copy')
+      .on('error', (err) => {
+          console.error('ffmpeg error:', err.message);
+          res.status(500).send('Internal Server Error');
+      })
+      .on('end', () => {
+          console.log('ffmpeg streaming ended');
+          res.end();
+      });
+      // Pipe ffmpeg output to HTTP response
+      ffmpegProcess.pipe(res);
+}
+
 app.all('*', (req, res, next) => { 
   next(new AppError("Endpoint not found !!", 404    ));         
 });
