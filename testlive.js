@@ -4,7 +4,7 @@ require('dotenv/config');
 const server = express();
 
 const streamkey = '4zw0-pfpr-u7bm-yemc-5kad'
-const video = "./video.mp4"
+const video = "./live.mp4"
 const audio = "https://stream.zeno.fm/ez4m4918n98uv";
 
 const ffmpegCommand = [

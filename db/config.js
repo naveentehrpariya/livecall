@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
   
 // mongoose.connect( `mongodb+srv://naveentehrpariya:naveentehrpariya21081998@cluster0.rnebihn.mongodb.net/test`, {
-mongoose.connect(process.env.DB_URL, {
+mongoose.connect(process.env.DB_URL_OFFICE, {
     useNewUrlParser: true,   
     serverSelectionTimeoutMS: 5000,    
     autoIndex: false, // Don't build indexes 

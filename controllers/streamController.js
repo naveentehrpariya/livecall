@@ -7,7 +7,6 @@ const { spawn } = require('child_process');
 const activeStreams = {}; 
 const start_stream = catchAsync ( async (req, res)=>{
     const isAlready = await Stream.findOne({streamkey: req.body.streamkey});
-    console.log(isAlready)
     if(isAlready){ 
       res.json({
         status : false,
@@ -24,11 +23,12 @@ const start_stream = catchAsync ( async (req, res)=>{
       streamkey: req.body.streamkey,
       user : req.user._id
     });
+    
    const savedStream = await stream.save();
    if(savedStream){
-     const streamKey = '4zw0-pfpr-u7bm-yemc-5kad'
-     const video = "./video.mp4"
-     const audio = "https://stream.zeno.fm/ez4m4918n98uv";
+     const streamKey = req.body.streamkey;
+     const video = "./video.mp4";
+     const audio = req.body.audio;
      if (activeStreams[stream._id]) {
          return res.status(400).send('Stream already active.');
      }
