@@ -6,14 +6,14 @@ const { spawn } = require('child_process');
 
 const activeStreams = {}; 
 const start_stream = catchAsync ( async (req, res)=>{
-    const isAlready = await Stream.findOne({streamkey: req.body.streamkey});
-    console.log(isAlready)
-    if(isAlready){ 
-      res.json({
-        status : false,
-        message: 'Stream already active.',
-      });
-    }
+    // const isAlready = await Stream.findOne({streamkey: req.body.streamkey});
+    // console.log(isAlready)
+    // if(isAlready){ 
+    //   res.json({
+    //     status : false,
+    //     message: 'Stream already active.',
+    //   });
+    // }
 
     const stream = new Stream({
       title: req.body.title,
