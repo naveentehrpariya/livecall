@@ -60,7 +60,7 @@ app.get('/startlive', (req, res)=>{
     // '-re',
     // '-i', audio,
     '-vcodec', 'libx264',
-    '-pix_fmt', 'yuv420p240', // Specify pixel format
+    '-pix_fmt', 'rgb24', // Specify pixel format
     '-maxrate', '300k', // Further reduce video bitrate
     '-bufsize', '300k',
     '-preset', 'fast', // Balance speed and quality
