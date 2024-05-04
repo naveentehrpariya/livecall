@@ -61,19 +61,19 @@ app.get('/startlive', (req, res)=>{
     '-i', audio,
     '-vcodec', 'libx264',
     '-pix_fmt', 'yuv420p', // Specify pixel format
-    // '-maxrate', '2048k', // Reduce bitrate significantly
-    // '-bufsize', '2048k',
-    '-preset', 'veryfast', // Balance speed and quality
-    '-r', '12',
+    '-maxrate', '300k', // Further reduce video bitrate
+    '-bufsize', '300k',
+    '-preset', 'fast', // Balance speed and quality
+    '-r', '6', // Lower frame rate
     '-framerate', '1',
-    '-g', '50',
+    '-g', '25', // Reduce keyframe interval
     '-crf', '51', // Adjust for acceptable quality
     '-c:a', 'aac',
-    '-b:a', '64k', // Reduce audio bitrate
+    '-b:a', '32k', // Reduce audio bitrate
     '-ar', '44100',
     '-strict', 'experimental',
     '-video_track_timescale', '100',
-    '-b:v', '500k', // Reduce video bitrate significantly
+    '-b:v', '250k', // Further reduce video bitrate
     '-f', 'flv',
     `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
   ];
