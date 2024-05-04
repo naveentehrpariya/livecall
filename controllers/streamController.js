@@ -38,30 +38,32 @@ const start_stream = catchAsync ( async (req, res, next)=>{
      }
      console.log("ffmped is gooing to 'start");
      const ffmpegCommand = [
-       'ffmpeg',
-       '-stream_loop', '-1',
-       '-re',
-       '-i', video,
-       '-stream_loop', '-1',
-       '-re',
-       '-i', audio,
-       '-vcodec', 'libx264',
-       '-pix_fmt', 'yuvj420p',
-       '-maxrate', '2048k',
-       '-preset', 'ultrafast',
-       '-r', '12',
-       '-framerate', '1',
-       '-g', '50',
-       '-crf', '51',
-       '-c:a', 'aac',
-       '-b:a', '128k',
-       '-ar', '44100',
-       '-strict', 'experimental',
-       '-video_track_timescale', '100',
-       '-b:v', '1500k',
-       '-f', 'flv',
-       `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
-     ];
+      'ffmpeg',
+      '-stream_loop', '-1',
+      '-re',
+      '-i', video,
+      '-stream_loop', '-1',
+      '-re',
+      '-i', audio,
+      '-vcodec', 'libx264',
+      '-pix_fmt', 'yuvj420p',
+      '-maxrate', '2048k',
+      '-bufsize', '2048k', // Set bufsize equal to maxrate
+      '-preset', 'ultrafast',
+      '-r', '12',
+      '-framerate', '1',
+      '-g', '50',
+      '-crf', '51',
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      '-ar', '44100',
+      '-strict', 'experimental',
+      '-video_track_timescale', '100',
+      '-b:v', '1500k',
+      '-f', 'flv',
+      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
+    ];
+    
 
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
      activeStreams[stream._id] = child;
