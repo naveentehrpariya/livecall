@@ -20,10 +20,19 @@ const schema = new mongoose.Schema({
     video: {
         type:String,
     },
+    status: {
+        type:String,
+        default:1, // 1- active, 0- inactive
+    },
+    stream_url: {
+        // required:[true, 'Please enter your stream url.'],
+        type:String,
+        minLength:[10, 'Stream url is too short.'],
+    },
     streamkey: {
         required:[true, 'Please enter your stream key.'],
         type:String,
-        minLength:10,
+        minLength:[10, 'Stream key is too short or invalid.'],
     },
     active : { 
         type:Boolean,

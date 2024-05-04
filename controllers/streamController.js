@@ -3,9 +3,11 @@ const Stream = require("../db/Stream");
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const { spawn } = require('child_process');
+const JSONerror = require("../utils/jsonErrorHandler");
 
 const activeStreams = {}; 
-const start_stream = catchAsync ( async (req, res)=>{
+const start_stream = catchAsync ( async (req, res, next)=>{
+  try {
     // const isAlready = await Stream.findOne({streamkey: req.body.streamkey});
     // console.log(isAlready)
     // if(isAlready){ 
@@ -15,20 +17,22 @@ const start_stream = catchAsync ( async (req, res)=>{
     //   });
     // }
 
+    const audio = req.body.audio || "https://stream.zeno.fm/ez4m4918n98uv";
     const stream = new Stream({
       title: req.body.title,
-      video: req.body.video,
-      audio: req.body.audio,
+      video: "./video.mp4", // req.body.video
+      audio: audio,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
+      stream_url: req.body.stream_url,
       streamkey: req.body.streamkey,
       user : req.user._id
     });
+
    const savedStream = await stream.save();
    if(savedStream){
-     const streamKey = '4zw0-pfpr-u7bm-yemc-5kad'
+     const streamKey = req.body.streamkey
      const video = "./video.mp4"
-     const audio = "https://stream.zeno.fm/ez4m4918n98uv";
      if (activeStreams[stream._id]) {
          return res.status(400).send('Stream already active.');
      }
@@ -58,16 +62,31 @@ const start_stream = catchAsync ( async (req, res)=>{
        '-f', 'flv',
        `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
      ];
+
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
      activeStreams[stream._id] = child;
      child.on('close', () => {
        delete activeStreams[streamKey];
      });
-     res.json({
-       status : true,
-       message: 'Stream started.',
-       stream : savedStream
-     });
+
+     child.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      
+      child.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+
+      child.on('error', (err) => {
+        console.error(`Child process error: ${err}`);
+      });
+
+      res.json({
+        status : true,
+        message: 'Stream started.',
+        stream : savedStream
+      });
+
    } else { 
      res.json({
        status : false,
@@ -75,14 +94,19 @@ const start_stream = catchAsync ( async (req, res)=>{
        errors : savedStream
      });
    }
-
+  } catch (err){
+    JSONerror(res, err, next);
+  }
 });
+
+
 
 const stop_stream = catchAsync ( async (req, res)=>{
   const stream = await Stream.findOne({"_id":ObjectId(req.body.id)});
   console.log("stream",stream)
   if(stream){
     stream.endedAt = Date.now();
+    stream.status = "0";
     const result = await stream.save();
     if (result) {
       const activeStream = activeStreams[req.body.id];
@@ -107,11 +131,13 @@ const stop_stream = catchAsync ( async (req, res)=>{
   }
 });
  
+
+
 const active_stream_lists = catchAsync ( async (req, res)=>{
   const records = await Stream.find({user: req.user._id}).populate('user').sort({createdAt: -1});
   if (records) {
     res.json({
-      status : false,
+      status : true,
       streams : records
     });
   } else {
