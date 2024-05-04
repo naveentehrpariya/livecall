@@ -64,13 +64,14 @@ app.get('/startlive', (req, res)=>{
     '-maxrate', '300k', // Further reduce video bitrate
     '-bufsize', '300k',
     '-preset', 'fast', // Balance speed and quality
-    '-r', '2', // Lower frame rate
+    '-r', '1', // Lower frame rate
     '-framerate', '1',
     '-g', '25', // Reduce keyframe interval
     '-crf', '51', // Adjust for acceptable quality  
     '-c:a', 'aac',
     '-b:a', '32k', // Reduce audio bitrate
     '-ar', '44100',
+    '-threads', '0',
     '-strict', 'experimental',
     '-video_track_timescale', '100',
     '-b:v', '250k', // Further reduce video bitrate
