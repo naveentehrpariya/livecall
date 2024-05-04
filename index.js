@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan')
+const { spawn } = require('child_process');
+
+
 app.use(morgan('dev')); 
 const corsOptions = {
   origin: '*',
@@ -9,7 +12,6 @@ const corsOptions = {
   credentials: true, 
 }; 
 app.use(cors(corsOptions));
-const { spawn } = require('child_process');
 
 
 const bodyParser = require('body-parser');
@@ -43,10 +45,10 @@ app.get('/', (req, res)=>{
 }); 
 
 
-app.get('/startlive', (req, res) => {
+app.get('/startlive', (req, res)=>{ 
 
-  const streamKey = '4zw0-pfpr-u7bm-yemc-5kad';
-  const video = "./video.mp4";
+  const streamKey = '4zw0-pfpr-u7bm-yemc-5kad'
+  const video = "./video.mp4"
   const audio = "https://stream.zeno.fm/ez4m4918n98uv";
 
   const ffmpegCommand = [
@@ -77,9 +79,27 @@ app.get('/startlive', (req, res) => {
   ];
 
   const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-  // ... rest of your code remains the same
-});
+  child.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
 
+  child.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  child.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+
+  child.on('error', (err) => {
+    console.error(`Child process error: ${err}`);
+  });  
+
+  res.send({
+    status:"stream started",  
+    Status :200
+});
+}); 
 
 
 app.all('*', (req, res, next) => { 
