@@ -43,61 +43,43 @@ app.get('/', (req, res)=>{
 }); 
 
 
-app.get('/startlive', (req, res)=>{ 
+app.get('/startlive', (req, res) => {
 
-  const streamKey = '4zw0-pfpr-u7bm-yemc-5kad'
-  const video = "./video.mp4"
+  const streamKey = '4zw0-pfpr-u7bm-yemc-5kad';
+  const video = "./video.mp4";
   const audio = "https://stream.zeno.fm/ez4m4918n98uv";
 
- const ffmpegCommand = [
-      'ffmpeg',
-      '-stream_loop', '-1',
-      '-re',
-      '-i', video,
-      '-stream_loop', '-1',
-      '-re',
-      '-i', audio,
-      '-vcodec', 'libx264',
-      '-pix_fmt', 'yuv420p', // Specify pixel format
-      // '-maxrate', '2048k',
-      // '-bufsize', '2048k',
-      '-preset', 'ultrafast',
-      '-r', '12',
-      '-framerate', '1',
-      '-g', '50',
-      '-crf', '51',
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ar', '44100',
-      '-strict', 'experimental',
-      '-video_track_timescale', '100',
-      '-b:v', '1500k',
-      '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
-    ];
+  const ffmpegCommand = [
+    'ffmpeg',
+    '-stream_loop', '-1',
+    '-re',
+    '-i', video,
+    '-stream_loop', '-1',
+    '-re',
+    '-i', audio,
+    '-vcodec', 'libx264',
+    '-pix_fmt', 'yuv420p', // Specify pixel format
+    // '-maxrate', '2048k', // Reduce bitrate significantly
+    // '-bufsize', '2048k',
+    '-preset', 'veryfast', // Balance speed and quality
+    '-r', '12',
+    '-framerate', '1',
+    '-g', '50',
+    '-crf', '51', // Adjust for acceptable quality
+    '-c:a', 'aac',
+    '-b:a', '64k', // Reduce audio bitrate
+    '-ar', '44100',
+    '-strict', 'experimental',
+    '-video_track_timescale', '100',
+    '-b:v', '500k', // Reduce video bitrate significantly
+    '-f', 'flv',
+    `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
+  ];
 
   const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-  child.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  child.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  child.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
-  });
-
-  child.on('error', (err) => {
-    console.error(`Child process error: ${err}`);
-  });  
-
-  res.send({
-    status:"stream started",  
-    Status :200
+  // ... rest of your code remains the same
 });
-}); 
+
 
 
 app.all('*', (req, res, next) => { 
