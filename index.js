@@ -53,11 +53,11 @@ app.get('/startlive', (req, res)=>{
 
   const ffmpegCommand = [
     'ffmpeg',
-    '-stream_loop', '-1',
+    '-stream_loop', '-1', // Loop video input
     '-re',
     '-i', video,
-    '-stream_loop', '-1',
-    '-re',
+    // '-stream_loop', '-1', // Removed for output
+    // '-re',
     // '-i', audio,
     '-vcodec', 'libx264',
     '-pix_fmt', 'yuv240p', // Specify pixel format
