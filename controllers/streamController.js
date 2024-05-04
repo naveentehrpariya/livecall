@@ -46,9 +46,9 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       '-re',
       '-i', audio,
       '-vcodec', 'libx264',
-      '-pix_fmt', 'yuvj420p',
+      '-pix_fmt', 'yuv420p', // Specify pixel format
       '-maxrate', '2048k',
-      '-bufsize', '2048k', // Set bufsize equal to maxrate
+      '-bufsize', '2048k',
       '-preset', 'ultrafast',
       '-r', '12',
       '-framerate', '1',
@@ -63,6 +63,7 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       '-f', 'flv',
       `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
     ];
+
     
 
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
