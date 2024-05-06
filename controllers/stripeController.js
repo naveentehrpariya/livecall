@@ -1,8 +1,8 @@
 const Products = require("../db/Products");
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
-const stripe = require('.../../../db/Stripe');
-// const stripe = require('stripe')('sk_test_51OOc6oCmFHIIsmOruh6oLBJN6wovOPHpBVdGEMVWALcc3SAcR3nnMCgt9ot6juPR88y9jd3qwRBikBolxUUaz27R00TwiinahX');
+const Pricing = require("../db/Pricing");
+const stripe = require('stripe')('sk_test_51OOc6oCmFHIIsmOruh6oLBJN6wovOPHpBVdGEMVWALcc3SAcR3nnMCgt9ot6juPR88y9jd3qwRBikBolxUUaz27R00TwiinahX');
 
 const createStripeCustomer = async (email, paymentMethodId = null) => {
   const customer = await stripe.customers.create({
@@ -20,30 +20,51 @@ const createStripeSubscription = async (customerId, priceId) => {
 };
 
 const create_pricing_plan = catchAsync ( async (req, res)=>{
+
+    const product_price = req.body.price;
     const product =  await stripe.products.create({
-        name: "INDIAN_PRODUCT",
-        description: "This is a test product.",
+        name: req.body.name,
+        description: req.body.description
     }); 
-    const product_price = "5000";
+
     const price = await stripe.prices.create({
       product: product.id,
       unit_amount: parseInt(product_price*100),
-      currency: 'inr',
+      currency: 'usd',
       recurring: { interval: 'month' },
     });
-    console.log("price",price)
-    if(product){ 
-        res.status(200).json({ 
-            status:true, 
-            data:product 
-        })
+
+    if(!price){
+      res.status(400).json({
+        status:false,
+        plan : null,
+        error:price
+      });
+    }
+
+    const plan = new Pricing({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      allowed_streams: req.body.allowed_streams,
+      storage: req.body.storage,
+      priceId: price,
+    });
+    const result = await plan.save();
+
+    if(result){ 
+      res.status(200).json({ 
+          status:true, 
+          plan:result 
+      })
     } else {  
-        res.status(400).json({
-            error:product
-        }); 
+      res.status(400).json({
+          status:false,
+          plan : null,
+          error:result
+      }); 
     } 
 });
-
 
 const subscribe = catchAsync ( async (req, res)=>{
   try {

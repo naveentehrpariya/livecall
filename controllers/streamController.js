@@ -5,9 +5,10 @@ const catchAsync  = require("../utils/catchAsync");
 const { spawn } = require('child_process');
 const JSONerror = require("../utils/jsonErrorHandler");
 
-const activeStreams = {}; 
+let activeStreams = {}; 
 const start_stream = catchAsync ( async (req, res, next)=>{
   try {
+
     // const isAlready = await Stream.findOne({streamkey: req.body.streamkey});
     // console.log(isAlready)
     // if(isAlready){ 
@@ -17,6 +18,7 @@ const start_stream = catchAsync ( async (req, res, next)=>{
     //   });
     // }
 
+    const streamKey = req.body.streamkey;
     const audio = req.body.audio || "https://stream.zeno.fm/ez4m4918n98uv";
     const stream = new Stream({
       title: req.body.title,
@@ -31,43 +33,40 @@ const start_stream = catchAsync ( async (req, res, next)=>{
 
    const savedStream = await stream.save();
    if(savedStream){
-     const streamKey = req.body.streamkey
      const video = "./video.mp4"
-     if (activeStreams[stream._id]) {
+     if (activeStreams[streamKey]) {
          return res.status(400).send('Stream already active.');
      }
-     console.log("ffmped is gooing to 'start");
      const ffmpegCommand = [
-      'ffmpeg',
-      '-stream_loop', '-1',
-      '-re',
-      '-i', video,
-      '-stream_loop', '-1',
-      '-re',
-      '-i', audio,
-      '-vcodec', 'libx264',
-      '-pix_fmt', 'yuv420p', // Specify pixel format
-      '-maxrate', '2048k',
-      '-bufsize', '2048k',
-      '-preset', 'ultrafast',
-      '-r', '12',
-      '-framerate', '1',
-      '-g', '50',
-      '-crf', '51',
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ar', '44100',
-      '-strict', 'experimental',
-      '-video_track_timescale', '100',
-      '-b:v', '1500k',
-      '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
-    ];
-
-    
+        'ffmpeg',
+        '-stream_loop', '-1',
+        '-re',
+        '-i', video,
+        '-stream_loop', '-1',
+        '-re',
+        '-i', audio,
+        '-vcodec', 'libx264',
+        '-pix_fmt', 'yuv420p', // Specify pixel format
+        '-maxrate', '2048k',
+        '-bufsize', '2048k',
+        '-preset', 'ultrafast',
+        '-r', '12',
+        '-framerate', '1',
+        '-g', '50',
+        '-crf', '51',
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-ar', '44100',
+        '-strict', 'experimental',
+        '-video_track_timescale', '100',
+        '-b:v', '1500k',
+        '-f', 'flv',
+        `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
+      ];
 
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-     activeStreams[stream._id] = child;
+     activeStreams[streamKey] = child;
+
      child.on('close', () => {
        delete activeStreams[streamKey];
      });
@@ -102,36 +101,58 @@ const start_stream = catchAsync ( async (req, res, next)=>{
   }
 });
 
+const stop_stream = catchAsync(async (req, res) => {
+  const { id } = req.body;
 
+  // Validate the id parameter
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({
+      status: false,
+      message: 'Invalid stream id',
+    });
+  }
 
-const stop_stream = catchAsync ( async (req, res)=>{
-  const stream = await Stream.findOne({"_id":ObjectId(req.body.id)});
-  console.log("stream",stream)
-  if(stream){
-    stream.endedAt = Date.now();
-    stream.status = "0";
-    const result = await stream.save();
-    if (result) {
-      const activeStream = activeStreams[req.body.id];
-      // activeStream.kill('SIGINT');
-      delete activeStreams[req.body.id];
-      res.json({
-        status : true,
-        message: 'Stream has been stopped.',
-      });
-    } else {
-      res.json({
-        status : false,
-        message: 'Something went wrong with this stream. Please try again.',
-        result: result,
-      });
-    }
-  } else { 
-    res.json({
-      status : false,
+  const stream = await Stream.findOne({ _id: ObjectId(id) });
+  if (!stream) {
+    return res.status(404).json({
+      status: false,
       message: 'Stream not found',
     });
   }
+
+  if (stream.status === '0') {
+    return res.status(400).json({
+      status: false,
+      message: 'Stream is already stopped',
+    });
+  }
+
+  stream.endedAt = Date.now();
+  stream.status = '0';
+
+  const result = await stream.save();
+  if (!result) {
+    return res.status(500).json({
+      status: false,
+      message: 'Failed to stop the stream',
+    });
+  }
+
+  const active = activeStreams[stream.streamkey];
+  if (!active) {
+    return res.status(400).json({
+      status: false,
+      message: 'Stream is not currently active',
+    });
+  }
+
+  delete activeStreams[stream.streamkey];
+  active.kill('SIGINT');
+
+  res.json({
+    status: true,
+    message: 'Stream has been stopped',
+  });
 });
  
 
