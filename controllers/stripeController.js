@@ -1,25 +1,17 @@
-const Products = require("../db/Products");
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const Pricing = require("../db/Pricing");
 const stripe = require('stripe')('sk_test_51OOc6oCmFHIIsmOruh6oLBJN6wovOPHpBVdGEMVWALcc3SAcR3nnMCgt9ot6juPR88y9jd3qwRBikBolxUUaz27R00TwiinahX');
-
-const createStripeCustomer = async (email, paymentMethodId = null) => {
-  const customer = await stripe.customers.create({
-    email: email
-  });
-  return customer;
-};
-
-const createStripeSubscription = async (customerId, priceId) => {
-  return await stripe.subscriptions.create({
-    customer: customerId,
-    items: [{ price: priceId }],
-    expand: ['latest_invoice.payment_intent'],
-  });
-};
+const domainURL = process.env.DOMAIN_URL || "http://localhost:8080";
 
 const create_pricing_plan = catchAsync ( async (req, res)=>{
+    const isAlreadyExist = await Pricing.findOne({name:req.body.name});
+    if(isAlreadyExist){
+      return res.status(400).json({
+        status:false,  
+        error:'Pricing plan already exist.'
+      });
+    }
 
     const product_price = req.body.price;
     const product =  await stripe.products.create({
@@ -48,10 +40,11 @@ const create_pricing_plan = catchAsync ( async (req, res)=>{
       price: req.body.price,
       allowed_streams: req.body.allowed_streams,
       storage: req.body.storage,
-      priceId: price,
+      priceId: price.id,
+      productId: price.product,
     });
-    const result = await plan.save();
 
+    const result = await plan.save();
     if(result){ 
       res.status(200).json({ 
           status:true, 
@@ -68,16 +61,16 @@ const create_pricing_plan = catchAsync ( async (req, res)=>{
 
 const subscribe = catchAsync ( async (req, res)=>{
   try {
-      const domainURL = 'http://localhost:8080';
-      const priceId = "price_1P698SSIg29rXj3yvGj39RS7";
+      const plan = await Pricing.findOne({productId:req.body.productId});
+      const productId = req.body.productId;
       const session = await stripe.checkout.sessions.create({
         mode: "subscription",
         line_items: [
           { 
             price_data: {
-              product : 'prod_Pw1AByYXlU0qtW',
-              unit_amount_decimal : 5000*100,
-              currency:"inr",
+              product : productId,
+              unit_amount_decimal : parseInt(plan.price*100),
+              currency: plan.currency || "usd",
               recurring : {
                 interval : 'month',
                 interval_count : 1,
@@ -86,10 +79,8 @@ const subscribe = catchAsync ( async (req, res)=>{
             quantity: 1
           }
         ],
-        // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
         success_url: `${domainURL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${domainURL}/canceled.html`,
-        // automatic_tax: { enabled: true }
       });
       res.json({
         status:true,
@@ -125,8 +116,28 @@ const subscribe = catchAsync ( async (req, res)=>{
     // } 
 });
 
-module.exports = { subscribe, create_pricing_plan } 
+const pricing_plan_lists = catchAsync ( async (req, res)=>{
+  try {
+    const items = await Pricing.find({});
+    if(items){
+      res.status(200).json({ 
+        status:true, 
+        items:items 
+      })
+    } else {
+      res.status(400).json({ 
+        status:false, 
+        items:null 
+      })
+    }
+  } catch(err){
+    res.status(400).json({ 
+      status:false, 
+      error:err 
+    })
 
+  }
+      
+});
 
-// id: 'prod_Pw0VWsq30v7oZp',
-// id: 'price_1P68U4SIg29rXj3yjj5rkV9A'
+module.exports = { subscribe, create_pricing_plan, pricing_plan_lists } 

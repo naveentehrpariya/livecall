@@ -104,7 +104,6 @@ const start_stream = catchAsync ( async (req, res, next)=>{
 const stop_stream = catchAsync(async (req, res) => {
   const { id } = req.body;
 
-  // Validate the id parameter
   if (!ObjectId.isValid(id)) {
     return res.status(400).json({
       status: false,
