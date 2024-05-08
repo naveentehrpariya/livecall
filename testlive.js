@@ -30,6 +30,7 @@ const ffmpegCommand = [
   '-video_track_timescale', '100',
   '-b:v', '1500k',
   '-f', 'flv',
+  // '-s', '1920x1080',
   `rtmp://a.rtmp.youtube.com/live2/${streamkey}`,
 ];
 
