@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team and Player Management Interface</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Team and Player Management Interface</h1>
+    </header>
+    <main>
+        <section id="teams">
+            <h2>Teams</h2>
+
+            <ul id="team-list"></ul>
+
+            <form id="add-team-form">
+                <label for="team-name">Name:</label>
+                <input type="text" id="team-name" name="team-name" required>
+                <label for="team-sport">Sport:</label>
+                <input type="text" id="team-sport" name="team-sport" required>
+                <label for="team-avg-age">Average Age:</label>
+                <input type="number" id="team-avg-age" name="team-avg-age" required step="0.01">
+                <button type="submit">Send Request</button>
+            </form>
+
+
+            <!-- Update Team Form -->
+            <form id="update-team-form" style="display: none;">
+                <input id="team-id-update" name="team-id-update">
+                <label for="team-name-update">Name:</label>
+                <input type="text" id="team-name-update" name="team-name-update" required>
+                <label for="team-sport-update">Sport:</label>
+                <input type="text" id="team-sport-update" name="team-sport-update" required>
+                <label for="team-avg-age-update">Average Age:</label>
+                <input type="number" id="team-avg-age-update" name="team-avg-age-update" required step="0.01">
+                <button type="submit">Update Team</button>
+            </form>
+        </section>
+
+
+        <section id="players">
+            <h2>Players</h2>
+            <form id="add-player-form">
+                <label for="player-team">Team:</label>
+                <select id="player-team" name="player-team" required>
+                    <!-- Options populated via JavaScript -->
+                </select>
+                <label for="player-surname">Surname:</label>
+                <input type="text" id="player-surname" name="player-surname" required>
+                <label for="player-given-names">Given Names:</label>
+                <input type="text" id="player-given-names" name="player-given-names" required>
+                <label for="player-nationality">Nationality:</label>
+                <input type="text" id="player-nationality" name="player-nationality" required>
+                <label for="player-date-of-birth">Date of Birth:</label>
+                <input type="date" id="player-date-of-birth" name="player-date-of-birth" required>
+                <button type="submit">Send Request</button>
+            </form>
+
+
+            <ul id="player-list"></ul>
+
+
+            <!-- Update Player Form -->
+            <form id="update-player-form" style="display: none;">
+                <input type="hidden" id="player-id-update" name="player-id-update">
+                <label for="player-surname-update">Surname:</label>
+                <input type="text" id="player-surname-update" name="player-surname-update" required>
+                <label for="player-given-names-update">Given Names:</label>
+                <input type="text" id="player-given-names-update" name="player-given-names-update" required>
+                <label for="player-nationality-update">Nationality:</label>
+                <input type="text" id="player-nationality-update" name="player-nationality-update" required>
+                <label for="player-date-of-birth-update">Date of Birth:</label>
+                <input type="date" id="player-date-of-birth-update" name="player-date-of-birth-update" required>
+                <button type="submit">Update Player</button>
+            </form>
+        </section>
+    </main>
+    <script src="interface.js"></script>
+</body>
+</html>
