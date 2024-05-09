@@ -4,6 +4,36 @@ const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const { spawn } = require('child_process');
 const JSONerror = require("../utils/jsonErrorHandler");
+const Subscription = require("../db/Subscription");
+
+const checkUserStreamLimit = async (req, res, next) => {
+  const user = req.user._id;
+  const userStreams = await Stream.find({ user: user});
+  const userSubscription = await Subscription.findOne({ user: user, status: 1 }).populate('plan');
+  if (userSubscription && userSubscription._id) {
+      if ((userStreams.length+1) > userSubscription.plan.allowed_streams) {
+        return res.json({
+          status: false,
+          message: 'You have reached your allowed stream limit.Please upgrade to higher plan.'
+        });
+      } else { 
+        next();
+      }
+  }
+  else {
+    if (req.user.freeTrialStatus == 'active') {
+      if (userStreams.length > 0) {
+        return res.json({
+          status: false,
+          message: 'You are allowed only 1 stream in free trial. Please upgrade subscription to create another stream.'
+        });
+      } else { 
+        next();
+      }
+    }
+  }
+};
+
 
 let activeStreams = {}; 
 const start_stream = catchAsync ( async (req, res, next)=>{
@@ -38,30 +68,29 @@ const start_stream = catchAsync ( async (req, res, next)=>{
          return res.status(400).send('Stream already active.');
      }
      const ffmpegCommand = [
-        'ffmpeg',
-        '-stream_loop', '-1',
-        '-re',
-        '-i', video,
-        '-stream_loop', '-1',
-        '-re',
-        '-i', audio,
-        '-vcodec', 'libx264',
-        '-pix_fmt', 'yuv420p', // Specify pixel format
-        '-maxrate', '2048k',
-        '-bufsize', '2048k',
-        '-preset', 'ultrafast',
-        '-r', '12',
-        '-framerate', '1',
-        '-g', '50',
-        '-crf', '51',
-        '-c:a', 'aac',
-        '-b:a', '128k',
-        '-ar', '44100',
-        '-strict', 'experimental',
-        '-video_track_timescale', '100',
-        '-b:v', '1500k',
-        '-f', 'flv',
-        `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
+      'ffmpeg',
+      '-stream_loop', '-1',
+      '-re',
+      '-i', video,
+      '-stream_loop', '-1',
+      '-re',
+      '-i', audio,
+      '-vcodec', 'libx264',
+      '-pix_fmt', 'yuvj420p',
+      '-maxrate', '2048k',
+      '-preset', 'ultrafast',
+      '-r', '12',
+      '-framerate', '1',
+      '-g', '50',
+      '-crf', '51',
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      '-ar', '44100',
+      '-strict', 'experimental',
+      '-video_track_timescale', '100',
+      '-b:v', '1500k',
+      '-f', 'flv',
+      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
       ];
 
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
@@ -153,8 +182,6 @@ const stop_stream = catchAsync(async (req, res) => {
     message: 'Stream has been stopped',
   });
 });
- 
-
 
 const active_stream_lists = catchAsync ( async (req, res)=>{
   const records = await Stream.find({user: req.user._id}).populate('user').sort({createdAt: -1});
@@ -173,4 +200,4 @@ const active_stream_lists = catchAsync ( async (req, res)=>{
 });
 
  
-module.exports = { start_stream, stop_stream, active_stream_lists } 
+module.exports = { start_stream, stop_stream, active_stream_lists, checkUserStreamLimit } 

@@ -22,9 +22,21 @@ const schema = new mongoose.Schema({
         lowercase:true,
         validate: [validator.isEmail, 'Please provide a valid email address.']
     },
-    stripe_id: {
-        type:String,
+    free_trial: {
+        type: Date,
+        default: function() {
+            const threeDaysFromNow = new Date();
+            threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+            this.freeTrialStatus = 'active';
+            return threeDaysFromNow;
+        }
     },
+    freeTrialStatus: {
+        type: String,
+        enum: ['active', 'ended'],
+        default: 'active'
+    },
+    plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
     avatar: {
         type:String,
     },
@@ -48,6 +60,10 @@ const schema = new mongoose.Schema({
         default:true,
         select:false,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now()     
+    },
     changedPasswordAt: Date,
     passwordResetToken : String,
     resetTokenExpire : Date,
@@ -64,7 +80,7 @@ schema.pre(/ˆfind/, async function(next) {
 });
 
 schema.methods.checkPassword = async function (pass, hash) { 
-    return await bcrypt.compare(pass, hash);
+   return await bcrypt.compare(pass, hash);
 }
 
 schema.methods.createPasswordResetToken  = async function() { 
@@ -73,6 +89,29 @@ schema.methods.createPasswordResetToken  = async function() {
     this.resetTokenExpire = Date.now() + 10 * 60 * 1000;
     return token;
 }
+
+schema.methods.checkFreeTrialStatus = async function() {
+    if (this.freeTrialStatus === 'active') {
+        if (this.free_trial <= new Date()) {
+            this.freeTrialStatus = 'ended';
+            this.save();
+        }
+        return 'active';
+    } else {
+        return 'ended';
+    }
+}
+
+schema.pre(/ˆfind/, async function(next) { 
+    if (this.free_trial <= new Date()) {
+        this.freeTrialStatus = 'ended';
+        this.save();
+    } else {
+        this.freeTrialStatus = 'active';
+        this.save();
+    }
+});
+
 
 const User = mongoose.model('users', schema);
 module.exports = User;

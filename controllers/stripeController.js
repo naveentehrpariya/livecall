@@ -1,7 +1,8 @@
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const Pricing = require("../db/Pricing");
-const stripe = require('stripe')('sk_test_51OOc6oCmFHIIsmOruh6oLBJN6wovOPHpBVdGEMVWALcc3SAcR3nnMCgt9ot6juPR88y9jd3qwRBikBolxUUaz27R00TwiinahX');
+const Subscription = require("../db/Subscription");
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 const domainURL = process.env.DOMAIN_URL || "http://localhost:8080";
 
 const create_pricing_plan = catchAsync ( async (req, res)=>{
@@ -59,10 +60,25 @@ const create_pricing_plan = catchAsync ( async (req, res)=>{
     } 
 });
 
+
 const subscribe = catchAsync ( async (req, res)=>{
   try {
-      const plan = await Pricing.findOne({productId:req.body.productId});
       const productId = req.body.productId;
+      const plan = await Pricing.findOne({productId:productId});
+      if(!plan){
+        res.json({
+          status:false,
+          message: "Subscription plan not found.",
+        });
+      }
+      const subcription = new Subscription({
+        plan: plan._id,
+        user: req.user._id,
+        updatedAt: Date.now(),     
+        upcomingPayment: new Date(Date.now() + (1000 * 60 * 60 * 24 * 30)), // 30 days from now
+      });
+      await subcription.save();
+
       const session = await stripe.checkout.sessions.create({
         mode: "subscription",
         line_items: [
@@ -79,9 +95,13 @@ const subscribe = catchAsync ( async (req, res)=>{
             quantity: 1
           }
         ],
-        success_url: `${domainURL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${domainURL}/canceled.html`,
-      });
+        success_url: `${domainURL}/success?subscription_id=${subcription._id}`,
+        cancel_url: `${domainURL}/canceled?subscription_id=${subcription._id}`,
+      }); 
+
+      subcription.session_id = session.id;
+      await subcription.save();
+
       res.json({
         status:true,
         url: session.url,
@@ -92,29 +112,8 @@ const subscribe = catchAsync ( async (req, res)=>{
         message: e.message,
       });
     }
-
-    // const email = 'naveen@internetbusinesssolutionsindia.com';
-    // const paymentMethodId = '';
-    // let customer = await createStripeCustomer(email);
-    // if (paymentMethodId) {
-    //   await attachPaymentMethodToCustomer(customer.id, paymentMethodId);
-    // }
-
-    // const subscription = await createStripeSubscription(customer.id, priceId);
-    // console.log("Subscription successful", subscription);
-
-    // if(subscription){ 
-    //     res.status(200).json({ 
-    //         status:true, 
-    //         subscription:subscription 
-    //     });
-    // } else {  
-    //     res.status(400).json({
-    //       status:false,
-    //       error:subscription
-    //     }); 
-    // } 
 });
+
 
 const pricing_plan_lists = catchAsync ( async (req, res)=>{
   try {
@@ -137,7 +136,64 @@ const pricing_plan_lists = catchAsync ( async (req, res)=>{
     })
 
   }
+});
+
+
+const my_subscriptions = catchAsync ( async (req, res)=>{
+  try {
+    const items = await Subscription.find({user : req.user._id}).populate('user').populate('plan').sort({createdAt: -1});
+    if(items){
+      res.status(200).json({ 
+        status:true, 
+        subscriptions:items 
+      })
+    } else {
+      res.status(400).json({ 
+        status:false, 
+        subscriptions:null 
+      })
+    }
+  } catch(err){
+    res.status(400).json({ 
+      status:false, 
+      error:err 
+    })
+
+  }
       
 });
 
-module.exports = { subscribe, create_pricing_plan, pricing_plan_lists } 
+
+const confirmSubscription = catchAsync ( async (req, res)=>{
+  try {
+    const item = await Subscription.findById(req.body.id);
+    if(req.body.status == 'success'){
+      item.status = 1;
+    } 
+    else {
+      item.status = 2;
+      item.upcomingPayment = null;
+    }
+    const updated = await item.save();
+    if(updated){
+      res.status(200).json({ 
+        status:true, 
+        message:"Payment has been completed successfully" 
+      })
+    } else {
+      res.status(400).json({ 
+        status:false, 
+        message:"Subscription payment failed." ,
+        error : updated
+      })
+    }
+  } catch(err){
+    res.status(400).json({ 
+      status:false, 
+      message:"Something went wrong Susbcription payment failed.",
+      error:err 
+    })
+  }
+});
+
+module.exports = { confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions } 

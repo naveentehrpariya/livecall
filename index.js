@@ -4,7 +4,6 @@ const cors = require('cors');
 const morgan = require('morgan')
 const { spawn } = require('child_process');
 
-
 app.use(morgan('dev')); 
 const corsOptions = {
   origin: '*',
@@ -43,7 +42,6 @@ app.get('/', (req, res)=>{
   });   
 }); 
 
-const { spawn } = require('child_process');
 const { validateToken } = require('./controllers/authController')
 const activeStreams = {}; 
 app.post('/stream/add', validateToken, async (req, res)=>{ 
@@ -100,11 +98,11 @@ app.post('/stream/add', validateToken, async (req, res)=>{
      ];
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
      activeStreams[stream._id] = child;
-     child.on('close', () => {
-       delete activeStreams[streamKey];
-     });
+      child.on('close', () => {
+        delete activeStreams[streamKey];
+      });
 
-     child.stdout.on('data', (data) => {
+      child.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
       });
       
@@ -140,28 +138,26 @@ app.get('/startlive', (req, res)=>{
 
   const ffmpegCommand = [
     'ffmpeg',
-    '-stream_loop', '-1', // Loop video input
+    '-stream_loop', '-1',
     '-re',
     '-i', video,
-    // '-stream_loop', '-1', // Removed for output
-    // '-re',
-    // '-i', audio,
+    '-stream_loop', '-1',
+    '-re',
+    '-i', audio,
     '-vcodec', 'libx264',
-    '-pix_fmt', 'yuv420p', // Specify pixel format
-    '-maxrate', '300k', // Further reduce video bitrate
-    '-bufsize', '300k',
-    '-preset', 'fast', // Balance speed and quality
-    '-r', '1', // Lower frame rate
+    '-pix_fmt', 'yuvj420p',
+    '-maxrate', '2048k',
+    '-preset', 'ultrafast',
+    '-r', '12',
     '-framerate', '1',
-    '-g', '25', // Reduce keyframe interval
-    '-crf', '51', // Adjust for acceptable quality  
+    '-g', '50',
+    '-crf', '51',
     '-c:a', 'aac',
-    '-b:a', '32k', // Reduce audio bitrate
+    '-b:a', '128k',
     '-ar', '44100',
-    '-threads', '0',
     '-strict', 'experimental',
     '-video_track_timescale', '100',
-    '-b:v', '250k', // Further reduce video bitrate
+    '-b:v', '1500k',
     '-f', 'flv',
     `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
   ];
@@ -182,11 +178,10 @@ app.get('/startlive', (req, res)=>{
   child.on('error', (err) => {
     console.error(`Child process error: ${err}`);
   });  
-
   res.send({
     status:"stream started",  
     Status :200
-});
+  });
 }); 
 
 
