@@ -46,7 +46,7 @@ const schema = new mongoose.Schema({
         select: false,
         validate: {
             validator: function (val) { return val === this.password },
-            message: 'Passwords do not match.'
+            message: "Passwords did't matched."
         }
     },
     active: {
@@ -57,6 +57,9 @@ const schema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now()
+    },
+    mailVerifiedAt: {
+        type: Date,
     },
     changedPasswordAt: Date,
     passwordResetToken: String,

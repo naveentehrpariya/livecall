@@ -2,8 +2,10 @@ const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const Pricing = require("../db/Pricing");
 const Subscription = require("../db/Subscription");
+const User = require("../db/Users");
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const domainURL = process.env.DOMAIN_URL || "http://localhost:8080";
+
 
 const create_pricing_plan = catchAsync ( async (req, res)=>{
     const isAlreadyExist = await Pricing.findOne({name:req.body.name});
@@ -99,6 +101,8 @@ const subscribe = catchAsync ( async (req, res)=>{
         cancel_url: `${domainURL}/canceled?subscription_id=${subcription._id}`,
       }); 
 
+
+      console.log("session", session)
       subcription.session_id = session.id;
       await subcription.save();
 
@@ -162,38 +166,162 @@ const my_subscriptions = catchAsync ( async (req, res)=>{
   }
       
 });
-
+ 
 
 const confirmSubscription = catchAsync ( async (req, res)=>{
   try {
     const item = await Subscription.findById(req.body.id);
-    if(req.body.status == 'success'){
-      item.status = 1;
-    } 
-    else {
-      item.status = 2;
-      item.upcomingPayment = null;
+    if(!item) {
+      res.status(400).json({
+        status:false,
+        message:"Subscription not found."
+      });
+      return;
     }
-    const updated = await item.save();
-    if(updated){
-      res.status(200).json({ 
-        status:true, 
-        message:"Payment has been completed successfully" 
-      })
+    const sessionId = item.session_id;
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if(session) {
+      const subscriptionData = await stripe.subscriptions.retrieve(session.subscription);
+      const endDate = subscriptionData.current_period_end;
+      if(session.payment_status) {
+        await User.findByIdAndUpdate(req.user._id, { plan: item.plan });
+        const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'active' });
+        if (currentSubscription) {
+          await Subscription.findByIdAndUpdate(currentSubscription._id, { status: 'inactive' });
+        }
+
+        item.upcomingPayment = new Date(endDate*1000);
+        item.status = session.payment_status;
+        item.subscription_id = session.subscription;
+
+        const updated = await item.save();
+        if(updated) {
+          res.status(200).json({
+            status:true,
+            message:"Payment has been completed successfully",
+            // session: session
+          });
+        } else {
+          res.status(400).json({
+            status:false,
+            message:"Subscription payment failed.",
+            error : updated
+          });
+        }
+      } else {
+        res.status(400).json({
+          status:false,
+          message:"Session not found."
+        });
+      }
     } else {
-      res.status(400).json({ 
-        status:false, 
-        message:"Subscription payment failed." ,
-        error : updated
-      })
+      res.status(400).json({
+        status:false,
+        message:"Session not found."
+      });
     }
-  } catch(err){
-    res.status(400).json({ 
-      status:false, 
-      message:"Something went wrong Susbcription payment failed.",
-      error:err 
-    })
+  } catch(err) {
+    res.status(400).json({
+      status:false,
+      message:"Something went wrong.",
+      error:err
+    });
   }
 });
+ 
 
-module.exports = { confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions } 
+const subscriptionRenew = catchAsync(async (req, res) => {
+  try {
+    const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'paid' }).populate('plan');
+
+    if (!currentSubscription) {
+      return res.status(400).json({
+        status: false,
+        message: "No active subscription found."
+      });
+    } 
+    
+    const currentProduct = await stripe.products.retrieve(currentSubscription.plan.productId);
+
+    if (!currentProduct) {
+      return res.status(400).json({
+        status: false,
+        message: "Product not found."
+      });
+    }
+
+    const newProduct = await stripe.products.retrieve(currentProduct.default_price.product);
+    if (!newProduct) {
+      return res.status(400).json({
+        status: false,
+        message: "New product not found."
+      });
+    }
+
+    const subscription = await stripe.subscriptions.retrieve(currentSubscription.subscription_id);
+    console.log("subscription",subscription)
+
+    if (!subscription) {
+      return res.status(400).json({
+        status: false,
+        message: "Subscription not found."
+      });
+    }
+
+    const updatedSubscription = await stripe.subscriptions.update(subscription.id, {
+      items: [{
+        price: newProduct.default_price.id,
+        quantity_mode: 1
+      }]
+    });
+
+    if (!updatedSubscription) {
+      return res.status(400).json({
+        status: false,
+        message: "Failed to update subscription."
+      });
+    }
+
+    const updatedSubscriptionItem = updatedSubscription.data.items.data.find(item => item.price === newProduct.default_price.id);
+
+    if (!updatedSubscriptionItem) {
+      return res.status(400).json({
+        status: false,
+        message: "Failed to update subscription."
+      });
+    }
+
+    const updatedSubscriptionPlan = await Pricing.findOne({ productId: newProduct.id });
+
+    if (!updatedSubscriptionPlan) {
+      return res.status(400).json({
+        status: false,
+        message: "Failed to update subscription plan."
+      });
+    }
+
+    await Subscription.findByIdAndUpdate(currentSubscription._id, {
+      plan: updatedSubscriptionPlan._id
+    });
+
+    // Update the user's upcoming payment date
+    const currentUser = await User.findById(req.user._id);
+    if (updatedSubscription.current_period_end && currentUser.upcomingPayment) {
+      const updatedPaymentDate = new Date(updatedSubscription.current_period_end * 1000);
+      await User.findByIdAndUpdate(req.user._id, {
+        upcomingPayment: updatedPaymentDate
+      });
+    }
+
+    await subscriptionRenew(req, res);
+
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: "Failed to renew subscription."
+    });
+  }
+});
+  
+module.exports = { confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew } 
