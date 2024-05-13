@@ -33,7 +33,7 @@ const validateToken = catchAsync ( async (req, res, next) => {
       try {
         const decode = await promisify(jwt.verify)(token, key);
         if(decode){ 
-          let result = await User.findById(decode.id);
+          let result = await User.findById(decode.id).populate('plan');
           req.user = result;
           next();
         } else { 
@@ -85,7 +85,7 @@ const login = catchAsync ( async (req, res, next) => {
    if(!email || !password){
       return next(new AppError("Email and password is required !!", 401))
    }
-   const user = await User.findOne({email}).select('+password');
+   const user = await User.findOne({email}).select('+password').populate('plan');
    if(!user || !(await user.checkPassword(password, user.password))){
     res.status(200).json({
       status : false,

@@ -189,5 +189,5 @@ app.all('*', (req, res, next) => {
   next(new AppError("Endpoint not found !!", 404    ));         
 });
 
-const port = 8080;
+const port = process.env.PORT;
 app.listen(port, ()=>{ console.log(`On PORT ${port} SERVER RUNNINGGGGG.....`) });
