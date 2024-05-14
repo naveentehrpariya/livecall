@@ -37,7 +37,7 @@ app.use("", require('./routes/stripeRoutes'));
  
 app.get('/', (req, res)=>{ 
   res.send({
-      status:"Active",  
+      status:"Active Latest",  
       Status :200
   });   
 }); 
