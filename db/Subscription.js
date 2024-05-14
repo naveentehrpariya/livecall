@@ -3,6 +3,9 @@ const validator = require('validator');
 
 const schema = new mongoose.Schema({
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
+    subscription_status : { 
+        type:String,
+    },
     status : { 
         type:String,
         default: 'pending', 

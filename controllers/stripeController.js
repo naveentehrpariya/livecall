@@ -77,10 +77,9 @@ const subscribe = catchAsync ( async (req, res)=>{
         plan: plan._id,
         user: req.user._id,
         updatedAt: Date.now(),     
-        upcomingPayment: new Date(Date.now() + (1000 * 60 * 60 * 24 * 30)), // 30 days from now
+        upcomingPayment: new Date(Date.now() + (1000 * 60 * 60 * 24 * 30)),
       });
       await subcription.save();
-
       const session = await stripe.checkout.sessions.create({
         mode: "subscription",
         line_items: [
@@ -97,12 +96,9 @@ const subscribe = catchAsync ( async (req, res)=>{
             quantity: 1
           }
         ],
-        success_url: `${domainURL}/success?subscription_id=${subcription._id}`,
-        cancel_url: `${domainURL}/canceled?subscription_id=${subcription._id}`,
+        success_url: `${domainURL}/subscription/success/${subcription._id}`,
+        cancel_url: `${domainURL}/subscription/cancel/${subcription._id}`,
       }); 
-
-
-      console.log("session", session)
       subcription.session_id = session.id;
       await subcription.save();
 
@@ -117,7 +113,6 @@ const subscribe = catchAsync ( async (req, res)=>{
       });
     }
 });
-
 
 const pricing_plan_lists = catchAsync ( async (req, res)=>{
   try {
@@ -142,7 +137,6 @@ const pricing_plan_lists = catchAsync ( async (req, res)=>{
   }
 });
 
-
 const my_subscriptions = catchAsync ( async (req, res)=>{
   try {
     const items = await Subscription.find({user : req.user._id}).populate('user').populate('plan').sort({createdAt: -1});
@@ -162,11 +156,8 @@ const my_subscriptions = catchAsync ( async (req, res)=>{
       status:false, 
       error:err 
     })
-
   }
-      
 });
- 
 
 const confirmSubscription = catchAsync ( async (req, res)=>{
   try {
@@ -181,26 +172,24 @@ const confirmSubscription = catchAsync ( async (req, res)=>{
     const sessionId = item.session_id;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    if(session) {
-      const subscriptionData = await stripe.subscriptions.retrieve(session.subscription);
-      const endDate = subscriptionData.current_period_end;
-      if(session.payment_status) {
+    if(session && session.id) {
+      if(session.subscription && session.payment_status === 'paid'){
+        const subscriptionData = await stripe.subscriptions.retrieve(session.subscription);
+        const endDate = subscriptionData.current_period_end;
         await User.findByIdAndUpdate(req.user._id, { plan: item.plan });
-        const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'active' });
+        const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'paid' });
         if (currentSubscription) {
-          await Subscription.findByIdAndUpdate(currentSubscription._id, { status: 'inactive' });
+          await Subscription.findByIdAndUpdate(currentSubscription._id, { subscription_status: 'inactive' });
         }
-
         item.upcomingPayment = new Date(endDate*1000);
         item.status = session.payment_status;
         item.subscription_id = session.subscription;
-
+  
         const updated = await item.save();
         if(updated) {
           res.status(200).json({
             status:true,
             message:"Payment has been completed successfully",
-            // session: session
           });
         } else {
           res.status(400).json({
@@ -212,7 +201,7 @@ const confirmSubscription = catchAsync ( async (req, res)=>{
       } else {
         res.status(400).json({
           status:false,
-          message:"Session not found."
+          message:"Your payment has been failed."
         });
       }
     } else {
@@ -302,7 +291,8 @@ const subscriptionRenew = catchAsync(async (req, res) => {
     }
 
     await Subscription.findByIdAndUpdate(currentSubscription._id, {
-      plan: updatedSubscriptionPlan._id
+      plan: updatedSubscriptionPlan._id,
+      subscription_status : 'renewed',
     });
 
     // Update the user's upcoming payment date
@@ -313,7 +303,6 @@ const subscriptionRenew = catchAsync(async (req, res) => {
         upcomingPayment: updatedPaymentDate
       });
     }
-
     await subscriptionRenew(req, res);
 
   } catch (error) {
