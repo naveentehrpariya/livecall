@@ -6,10 +6,45 @@ const { spawn } = require('child_process');
 const JSONerror = require("../utils/jsonErrorHandler");
 const Subscription = require("../db/Subscription");
 
+const resolutionSettings = {
+  '2160p': {
+    resolution: '3840x2160',
+    videoBitrate: '20000k',
+    maxrate: '30000k',
+    bufsize: '40000k',
+    preset: 'slow', // Higher quality but more CPU usage
+    gop: '120', // Keyframe interval for 4K (assuming 30fps, keyframe every 4 seconds)
+  },
+  '1080p': {
+    resolution: '1920x1080',
+    videoBitrate: '6000k',
+    maxrate: '8000k',
+    bufsize: '10000k',
+    preset: 'fast', // Good balance between quality and performance
+    gop: '60', // Keyframe interval for 1080p (assuming 30fps, keyframe every 2 seconds)
+  },
+  '720p': {
+    resolution: '1280x720',
+    videoBitrate: '3000k',
+    maxrate: '4000k',
+    bufsize: '5000k',
+    preset: 'fast',
+    gop: '60', // Keyframe interval for 720p
+  },
+  '1080x720': {
+    resolution: '720x1080',
+    videoBitrate: '3000k',
+    maxrate: '4000k',
+    bufsize: '5000k',
+    preset: 'fast',
+    gop: '60', // Keyframe interval for this unusual resolution
+  }
+};
+
 const checkUserStreamLimit = async (req, res, next) => {
   const user = req.user._id;
   const userStreams = await Stream.find({ user: user});
-  const userSubscription = await Subscription.findOne({ user: user, status: 1 }).populate('plan');
+  const userSubscription = await Subscription.findOne({ user: user, status: 'paid' }).populate('plan');
   if (userSubscription && userSubscription._id) {
       if ((userStreams.length+1) > userSubscription.plan.allowed_streams) {
         return res.json({
@@ -19,8 +54,7 @@ const checkUserStreamLimit = async (req, res, next) => {
       } else { 
         next();
       }
-  }
-  else {
+  } else {
     if (req.user.freeTrialStatus == 'active') {
       if (userStreams.length > 0) {
         return res.json({
@@ -30,6 +64,8 @@ const checkUserStreamLimit = async (req, res, next) => {
       } else { 
         next();
       }
+    }else {
+
     }
   }
 };
@@ -67,7 +103,9 @@ const start_stream = catchAsync ( async (req, res, next)=>{
      if (activeStreams[streamKey]) {
          return res.status(400).send('Stream already active.');
      }
-     const ffmpegCommand = [
+
+    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution];
+    const ffmpegCommand = [
       'ffmpeg',
       '-stream_loop', '-1',
       '-re',
@@ -75,23 +113,22 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       '-stream_loop', '-1',
       '-re',
       '-i', audio,
-      '-vcodec', 'libx264',
-      '-pix_fmt', 'yuvj420p',
-      '-maxrate', '2048k',
-      '-preset', 'ultrafast',
-      '-r', '12',
-      '-framerate', '1',
-      '-g', '50',
-      '-crf', '51',
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ar', '44100',
-      '-strict', 'experimental',
-      '-video_track_timescale', '100',
-      '-b:v', '1500k',
+      '-vf', `scale=${resolution}`, 
+      '-c:v', 'libx264', // Video codec
+      '-preset', preset, // Adjust based on your latency vs. quality needs
+      '-tune', 'zerolatency', // Tune for low latency
+      '-pix_fmt', 'yuv420p', // Pixel format
+      '-b:v', videoBitrate, // Video bitrate, adjust based on resolution
+      '-maxrate', maxrate, // Max rate
+      '-bufsize', bufsize, // Buffer size
+      '-g', gop, // GOP size (keyframe interval)
+      '-c:a', 'aac', // Audio codec
+      '-b:a', '128k', // Audio bitrate
+      '-ar', '44100', // Audio sampling rate
+      '-strict', 'experimental', // Allow experimental codecs
       '-f', 'flv',
       `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
-      ];
+    ];
 
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
      activeStreams[streamKey] = child;

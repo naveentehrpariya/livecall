@@ -17,7 +17,7 @@ app.use(errorHandler);
 app.use(globalErrorHandler); 
 const catchAsync  = require(".//utils/catchAsync");
 
-const stripe = require('stripe')('sk_test_51OOc6oCmFHIIsmOruh6oLBJN6wovOPHpBVdGEMVWALcc3SAcR3nnMCgt9ot6juPR88y9jd3qwRBikBolxUUaz27R00TwiinahX');
+// const stripe = require('stripe')('sk_test_51OOc6oCmFHIIsmOruh6oLBJN6wovOPHpBVdGEMVWALcc3SAcR3nnMCgt9ot6juPR88y9jd3qwRBikBolxUUaz27R00TwiinahX');
 const stripe = require('stripe')('sk_test_51O5itNSIg29rXj3yBHirQ8SqBJljWoFncjyaOhEFRQceT83RK26srCwS88OkzYgSo68C1cOzWlk10VBOrT7k6XlV006Js6CHHl');
 
 // Function to create a Stripe product
