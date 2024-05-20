@@ -88,7 +88,7 @@ const start_stream = catchAsync ( async (req, res, next)=>{
     const audio = req.body.audio || "https://stream.zeno.fm/ez4m4918n98uv";
     const stream = new Stream({
       title: req.body.title,
-      video: "./video.mp4", // req.body.video
+      video: req.body.video, // "./video.mp4", // req.body.video
       audio: audio,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
@@ -99,7 +99,7 @@ const start_stream = catchAsync ( async (req, res, next)=>{
 
    const savedStream = await stream.save();
    if(savedStream){
-     const video = "./video.mp4"
+     const video = req.body.video // "./video.mp4"
      if (activeStreams[streamKey]) {
          return res.status(400).send('Stream already active.');
      }
