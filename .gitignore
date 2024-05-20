@@ -9,3 +9,5 @@ config.env
 .env
 /env
 env
+uploads
+/uploads

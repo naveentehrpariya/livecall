@@ -6,7 +6,6 @@ const handleFileUpload = async (file) => {
     const filePath = file.path;
     const fileStream = fs.createReadStream(filePath);
     const originalFilename = file.originalname.replace(/\s/g, '');
-    console.log('Original file name:', originalFilename);
     const uniqueFilename = `${Date.now()}-${file.filename}-${originalFilename}`;
     const yourStorageZone = process.env.BUNNY_STORAGE_ZONE;
     const url = `https://storage.bunnycdn.com/${yourStorageZone}/${uniqueFilename}`;

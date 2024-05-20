@@ -132,8 +132,7 @@ const pricing_plan_lists = catchAsync ( async (req, res)=>{
     res.status(400).json({ 
       status:false, 
       error:err 
-    })
-
+    });
   }
 });
 
