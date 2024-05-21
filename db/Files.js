@@ -12,6 +12,9 @@ const schema = new mongoose.Schema({
       type: Date,
       default: Date.now()     
    },
+   deletedAt: {
+      type: Date,
+   },
 });
 
 const Files = mongoose.model('files', schema);

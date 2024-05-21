@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { myMedia } = require('../controllers/fileController');
+const { myMedia, deleteMedia } = require('../controllers/fileController');
 const { validateToken } = require('../controllers/authController');
 
 // types = all/ images / videos / audios;
 router.route('/my-media/:type').get(validateToken, myMedia);
+router.route('/my-media/:id').get(validateToken, deleteMedia);
 
 module.exports = router; 
 

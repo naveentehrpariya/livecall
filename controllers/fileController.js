@@ -24,7 +24,8 @@ const myMedia = catchAsync(async (req, res) => {
    const Query = new APIFeatures(
      Files.find({
        user: req.user._id,
-       mime: mimeFilter
+       mime: mimeFilter,
+       deletedAt : null
      }),
      req.query
    ).sort();
@@ -34,7 +35,33 @@ const myMedia = catchAsync(async (req, res) => {
      files: files.length ? files : [],
      message: files.length ? undefined : "No files found"
    });
- });
- 
+});
 
-module.exports = { myMedia } 
+const deleteMedia = catchAsync(async (req, res) => {
+   const { id } = req.params;
+   const file = await Files.findById(id);
+   if (!file) {
+     return res.status(404).json({
+       status: false,
+       message: "File not found"
+     });
+   }
+
+   file.deletedAt = new Date.now();
+   const saved = file.save();
+   if (saved) {
+     res.json({
+       status: true,
+       message: "File deleted successfully"
+     }); 
+   } else { 
+    res.json({
+      status: false,
+      message: "Unable to remove file at this moment.",
+      error : saved
+    }); 
+   }
+});
+
+
+module.exports = { myMedia, deleteMedia } 
