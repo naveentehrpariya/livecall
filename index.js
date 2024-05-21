@@ -22,6 +22,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const AppError = require('./utils/AppError');
 const Stream = require('./db/Stream');
 require('./db/config');
+const multer = require('multer');
  
 app.use(express.json()); 
 app.use(errorHandler);  
@@ -36,15 +37,14 @@ app.use("", require('./routes/streamRoutes'));
 app.use("", require('./routes/stripeRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 
-const multer = require('multer');
 const multerParse = multer({
   dest: "uploads/",
 });
 const handleFileUpload = require('./utils/file-upload-util');
 const { validateToken } = require('./controllers/authController');
 const Files = require('./db/Files');
-
-app.post("/cloud/upload", validateToken, multerParse.fields([{name: "attachment",},]),
+// validateToken,
+app.post("/cloud/upload",  multerParse.fields([{name: "attachment",},]),
   async (req, res) => {
     const attachment = req.files?.attachment?.[0];
     if (!attachment) {
@@ -59,6 +59,7 @@ app.post("/cloud/upload", validateToken, multerParse.fields([{name: "attachment"
           filename: uploadResponse.filename,
           url: uploadResponse.url,
           user: req.user?._id,
+          size : uploadResponse.size,
         });
         const fileupoaded = await file.save();
 

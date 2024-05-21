@@ -4,6 +4,7 @@ const schema = new mongoose.Schema({
    mime: {
         type:String,
    },
+   size: { type:String },
    filename: { type:String },
    url: { type:String },
    user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },

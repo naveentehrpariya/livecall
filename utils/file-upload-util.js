@@ -19,7 +19,8 @@ const handleFileUpload = async (file) => {
         mime: file.mimetype,
         filename: uniqueFilename,
         url: `https://runstream.b-cdn.net/${uniqueFilename}`,
-        file : file
+        file : file,
+        size : file.size,
       }
     } else {
       console.error(`Upload failed with status: ${response.status}`);
