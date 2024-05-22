@@ -47,7 +47,7 @@ const deleteMedia = catchAsync(async (req, res) => {
      });
    }
 
-   file.deletedAt = new Date.now();
+   file.deletedAt = Date.now();
    const saved = file.save();
    if (saved) {
      res.json({

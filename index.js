@@ -44,7 +44,7 @@ const handleFileUpload = require('./utils/file-upload-util');
 const { validateToken } = require('./controllers/authController');
 const Files = require('./db/Files');
 // validateToken,
-app.post("/cloud/upload",  multerParse.fields([{name: "attachment",},]),
+app.post("/cloud/upload", validateToken, multerParse.fields([{name: "attachment",},]),
   async (req, res) => {
     const attachment = req.files?.attachment?.[0];
     if (!attachment) {

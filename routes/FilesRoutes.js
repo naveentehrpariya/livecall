@@ -5,7 +5,7 @@ const { validateToken } = require('../controllers/authController');
 
 // types = all/ images / videos / audios;
 router.route('/my-media/:type').get(validateToken, myMedia);
-router.route('/my-media/:id').get(validateToken, deleteMedia);
+router.route('/delete/media/:id').get(validateToken, deleteMedia);
 
 module.exports = router; 
 

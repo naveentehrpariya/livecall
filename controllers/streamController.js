@@ -64,7 +64,7 @@ const checkUserStreamLimit = async (req, res, next) => {
       } else { 
         next();
       }
-    }else {
+    } else {
 
     }
   }
@@ -83,13 +83,11 @@ const start_stream = catchAsync ( async (req, res, next)=>{
     //     message: 'Stream already active.',
     //   });
     // }
-
-    const streamKey = req.body.streamkey;
-    const audio = req.body.audio || "https://stream.zeno.fm/ez4m4918n98uv";
+    
     const stream = new Stream({
       title: req.body.title,
-      video: req.body.video, // "./video.mp4", // req.body.video
-      audio: audio,
+      video: req.body.video, // 
+      audio: req.body.audio,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
@@ -99,7 +97,10 @@ const start_stream = catchAsync ( async (req, res, next)=>{
 
    const savedStream = await stream.save();
    if(savedStream){
-     const video = req.body.video // "./video.mp4"
+      const audio = req.body.audio // "./video.mp4"
+      const video = req.body.video // "https://stream.zeno.fm/ez4m4918n98uv"
+      const streamKey = req.body.streamkey;
+
      if (activeStreams[streamKey]) {
          return res.status(400).send('Stream already active.');
      }
@@ -130,31 +131,30 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
     ];
 
-     const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-     activeStreams[streamKey] = child;
+    const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
+    activeStreams[streamKey] = child;
 
-     child.on('close', () => {
-       delete activeStreams[streamKey];
-     });
+    child.on('close', () => {
+      delete activeStreams[streamKey];
+    });
 
-     child.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-      });
+    child.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
       
-      child.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-      });
+    child.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
 
-      child.on('error', (err) => {
-        console.error(`Child process error: ${err}`);
-      });
+    child.on('error', (err) => {
+      console.error(`Child process error: ${err}`);
+    });
 
-      res.json({
-        status : true,
-        message: 'Stream started.',
-        stream : savedStream
-      });
-
+    res.json({
+      status : true,
+      message: 'Stream started.',
+      stream : savedStream
+    });
    } else { 
      res.json({
        status : false,
@@ -169,7 +169,6 @@ const start_stream = catchAsync ( async (req, res, next)=>{
 
 const stop_stream = catchAsync(async (req, res) => {
   const { id } = req.body;
-
   if (!ObjectId.isValid(id)) {
     return res.status(400).json({
       status: false,
@@ -235,6 +234,5 @@ const active_stream_lists = catchAsync ( async (req, res)=>{
     });
   }
 });
-
  
 module.exports = { start_stream, stop_stream, active_stream_lists, checkUserStreamLimit } 
