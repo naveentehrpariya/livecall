@@ -9,7 +9,6 @@ const JSONerror = require("../utils/jsonErrorHandler");
 const SECRET_ACCESS = process.env && process.env.SECRET_ACCESS;
 const key = process && process.env && process.env.SECRET_ACCESS;
 
-
 const signToken = async (id) => {
   const token = jwt.sign(
     {id}, 
@@ -19,7 +18,6 @@ const signToken = async (id) => {
   return token
 }
 
-
 const validateToken = catchAsync ( async (req, res, next) => {
   let authHeader = req.headers.Authorization || req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer")) {
@@ -28,7 +26,7 @@ const validateToken = catchAsync ( async (req, res, next) => {
       res.status(400).json({
         status : false,
         message:"User is not authorized or Token is missing",
-      })
+      });
     } else {
       try {
         const decode = await promisify(jwt.verify)(token, key);
@@ -46,7 +44,7 @@ const validateToken = catchAsync ( async (req, res, next) => {
         res.status(401).json({
           status : false,
           message:'Invalid or expired token',
-        })
+        });
       }
     }
   } else { 

@@ -23,6 +23,8 @@
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "fluent-ffmpeg": "^2.1.2",
+    "google-auth-library": "^9.10.0",
+    "googleapis": "^137.1.0",
     "http-proxy-middleware": "^2.0.6",
     "install": "^0.13.0",
     "joi": "^17.9.1",

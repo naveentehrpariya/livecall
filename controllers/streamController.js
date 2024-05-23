@@ -41,6 +41,7 @@ const resolutionSettings = {
   }
 };
 
+
 const checkUserStreamLimit = async (req, res, next) => {
   const user = req.user._id;
   const userStreams = await Stream.find({ user: user});
@@ -89,7 +90,7 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       video: req.body.video, // 
       audio: req.body.audio,
       thumbnail: req.body.thumbnail,
-      resolution: req.body.resolution,
+      resolution: req.body.resolution || "1080p",
       stream_url: req.body.stream_url,
       streamkey: req.body.streamkey,
       user : req.user._id
@@ -97,15 +98,21 @@ const start_stream = catchAsync ( async (req, res, next)=>{
 
    const savedStream = await stream.save();
    if(savedStream){
-      const audio = req.body.audio // "./video.mp4"
+      // const audio = req.body.audio  
+      const audio = 'https://stream.zeno.fm/ez4m4918n98uv'  
       const video = req.body.video // "https://stream.zeno.fm/ez4m4918n98uv"
       const streamKey = req.body.streamkey;
+      const thumbnail = req.body.thumbnail  // "https://stream.zeno.fm/ez4m4918n98uv"
 
      if (activeStreams[streamKey]) {
          return res.status(400).send('Stream already active.');
      }
 
-    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution];
+
+    
+    //  '-i', thumbnail,
+
+    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution || '1080p'];
     const ffmpegCommand = [
       'ffmpeg',
       '-stream_loop', '-1',
@@ -114,6 +121,7 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       '-stream_loop', '-1',
       '-re',
       '-i', audio,
+      '-i', thumbnail,  // Add this line to include the thumbnail
       '-vf', `scale=${resolution}`, 
       '-c:v', 'libx264', // Video codec
       '-preset', preset, // Adjust based on your latency vs. quality needs
@@ -149,6 +157,37 @@ const start_stream = catchAsync ( async (req, res, next)=>{
     child.on('error', (err) => {
       console.error(`Child process error: ${err}`);
     });
+
+
+     // Download the thumbnail and set it using YouTube API
+     const downloadThumbnail = async (url, dest) => {
+      const response = await axios({
+        url,
+        responseType: 'stream',
+      });
+      return new Promise((resolve, reject) => {
+        const stream = response.data.pipe(fs.createWriteStream(dest));
+        stream.on('finish', () => resolve());
+        stream.on('error', (err) => reject(err));
+      });
+    };
+
+    const thumbnailPath = path.resolve(__dirname, 'thumbnail.jpg');
+    await downloadThumbnail(thumbnail, thumbnailPath);
+
+    // Upload the custom thumbnail
+    const videoId = req.body.videoId; // You need to pass the video ID of the live stream
+    const response = await youtube.thumbnails.set({
+      videoId: videoId,
+      media: {
+        mimeType: 'image/jpeg',
+        body: fs.createReadStream(thumbnailPath),
+      },
+    });
+    console.log('Thumbnail set:', response.data);
+
+    // Clean up the downloaded thumbnail file
+    fs.unlinkSync(thumbnailPath);
 
     res.json({
       status : true,
