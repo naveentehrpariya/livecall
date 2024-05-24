@@ -32,6 +32,10 @@ const schema = new mongoose.Schema({
       type:String,
       default:'usd', 
    },
+   status : {
+      type:String,
+      default:'active',
+   },
    recurring : {
       type:String,
       default:'month', 

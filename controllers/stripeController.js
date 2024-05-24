@@ -6,7 +6,6 @@ const User = require("../db/Users");
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const domainURL = process.env.DOMAIN_URL || "http://localhost:8080";
 
-
 const create_pricing_plan = catchAsync ( async (req, res)=>{
     const isAlreadyExist = await Pricing.findOne({name:req.body.name});
     if(isAlreadyExist){
@@ -60,6 +59,82 @@ const create_pricing_plan = catchAsync ( async (req, res)=>{
           error:result
       }); 
     } 
+});
+
+const update_pricing_plan = catchAsync(async (req, res) => {
+  try {
+    // Find the existing pricing plan by ID
+    const plan = await Pricing.findById(req.params.id);
+    if (!plan) {
+      return res.status(404).json({
+        status: false,
+        error: 'Pricing plan not found.',
+      });
+    }
+
+    // Update Stripe product
+    const product = await stripe.products.update(plan.productId, {
+      name: req.body.name,
+      description: req.body.description,
+    });
+
+    // Convert the existing and new prices to the same unit (cents) for comparison
+    const existingPriceInCents = plan.price * 100;
+    const newPriceInCents = parseInt(req.body.price * 100);
+
+    let priceId = plan.priceId;
+
+    // Check if the price has changed
+    if (existingPriceInCents !== newPriceInCents) {
+      // Create a new Stripe price
+      const newPrice = await stripe.prices.create({
+        product: product.id,
+        unit_amount: newPriceInCents,
+        currency: 'usd',
+        recurring: { interval: 'month' },
+      });
+
+      if (!newPrice) {
+        return res.status(400).json({
+          status: false,
+          plan: null,
+          error: 'Error creating the new price.',
+        });
+      }
+
+      // Archive the old price
+      await stripe.prices.update(plan.priceId, { active: false });
+      priceId = newPrice.id;
+    }
+
+    // Update local database
+    plan.name = req.body.name;
+    plan.description = req.body.description;
+    plan.price = req.body.price;
+    plan.allowed_streams = req.body.allowed_streams;
+    plan.storage = req.body.storage;
+    plan.priceId = priceId;
+
+    const result = await plan.save();
+
+    if (result) {
+      return res.status(200).json({
+        status: true,
+        plan: result,
+      });
+    } else {
+      return res.status(400).json({
+        status: false,
+        plan: null,
+        error: 'Error saving the updated plan.',
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      error: error.message,
+    });
+  }
 });
 
 
@@ -217,7 +292,6 @@ const confirmSubscription = catchAsync ( async (req, res)=>{
     });
   }
 });
- 
 
 const subscriptionRenew = catchAsync(async (req, res) => {
   try {
@@ -312,4 +386,4 @@ const subscriptionRenew = catchAsync(async (req, res) => {
   }
 });
   
-module.exports = { confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew } 
+module.exports = { confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 
