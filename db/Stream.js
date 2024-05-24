@@ -34,6 +34,9 @@ const schema = new mongoose.Schema({
         type:String,
         minLength:[10, 'Stream key is too short or invalid.'],
     },
+    streamId: {
+        type:String,
+    },
     active : { 
         type:Boolean,
         default:true,

@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan')
-const { spawn } = require('child_process');
 
 app.use(morgan('dev')); 
 const corsOptions = {
@@ -43,7 +42,6 @@ const multerParse = multer({
 const handleFileUpload = require('./utils/file-upload-util');
 const { validateToken } = require('./controllers/authController');
 const Files = require('./db/Files');
-// validateToken,
 app.post("/cloud/upload", validateToken, multerParse.fields([{name: "attachment",},]),
   async (req, res) => {
     const attachment = req.files?.attachment?.[0];
