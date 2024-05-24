@@ -9,4 +9,3 @@ config.env
 uploads
 uploads
 client_secret.json
-/client_secret.json
