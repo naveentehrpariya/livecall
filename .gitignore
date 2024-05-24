@@ -5,9 +5,7 @@ backend/node_modules
 /e-com/node_modules
 e-com/node_modules
 config.env
-/config.env
 .env
-/env
-env
 uploads
-/uploads
+uploads
+client_secret.json
