@@ -200,7 +200,6 @@ const downloadThumbnail = async (url, dest) => {
   });
 };
 
-
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const createAndBindLiveBroadcast = async (youtube, title) => {
@@ -247,7 +246,8 @@ const createAndBindLiveBroadcast = async (youtube, title) => {
   });
   
   const streamId = streamResponse.data.id;
-  
+  const streamUrl = `https://www.youtube.com/watch?v=${streamId}`
+  console.log(`streamUrl`,streamUrl)
   // Step 3: Introduce delay before next API call
   await delay(3000); // 1-second delay
 
@@ -455,18 +455,18 @@ const start_streams = catchAsync (async (req, res, next) => {
 
 const start_stream = catchAsync ( async (req, res, next)=>{
   try {
-    // const { title, video, audio, thumbnail } = req.body;
+    const { title, video, audio, thumbnail } = req.body;
 
-    // const userId = req.user._id;
-    // const token = await getStoredToken(userId);
-    // const credentials = loadClientSecrets();
-    // const oAuth2Client = getOAuth2Client(credentials, redirectUri);
-    // await oAuth2Client.setCredentials(token);
+    const userId = req.user._id;
+    const token = await getStoredToken(userId);
+    const credentials = loadClientSecrets();
+    const oAuth2Client = getOAuth2Client(credentials, redirectUri);
+    await oAuth2Client.setCredentials(token);
 
-    // // Create live broadcast
-    // const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
-    // const streamData = await createAndBindLiveBroadcast(youtube, title);
-    // console.log('streamData :', streamData);
+    // Create live broadcast
+    const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
+    const streamData = await createAndBindLiveBroadcast(youtube, title);
+    console.log('streamData :', streamData);
 
     const streamKey = req.body.streamkey;
     const stream = new Stream({
@@ -486,13 +486,16 @@ const start_stream = catchAsync ( async (req, res, next)=>{
      if (activeStreams[streamKey]) {
          return res.status(400).send('Stream already active.');
      }
-
+    const audio = "https://stream.zeno.fm/ez4m4918n98uv";
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution];
     const ffmpegCommand = [
       'ffmpeg',
       '-stream_loop', '-1',
       '-re',
       '-i', video,
+      '-stream_loop', '-1',
+      '-re',
+      '-i', audio,
       '-vf', `scale=${resolution}`, 
       '-c:v', 'libx264', // Video codec
       '-preset', preset, // Adjust based on your latency vs. quality needs
@@ -509,6 +512,7 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       '-f', 'flv',
       `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
     ];
+    
 
      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
      activeStreams[streamKey] = child;
