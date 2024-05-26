@@ -10,40 +10,9 @@ const readline = require('readline');
 const Token = require("../db/Token");
 const axios = require("axios");
 const logger = require("../utils/logger");
+const SizeReducer = require("../utils/SizeReducer");
+const JSONerror = require("../utils/jsonErrorHandler");
 
-const checkUserStreamLimit = async (req, res, next) => {
-  const user = req.user._id;
-  const userStreams = await Stream.find({ user: user});
-  console.log("userStreams",userStreams)
-  const userSubscription = await Subscription.findOne({ user: user, status: 'paid' }).populate('plan');
-  console.log("userSubscription",userSubscription)
-  console.log("req.user.trialStatus",req.user.trialStatus)
-  if (userSubscription && userSubscription._id) {
-      if ((userStreams.length+1) > userSubscription.plan.allowed_streams) {
-        return res.json({
-          status: false,
-          message: 'You have reached your allowed stream limit. Please upgrade to higher plan.'
-        });
-      } else { 
-        next();
-      }
-  } else {
-    if (req.user.trialStatus === 'active') {
-        if (userStreams.length > 0) {
-          return res.json({
-            status: false,
-            message: 'You are allowed only 1 stream in free trial. Please upgrade subscription to create another stream.'
-          });
-        }
-        next();
-    } else {
-      return res.json({
-        status: false,
-        message: "You free trial has been ended. You don't have any active subscription plan to start a live stream."
-      });
-    }
-  }
-};
 
 const resolutionSettings = {
   '2160p': {
@@ -153,11 +122,11 @@ const getStoredToken = async (userId) => {
 };
 
 // Route to initiate OAuth2 flow
+const redirectUri = process.env.DOMAIN_URL+"/oauth2callback";
 const oauth = async (req, res) => {
   try {
-    const redirectUri = `http://localhost:8080/oauth2callback`;
     const credentials = loadClientSecrets();
-    if (!credentials) {
+    if (!credentials){
       res.status(500).send('Error loading client secrets');
       return;
     }
@@ -168,7 +137,6 @@ const oauth = async (req, res) => {
       return;
     }
     const authUrl = generateAuthUrl(oAuth2Client);
-    console.log("Auth URL:", authUrl);
     if (!authUrl) {
       res.json({
         status:false,
@@ -192,7 +160,6 @@ const oauth2callback = async (req, res) => {
     const userId = req.user._id;
     console.log("userId",userId)
     const code = req.query.code;
-    const redirectUri = `http://localhost:8080/oauth2callback`;
     const credentials = loadClientSecrets();
     console.log("Credentials:", credentials);
     if (!credentials) {
@@ -221,28 +188,6 @@ const oauth2callback = async (req, res) => {
   }
 };
 
-// Function to create a live broadcast and get the video ID
-const createLiveBroadcast = async (auth, title) => {
-  const youtube = google.youtube({ version: 'v3', auth });
-  const res = await youtube.liveBroadcasts.insert({
-    part: 'snippet,status,contentDetails',
-    resource: {
-      snippet: {
-        title: title,
-        scheduledStartTime: new Date().toISOString(),
-      },
-      status: {
-        privacyStatus: 'public',
-      },
-      contentDetails: {
-        enableAutoStart: true,
-        enableAutoStop: true,
-      },
-    },
-  });
-  return res.data.id; // This is the videoId
-};
-
 const downloadThumbnail = async (url, dest) => {
   const response = await axios({
     url,
@@ -255,21 +200,89 @@ const downloadThumbnail = async (url, dest) => {
   });
 };
 
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const createAndBindLiveBroadcast = async (youtube, title) => {
+  const scheduledStartTime = new Date(Date.now() + 15000).toISOString();
+  
+  // Step 1: Create the live broadcast
+  const broadcastResponse = await youtube.liveBroadcasts.insert({
+    part: 'snippet,status,contentDetails',
+    requestBody: {
+      snippet: {
+        title: title,
+        description: 'This is a test broadcast',
+        scheduledStartTime: scheduledStartTime,
+      },
+      status: {
+        privacyStatus: 'public',
+      },
+      contentDetails: {
+        monitorStream: {
+          enableMonitorStream: true,
+        },
+      },
+    },
+  });
+  
+  const broadcastId = broadcastResponse.data.id;
+  
+  // Step 2: Introduce delay before next API call
+  await delay(3000); // 1-second delay
+
+  // Step 2: Create the live stream
+  const streamResponse = await youtube.liveStreams.insert({
+    part: 'snippet,cdn',
+    requestBody: {
+      snippet: {
+        title: title,
+      },
+      cdn: {
+        ingestionType: 'rtmp',
+        resolution: '1080p',
+        frameRate: '30fps',
+      },
+    },
+  });
+  
+  const streamId = streamResponse.data.id;
+  
+  // Step 3: Introduce delay before next API call
+  await delay(3000); // 1-second delay
+
+  // Step 3: Bind the broadcast to the stream
+  const bindResponse = await youtube.liveBroadcasts.bind({
+    part: 'id,contentDetails',
+    id: broadcastId,
+    streamId: streamId,
+  });
+  
+  return {
+    broadcast: broadcastResponse.data,
+    stream: streamResponse.data,
+    bind: bindResponse.data,
+  };
+};
+
+
+const startLiveBroadcast = async (auth, broadcastId) => {
+  const youtube = google.youtube({ version: 'v3', auth });
+  const response = await youtube.liveBroadcasts.transition({
+    part: 'status',
+    id: broadcastId,
+    broadcastStatus: 'live',
+  });
+  console.log("response",response)
+  return response.data;
+};
+
+
 let activeStreams = {};
-const start_stream = async (req, res, next) => {
-  const userId = req.user._id; 
-  const { title, video, audio, thumbnail, streamkey, resolution = '1080p' } = req.body;
+const start_streams = catchAsync (async (req, res, next) => {
   try {
-
-    // const isAlready = await Stream.findOne({streamkey: req.body.streamkey});
-    // console.log(isAlready)
-    // if(isAlready){ 
-    //   res.json({
-    //     status : false,
-    //     message: 'Stream already active.',
-    //   });
-    // }
-
+    const userId = req.user._id;
+    const { title, video, audio, thumbnail } = req.body;
     const token = await getStoredToken(userId);
     if (!token) {
       return res.status(400).json({
@@ -277,92 +290,152 @@ const start_stream = async (req, res, next) => {
         message: 'No linked account found for this user.',
       });
     }
-   
-    const credentials = loadClientSecrets();
-    const oAuth2Client = getOAuth2Client(credentials, `http://localhost:8080/oauth2callback`);
-    oAuth2Client.setCredentials(token);
 
-    // Create a YouTube live broadcast
-    const videoId = await createLiveBroadcast(oAuth2Client, title);
-    console.log("videoId", videoId);
-    const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
-    await downloadThumbnail(thumbnail, thumbnailPath);
+    // const credentials = loadClientSecrets();
+    // const oAuth2Client = getOAuth2Client(credentials, redirectUri);
+    // await oAuth2Client.setCredentials(token);
 
-    const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
-    await youtube.thumbnails.set({
-      videoId: videoId,
-      media: {
-        mimeType: 'image/jpeg',
-        body: fs.createReadStream(thumbnailPath),
-      },
-    });
+    // // Calculate a scheduled start time 15 seconds from now
+    // const scheduledStartTime = new Date(Date.now() + 15000).toISOString();
 
-    const streamUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    fs.unlinkSync(thumbnailPath);
+    // // Create live broadcast
+    // const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
+    // const broadcastResponse = await youtube.liveBroadcasts.insert({
+    //   part: 'snippet,status,contentDetails',
+    //   requestBody: {
+    //     snippet: {
+    //       title: title,
+    //       description: 'This is a test broadcast',
+    //       scheduledStartTime: scheduledStartTime,
+    //     },
+    //     status: {
+    //       privacyStatus: 'public',
+    //     },
+    //     contentDetails: {
+    //       monitorStream: {
+    //         enableMonitorStream: true,
+    //       },
+    //     },
+    //   },
+    // });
+    // const broadcast = broadcastResponse.data;
+    // console.log('Broadcast created:', broadcast);
+
+    // // Create live stream
+    // const liveStreamResponse = await youtube.liveStreams.insert({
+    //   part: 'snippet,cdn',
+    //   requestBody: {
+    //     snippet: {
+    //       title: title,
+    //     },
+    //     cdn: {
+    //       ingestionType: 'rtmp',
+    //       resolution: '1080p',
+    //       frameRate: '30fps',
+    //     },
+    //   },
+    // });
+    // const liveStream = liveStreamResponse.data;
+    // console.log('Live stream created:', liveStream);
+
+    // // Bind broadcast to stream
+    // youtube.liveBroadcasts.bind({
+    //   part: 'id,contentDetails',
+    //   id: broadcast.id,
+    //   streamId: liveStream.id,
+    // });
+
+    // Download and set the thumbnail
+    // const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
+    // const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
+    // await downloadThumbnail(thumbnail, thumbnailPath);
+    // console.log('Thumbnail downloaded and saved:');
+    // await SizeReducer(thumbnailPath, OutputPath);
+    // console.log('Thumbnail resized and saved:');
+
+    // await youtube.thumbnails.set({
+    //   videoId: broadcast.id,
+    //   media: {
+    //     mimeType: 'image/jpeg',
+    //     body: fs.createReadStream(OutputPath),
+    //   },
+    // });
+    // console.log('Thumbnail set.');
+
+    // await new Promise(resolve => setTimeout(resolve, 20000));
+    // const transitionResponse = await youtube.liveBroadcasts.transition({
+    //   part: 'status',
+    //   id: broadcast.id,
+    //   broadcastStatus: 'live',
+    // });
+
+    // if (transitionResponse.data.status !== 'live') {
+    //   return res.status(500).json({ status: false, message: 'Failed to transition to live.' });
+    // }
+
+    // const streamUrl = `https://www.youtube.com/watch?v=${broadcast.id}`;
+    // fs.unlinkSync(thumbnailPath);
+    // fs.unlinkSync(OutputPath);
 
     const stream = new Stream({
       title: req.body.title,
-      video: req.body.video, // 
+      video: req.body.video,
       audio: req.body.audio,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution || "1080p",
       stream_url: req.body.stream_url,
       streamkey: req.body.streamkey,
-      user : req.user._id,
-      streamId: videoId
+      user: req.user._id,
+      // streamId: broadcast.id,
     });
 
     const savedStream = await stream.save();
-    if (activeStreams[streamKey]) {
-        return res.status(400).send('Stream already active.');
+    if (activeStreams[req.body.streamkey]) {
+      return res.status(400).send('Stream already active.');
     }
-   
-    // Start ffmpeg stream
+    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution];
     const ffmpegCommand = [
       'ffmpeg',
       '-stream_loop', '-1',
       '-re',
       '-i', video,
-      '-stream_loop', '-1',
-      '-re',
-      '-i', audio,
-      '-vf', `scale=${resolutionSettings[resolution].resolution}`,
-      '-c:v', 'libx264',
-      '-preset', resolutionSettings[resolution].preset,
-      '-tune', 'zerolatency',
-      '-pix_fmt', 'yuv420p',
-      '-b:v', resolutionSettings[resolution].videoBitrate,
-      '-maxrate', resolutionSettings[resolution].maxrate,
-      '-bufsize', resolutionSettings[resolution].bufsize,
-      '-g', resolutionSettings[resolution].gop,
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ar', '44100',
-      '-strict', 'experimental',
+      '-vf', `scale=${resolution}`, 
+      '-c:v', 'libx264', // Video codec
+      '-preset', preset, // Adjust based on your latency vs. quality needs
+      '-tune', 'zerolatency', // Tune for low latency
+      '-pix_fmt', 'yuv420p', // Pixel format
+      '-b:v', videoBitrate, // Video bitrate, adjust based on resolution
+      '-maxrate', maxrate, // Max rate
+      '-bufsize', bufsize, // Buffer size
+      '-g', gop, // GOP size (keyframe interval)
+      '-c:a', 'aac', // Audio codec
+      '-b:a', '128k', // Audio bitrate
+      '-ar', '44100', // Audio sampling rate
+      '-strict', 'experimental', // Allow experimental codecs
       '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`,
+      `rtmp://a.rtmp.youtube.com/live2/${req.body.streamkey}`,
     ];
 
-    const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-    activeStreams[streamkey] = child;
+     const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
+     activeStreams[req.body.streamkey] = child;
 
-    child.on('close', () => {
-      delete activeStreams[streamkey];
-    });
+     child.on('close', () => {
+       delete activeStreams[req.body.streamkey];
+     });
 
-    child.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
+     child.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      
+      child.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
 
-    child.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-    });
+      child.on('error', (err) => {
+        console.error(`Child process error: ${err}`);
+      });
 
-    child.on('error', (err) => {
-      console.error(`Child process error: ${err}`);
-    });
-
-    if(!savedStream){
+    if (!savedStream) {
       res.json({
         status: false,
         message: 'Failed to create stream.',
@@ -372,12 +445,107 @@ const start_stream = async (req, res, next) => {
     res.json({
       status: true,
       message: 'Stream started.',
-      streamUrl: streamUrl,
+      // streamUrl: streamUrl,
     });
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
   }
-};
+});
+
+
+const start_stream = catchAsync ( async (req, res, next)=>{
+  try {
+    // const { title, video, audio, thumbnail } = req.body;
+
+    // const userId = req.user._id;
+    // const token = await getStoredToken(userId);
+    // const credentials = loadClientSecrets();
+    // const oAuth2Client = getOAuth2Client(credentials, redirectUri);
+    // await oAuth2Client.setCredentials(token);
+
+    // // Create live broadcast
+    // const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
+    // const streamData = await createAndBindLiveBroadcast(youtube, title);
+    // console.log('streamData :', streamData);
+
+    const streamKey = req.body.streamkey;
+    const stream = new Stream({
+      title: req.body.title,
+      video: req.body.video, 
+      audio: req.body.audio,
+      thumbnail: req.body.thumbnail,
+      resolution: req.body.resolution,
+      stream_url: req.body.stream_url,
+      streamkey: req.body.streamkey,
+      user : req.user._id
+    });
+
+   const savedStream = await stream.save();
+   if(savedStream){
+     const video = req.body.video
+     if (activeStreams[streamKey]) {
+         return res.status(400).send('Stream already active.');
+     }
+
+    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution];
+    const ffmpegCommand = [
+      'ffmpeg',
+      '-stream_loop', '-1',
+      '-re',
+      '-i', video,
+      '-vf', `scale=${resolution}`, 
+      '-c:v', 'libx264', // Video codec
+      '-preset', preset, // Adjust based on your latency vs. quality needs
+      '-tune', 'zerolatency', // Tune for low latency
+      '-pix_fmt', 'yuv420p', // Pixel format
+      '-b:v', videoBitrate, // Video bitrate, adjust based on resolution
+      '-maxrate', maxrate, // Max rate
+      '-bufsize', bufsize, // Buffer size
+      '-g', gop, // GOP size (keyframe interval)
+      '-c:a', 'aac', // Audio codec
+      '-b:a', '128k', // Audio bitrate
+      '-ar', '44100', // Audio sampling rate
+      '-strict', 'experimental', // Allow experimental codecs
+      '-f', 'flv',
+      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
+    ];
+
+     const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
+     activeStreams[streamKey] = child;
+
+     child.on('close', () => {
+       delete activeStreams[streamKey];
+     });
+
+     child.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      
+      child.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+
+      child.on('error', (err) => {
+        console.error(`Child process error: ${err}`);
+      });
+
+      res.json({
+        status : true,
+        message: 'Stream started.',
+        stream : savedStream
+      });
+
+   } else { 
+     res.json({
+       status : false,
+       message: 'Failed to create stream.',
+       errors : savedStream
+     });
+   }
+  } catch (err){
+    JSONerror(res, err, next);
+  }
+});
 
 
 const stop_stream = catchAsync(async (req, res) => {
@@ -432,22 +600,4 @@ const stop_stream = catchAsync(async (req, res) => {
   });
 });
 
-
-const active_stream_lists = catchAsync ( async (req, res)=>{
-  const records = await Stream.find({user: req.user._id}).populate('user').sort({createdAt: -1});
-  if (records) {
-    res.json({
-      status : true,
-      streams : records
-    });
-  } else {
-    res.json({
-      status : false,
-      streams : [],
-      error : records
-    });
-  }
-});
-
-
-module.exports = { start_stream, stop_stream, active_stream_lists, checkUserStreamLimit, oauth, oauth2callback } 
+module.exports = { start_stream, stop_stream, oauth, oauth2callback } 

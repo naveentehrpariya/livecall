@@ -54,6 +54,10 @@ const schema = new mongoose.Schema({
         default: true,
         select: false,
     },
+    role: {
+        type: String,
+        default:'0'
+    },
     createdAt: {
         type: Date,
         default: Date.now()
