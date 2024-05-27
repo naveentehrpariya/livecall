@@ -54,7 +54,7 @@ const active_stream_lists = catchAsync ( async (req, res)=>{
 });
 
 const checkIsYoutubeLinked = catchAsync ( async (req, res)=>{
-  const tokens = await Token.findOne({user: req.user._id});
+  const tokens = await Token.findOne({user: req.user._id, status:"active"});
   if (tokens) {
     res.json({
       status : true,
@@ -68,4 +68,21 @@ const checkIsYoutubeLinked = catchAsync ( async (req, res)=>{
   }
 });
  
-module.exports = {   checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 
+const unLinkYoutube = catchAsync ( async (req, res)=>{
+  const tokens = await Token.findOne({user: req.user._id, status :"active"});
+  tokens.status = "notactive";
+  const saved = await tokens.save();
+  if (saved){
+    res.json({
+      status : true,
+      message : "Youtube account is unlinked successfully."
+    });
+  } else {
+    res.json({
+      status : false,
+      message : "Youtube account is not unlinked."
+    });
+  }
+});
+ 
+module.exports = {  unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 

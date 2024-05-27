@@ -19,8 +19,8 @@ const errorHandler = require("./middlewares/errorHandler");
 const AppError = require('./utils/AppError');
 require('./db/config');
 
-const compression = require('compression');
-app.use(compression());
+// const compression = require('compression');
+// app.use(compression());
 
 const multer = require('multer');
 app.use(express.json()); 

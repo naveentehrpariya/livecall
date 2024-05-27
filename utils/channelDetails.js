@@ -1,23 +1,64 @@
-const channelDetails = async (youtube, tt) => {
-     try {
-      const token = {
-         "access_token":"ya29.a0AXooCgvMepbnw_9yjkCrMvEXWJuNxQF1zmJBAsg2u0KgiLI75NhZX4O14xYkgT732RmF1vcwbrd_bAEMNRrfcVMK9oYJk_j-k6OgCDAIJ5IWPL_q4LQaNUdgdGoPAe0rntoFZQ3tDPgAw2nCjcPRf-CTVkVqah0--wizaCgYKAeASAQ8SFQHGX2MioLqPMT-N79sy7cElj0IDFg0171",
-         "refresh_token":"1//0gDtHJIlPJdreCgYIARAAGBASNwF-L9IrPyyke9T9yGElY3QdQCuC6AvOjyX_o2mJStqyjbY0W64ONUzkwQqU2eJTpsDkovTkwSI",
-         "scope":"https://www.googleapis.com/auth/youtube.force-ssl",
-         "token_type":"Bearer",
-         "expiry_date":1716728162598
-      }
-      const response = await youtube.channels.list({
-         part: 'nippet,contentDetails,statistics',
-         mine: true,
-         auth: token,
-       });
-       const channel = response.data.items[0];
-       return channel;
-     } catch (error) {
-       console.error('Error retrieving channel details:', error);
-       throw error;
-     }
- };
+const { google } = require('googleapis');
+const fs = require('fs');
+const path = require('path');
+const redirectUri = process.env.DOMAIN_URL + "/oauth2callback";
 
- module.exports = channelDetails;
+const CLIENT_SECRETS_FILE = 'client_secret.json';
+
+const loadClientSecrets = async () => {
+  try {
+    const content = fs.readFileSync(CLIENT_SECRETS_FILE, 'utf8');
+    return JSON.parse(content);
+  } catch (err) {
+    console.error('Error loading client secrets:', err);
+    return null;
+  }
+};
+
+const getOAuth2Client = async (credentials, redirectUri) => {
+  try {
+    const { client_secret, client_id } = credentials.web;
+    return new google.auth.OAuth2(client_id, client_secret, redirectUri);
+  } catch (err) {
+    console.error('Error creating OAuth2 client:', err);
+    return null;
+  }
+};
+
+const channelDetails = async (token) => {
+  try {
+    const credentials = await loadClientSecrets();
+    if (!credentials) {
+      throw new Error('Failed to load client secrets');
+    }
+
+    console.log("credentials getted",credentials)
+
+    const oAuth2Client = await getOAuth2Client(credentials, redirectUri);
+    if (!oAuth2Client) {
+      throw new Error('Failed to create OAuth2 client');
+    }
+
+    // Set the credentials (token) on the OAuth2 client
+    oAuth2Client.setCredentials(token);
+
+    const youtube = google.youtube({
+      version: 'v3',
+      auth: oAuth2Client,
+    });
+
+    const response = await youtube.channels.list({
+      part: 'snippet,contentDetails,statistics',
+      mine: true,
+    });
+
+    console.log("channel response", response);
+    const channel = response.data.items[0];
+    return channel;
+  } catch (error) {
+    console.error('Error retrieving channel details:', error);
+    throw error;
+  }
+};
+
+module.exports = channelDetails;

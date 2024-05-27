@@ -5,7 +5,7 @@ const { validateToken } = require('../controllers/authController');
 const cacheMiddleware = require('../middlewares/cacheMiddleware');
 
 // types = all/ images / videos / audios;
-router.route('/my-media/:type').get(validateToken, cacheMiddleware, myMedia);
+router.route('/my-media/:type').get(validateToken, myMedia);
 router.route('/delete/media/:id').get(validateToken, deleteMedia);
 
 module.exports = router; 

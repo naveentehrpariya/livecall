@@ -17,16 +17,16 @@ const schema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: [true, 'Please enter your email address.'],
         lowercase: true,
-        validate: [validator.isEmail, 'Please provide a valid email address.']
+        validate: [validator.isEmail, 'Please provide a valid email address.'],
+        unique: true
     },
     free_trial: {
         type: Date,
         default: function () {
             const threeDaysFromNow = new Date();
-            threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+            threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 1);
             return threeDaysFromNow;
         }
     },

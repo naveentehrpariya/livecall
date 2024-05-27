@@ -25,14 +25,14 @@ const myMedia = catchAsync(async (req, res) => {
      Files.find({
        user: req.user._id,
        mime: mimeFilter,
-       deletedAt : null
+       deletedAt : null || ''
      }),
      req.query
    ).sort();
    const files = await Query.query;
    res.json({
      status: true,
-     files: files.length ? files : [],
+     files: files,
      message: files.length ? undefined : "No files found"
    });
 });

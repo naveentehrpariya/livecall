@@ -7,6 +7,10 @@ const schema = new mongoose.Schema({
       type: Date,
       default: Date.now()     
    },
+   status:{
+      type: String,
+      default: 'active'
+   }
 });
 
 const Token = mongoose.model('tokens', schema);

@@ -1,0 +1,25 @@
+2024-05-27T15:14:47.219Z [INFO]: get token [object Object]
+2024-05-27T15:14:47.224Z [INFO]: initilize youtube auth [object Object]
+2024-05-27T15:14:50.086Z [INFO]: broadcastResponse response 
+2024-05-27T15:14:54.485Z [INFO]: stream created 
+2024-05-27T15:14:58.828Z [INFO]: stream broadcast or live stream created 
+2024-05-27T15:14:58.828Z [INFO]: streamData [object Object]
+2024-05-27T15:14:58.829Z [INFO]: uploading thumbnail
+2024-05-27T15:15:02.433Z [INFO]: downloading thumbnail
+2024-05-27T15:15:02.434Z [INFO]: downloading thumbnail is about to finish.
+2024-05-27T15:15:03.267Z [INFO]: Thumbnail downloaded and saved:
+2024-05-27T15:15:03.326Z [INFO]: Thumbnail resized and saved:
+2024-05-27T15:15:06.159Z [INFO]: Thumbnail set.
+2024-05-27T15:15:14.484Z [INFO]: Stream create error. Error: Stream is inactive
+2024-05-27T15:40:26.636Z [INFO]: get token [object Object]
+2024-05-27T15:40:26.639Z [INFO]: initilize youtube auth [object Object]
+2024-05-27T15:40:29.438Z [INFO]: broadcastResponse response 
+2024-05-27T15:40:33.716Z [INFO]: stream created 
+2024-05-27T15:40:38.423Z [INFO]: stream broadcast or live stream created 
+2024-05-27T15:40:38.423Z [INFO]: streamData [object Object]
+2024-05-27T15:40:38.424Z [INFO]: uploading thumbnail
+2024-05-27T15:40:42.003Z [INFO]: downloading thumbnail
+2024-05-27T15:40:42.004Z [INFO]: downloading thumbnail is about to finish.
+2024-05-27T15:40:42.827Z [INFO]: Thumbnail downloaded and saved:
+2024-05-27T15:40:42.876Z [INFO]: Thumbnail resized and saved:
+2024-05-27T15:40:46.017Z [INFO]: Thumbnail set.
