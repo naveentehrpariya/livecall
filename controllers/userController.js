@@ -12,13 +12,22 @@ const filterObj = async (obj, ...allowed) => {
 
 exports.updateCurrentUserData = catchAsync( async (req, res, next) => { 
    if(req.body.password || req.body.confirmPassword){
-      return next(new AppError('Password can not changed via this request.', 400));
+      res.json({
+         status:false,
+         message:"'Password can not changed via this request.'"
+      });
    }
-   const allowedFields = await filterObj(req.body, 'name', 'email');
+   const allowedFields = await filterObj(req.body, 'name', 'email', 'username', 'avatar');
    const user = await User.findByIdAndUpdate(req.user.id, allowedFields, {
       new : true, 
       runValidators : true
    });
+
+   if(req.body.email !== ''){
+     user.mailVerifiedAt = null
+     await user.save();
+   }
+
    return res.status(200).json({
       status:true,
       user: user,
@@ -26,9 +35,8 @@ exports.updateCurrentUserData = catchAsync( async (req, res, next) => {
    });
 });
 
-
 exports.deleteCurrentUser = catchAsync( async (req, res, next) => { 
-   const user = await User.findByIdAndUpdate(req.user.id, { active:false});
+   const user = await User.findByIdAndUpdate(req.user.id, { status:"inactive"});
    return res.status(200).json({
       status:true,
       user:user,

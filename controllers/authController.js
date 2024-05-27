@@ -55,7 +55,6 @@ const validateToken = catchAsync ( async (req, res, next) => {
   }
 });
 
-
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, avatar, password, confirmPassword } = req.body;
   await User.syncIndexes();
@@ -77,13 +76,18 @@ const signup = catchAsync(async (req, res, next) => {
   });
 });
 
-
 const login = catchAsync ( async (req, res, next) => { 
    const { email, password } = req.body;
    if(!email || !password){
       return next(new AppError("Email and password is required !!", 401))
    }
    const user = await User.findOne({email}).select('+password').populate('plan');
+   if(user.status === 'inactive'){
+    res.status(200).json({
+      status : false,
+      message:"Your account is suspended !!",
+     });
+   }
    if(!user || !(await user.checkPassword(password, user.password))){
     res.status(200).json({
       status : false,
@@ -104,9 +108,6 @@ const login = catchAsync ( async (req, res, next) => {
    });
 });
 
-
-
-
 const profile = catchAsync ( async (req, res) => {
   if(req.user){
      res.status(200).json({
@@ -120,7 +121,6 @@ const profile = catchAsync ( async (req, res) => {
     });
   }
 });
-
 
 const forgotPassword = catchAsync ( async (req, res, next) => {
   // 1. Check is email valid or not
@@ -178,5 +178,4 @@ const resetpassword = catchAsync ( async (req, res, next) => {
   }); 
 });
 
-
-module.exports = {  signup, login, validateToken, profile, forgotPassword,resetpassword };
+module.exports = { signup, login, validateToken, profile, forgotPassword, resetpassword };

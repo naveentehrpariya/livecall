@@ -53,7 +53,6 @@ const active_stream_lists = catchAsync ( async (req, res)=>{
   }
 });
 
-
 const checkIsYoutubeLinked = catchAsync ( async (req, res)=>{
   const tokens = await Token.findOne({user: req.user._id});
   if (tokens) {
@@ -68,5 +67,5 @@ const checkIsYoutubeLinked = catchAsync ( async (req, res)=>{
     });
   }
 });
-
-module.exports = { checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 
+ 
+module.exports = {   checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 

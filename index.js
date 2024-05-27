@@ -19,20 +19,13 @@ const errorHandler = require("./middlewares/errorHandler");
 const AppError = require('./utils/AppError');
 require('./db/config');
 
+const compression = require('compression');
+app.use(compression());
+
 const multer = require('multer');
 app.use(express.json()); 
 app.use(errorHandler);  
 app.use(globalErrorHandler); 
-
-
-const rateLimit = require("express-rate-limit");
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
-  message: "Too many requests from this IP, please try again later",
-});
-
-app.use(limiter);
 
 // ROUTES
 app.use("/user", require('./routes/authRoutes'));
@@ -42,13 +35,14 @@ app.use("", require('./routes/streamRoutes'));
 app.use("", require('./routes/stripeRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 
+app.use("/admin", require('./routes/adminRoutes'));
 const multerParse = multer({
   dest: "uploads/",
 });
-
 const handleFileUpload = require('./utils/file-upload-util');
 const { validateToken } = require('./controllers/authController');
 const Files = require('./db/Files');
+
 app.post("/cloud/upload", validateToken, multerParse.fields([{name: "attachment",},]),
   async (req, res) => {
     const attachment = req.files?.attachment?.[0];
@@ -96,8 +90,8 @@ app.post("/cloud/upload", validateToken, multerParse.fields([{name: "attachment"
 
 app.get('/', (req, res)=>{ 
   res.send({
-      status:"Active Latest",  
-      Status :200
+      message:"ACTIVE",  
+      status :200
   });   
 }); 
 

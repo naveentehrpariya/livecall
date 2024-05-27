@@ -49,10 +49,9 @@ const schema = new mongoose.Schema({
             message: "Passwords did't matched."
         }
     },
-    active: {
-        type: Boolean,
-        default: true,
-        select: false,
+    status: {
+        type: String,
+        default: "active",
     },
     role: {
         type: String,
@@ -64,10 +63,14 @@ const schema = new mongoose.Schema({
     },
     mailVerifiedAt: {
         type: Date,
+        default: null
     },
     changedPasswordAt: Date,
     passwordResetToken: String,
     resetTokenExpire: Date,
+    deletedAt: {
+        type: Date
+    },
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

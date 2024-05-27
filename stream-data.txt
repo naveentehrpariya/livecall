@@ -1,0 +1,78 @@
+streamData : {
+  broadcast: {
+    kind: 'youtube#liveBroadcast',
+    etag: 'e-XQ-ylUuXyzMgO-k6zzkty4M8w',
+    id: 'bzOb0jUjl8E',
+    snippet: {
+      publishedAt: '2024-05-27T09:48:57Z',
+      channelId: 'UCyPQ6zKKoMZ6rxGvPyj14yg',
+      title: 'CRICKET LIVE 3',
+      description: 'This is a test broadcast',
+      thumbnails: [Object],
+      scheduledStartTime: '2024-05-27T09:49:15Z',
+      isDefaultBroadcast: false,
+      liveChatId: 'KicKGFVDeVBRNnpLS29NWjZyeEd2UHlqMTR5ZxILYnpPYjBqVWpsOEU'
+    },
+    status: {
+      lifeCycleStatus: 'created',
+      privacyStatus: 'public',
+      recordingStatus: 'notRecording',
+      madeForKids: false,
+      selfDeclaredMadeForKids: false
+    },
+    contentDetails: {
+      monitorStream: [Object],
+      enableEmbed: true,
+      enableDvr: true,
+      enableContentEncryption: false,
+      recordFromStart: true,
+      enableClosedCaptions: false,
+      closedCaptionsType: 'closedCaptionsDisabled',
+      enableLowLatency: false,
+      latencyPreference: 'normal',
+      projection: 'rectangular',
+      enableAutoStart: false,
+      enableAutoStop: false
+    }
+  },
+  stream: {
+    kind: 'youtube#liveStream',
+    etag: 'oLXhjlR4_B5ge2VYSjtM6wBqnNQ',
+    id: 'yPQ6zKKoMZ6rxGvPyj14yg1716803342165947',
+    snippet: {
+      publishedAt: '2024-05-27T09:49:02Z',
+      channelId: 'UCyPQ6zKKoMZ6rxGvPyj14yg',
+      title: 'CRICKET LIVE 3',
+      description: '',
+      isDefaultStream: false
+    },
+    cdn: {
+      ingestionType: 'rtmp',
+      ingestionInfo: [Object],
+      resolution: '1080p',
+      frameRate: '30fps'
+    }
+  },
+  bind: {
+    kind: 'youtube#liveBroadcast',
+    etag: '1feRCBqay7yoXWZccfRAqgJNCcI',
+    id: 'bzOb0jUjl8E',
+    contentDetails: {
+      boundStreamId: 'yPQ6zKKoMZ6rxGvPyj14yg1716803342165947',
+      boundStreamLastUpdateTimeMs: '2024-05-27T09:49:02Z',
+      monitorStream: [Object],
+      enableEmbed: true,
+      enableDvr: true,
+      enableContentEncryption: false,
+      recordFromStart: true,
+      enableClosedCaptions: false,
+      closedCaptionsType: 'closedCaptionsDisabled',
+      enableLowLatency: false,
+      latencyPreference: 'normal',
+      projection: 'rectangular',
+      enableAutoStart: false,
+      enableAutoStop: false
+    }
+  }
+}
+streamKey 6m2z-kqr0-auu3-7ykg-9zrz
