@@ -9,15 +9,14 @@ const channelSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  videoId: {
+    type: String,
+  },
   streamKey: {
     type: String,
     required: true,
   },
   callbackUrl: {
-    type: String,
-    required: true,
-  },
-  secret: {
     type: String,
     required: true,
   },

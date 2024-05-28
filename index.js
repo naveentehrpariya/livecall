@@ -14,6 +14,9 @@ app.use(cors(corsOptions));
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.text({ type: '*/*' }));
+app.use(bodyParser.text({ type: 'application/atom+xml' }));
+
 const globalErrorHandler = require("./middlewares/gobalErrorHandler");
 const errorHandler = require("./middlewares/errorHandler");
 const AppError = require('./utils/AppError');

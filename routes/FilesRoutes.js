@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { myMedia, deleteMedia } = require('../controllers/fileController');
 const { validateToken } = require('../controllers/authController');
-const cacheMiddleware = require('../middlewares/cacheMiddleware');
 
 // types = all/ images / videos / audios;
 router.route('/my-media/:type').get(validateToken, myMedia);

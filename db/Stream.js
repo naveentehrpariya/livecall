@@ -5,7 +5,6 @@ const schema = new mongoose.Schema({
     title: {
         type:String, 
         required:[true, 'Please enter your stream title.'],
-        minLength:5,
     },
     resolution: {
         type:String,
@@ -21,8 +20,8 @@ const schema = new mongoose.Schema({
         type:String,
     },
     status: {
-        type:String,
-        default:1, // 1- active, 0- inactive
+        type:Number,
+        default:1,
     },
     stream_url: {
         type:String,

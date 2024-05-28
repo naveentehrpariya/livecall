@@ -16,6 +16,7 @@ const JSONerror = require("../utils/jsonErrorHandler");
 const channelDetails = require("../utils/channelDetails");
 const SubscribeYouTubeNotifications = require("../utils/SubscribeYoutubeNotifications");
 const YoutubeNotification = require("../db/YoutubeNotification");
+const xml2js = require('xml2js');
 
 const resolutionSettings = {
   '2160p': {
@@ -296,20 +297,12 @@ const stopffmpegstream = async (streamKey) => {
 const stopDbStream = async (streamKey) => {
   const stream = await Stream.findOne({ streamKey: streamKey });
   if (!stream){
-    return {
-      status: false,
-      error: stream
-    };
+    return false
   }
-  if (stream.status === '1') {
-    stream.status = '0';
-    stream.endedAt = Date.now();
-    await stream.save();
-    return {
-      status: true,
-      stream: stream
-    }
-  }
+  stream.status = 0;
+  stream.endedAt = Date.now();
+  const savedstream = await stream.save();
+  return savedstream;
 }
   
 const start_stream = catchAsync(async (req, res, next) => {
@@ -352,6 +345,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       stream_url: req.body.stream_url,
       streamkey: streamKey,
       user: req.user._id,
+      status: '1',
       streamId: streamData.broadcast.id,
     });
     
@@ -437,38 +431,80 @@ const force_start_stream = catchAsync ( async (req, res, next)=>{
   }
 });
 
-const stop_stream = catchAsync(async (req, res) => {
-  const { streamKey } = req.body;
-  stopffmpegstream(streamKey);
-  const stop = stopDbStream(streamKey);
-  if (stop.status === true) {
-    return res.status(200).json({
-      status: true,
-      message: 'Live stream stopped successfully.',
-    });
-  } else {
-    return res.status(200).json({
-      status: true,
-      message: 'Live stream stopped successfully.',
-    });
-  }
-});
+const stop_stream = async (req, res, next) => {
+  try {
+    const streamKey  = req.params.streamKey;
+    console.log("params",streamKey);
+    if(streamKey == "" || streamKey == null || streamKey == undefined){
+      res.json({
+        status : false,
+        message: 'Stream key is required.'
+      });
+      return false;
+    }
 
-const notificationCallback = catchAsync( async (req, res) => {
-  console.log("callback called", req.params )
+    const stop = await stopDbStream(streamKey);
+    await stopffmpegstream(streamKey);
+    console.log("stop",stop)
+    if(stop){
+      return res.status(200).json({
+        status: true,
+        message: 'Live stream stopped successfully.',
+        stream : stop
+      });
+    } else {
+      return res.status(200).json({
+        status: false,
+        message: 'Failed to stop live stream.',
+        stream : stop
+      });
+    }
+  } catch(err) {
+    console.error(`Stream stop error: ${err}`);
+    JSONerror(res, err, next);
+  }
+  
+};
+
+
+
+const parseXML = (xml) => {
+  return new Promise((resolve, reject) => {
+    xml2js.parseString(xml, { explicitArray: false }, (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(result);
+    });
+  });
+};
+
+
+const notificationCallback = async (req, res) => {
+  if (req.method === 'GET' && req.query['hub.challenge']) {
+    console.log('Verification request received');
+    return res.status(200).send(req.query['hub.challenge']);
+  }
+
+  console.log("Callback called", req.params);
   const streamKey = req.params.streamKey;
   const subscription = await YoutubeNotification.findOne({ streamKey });
 
   if (!subscription) {
     return res.status(404).json({
-      status : false,
-      message :`No youtube subscription found for this stream key ${streamKey}`
+      status: false,
+      message: `No YouTube subscription found for this stream key ${streamKey}`
     });
   }
 
   const signature = req.headers['x-hub-signature'];
-  console.log("req.body",req.body)
-  const computedSignature = 'sha1=' + crypto.createHmac('sha1', subscription.secret).update(req.body).digest('hex');
+  console.log("Received signature:", signature);
+
+  const bodyString = req.body;
+  console.log("Request body:", bodyString);
+
+  const computedSignature = 'sha1=' + crypto.createHmac('sha1', subscription.secret).update(bodyString).digest('hex');
+  console.log("Computed signature:", computedSignature);
 
   if (signature !== computedSignature) {
     return res.status(400).json({
@@ -477,18 +513,42 @@ const notificationCallback = catchAsync( async (req, res) => {
     });
   }
 
-  const notification = req.body.toString();
-  console.log("notification",notification)
-  if (notification.includes('<yt:liveBroadcastEvent>')) {
-    const eventType = notification.match(/<yt:liveBroadcastEvent type="([^"]+)">/)[1];
-    console.log("eventType",eventType)
-    if (eventType === 'complete') {
-       console.log("STREAM COMPLETE");
-       stopffmpegstream(streamKey);
-       stopDbStream(streamKey);
+  try {
+    const parsedBody = await parseXML(bodyString);
+    console.log("Parsed body:", parsedBody);
+
+    if (parsedBody.feed.entry) {
+      console.log("Video published or updated:");
+      const videoId = parsedBody.feed.entry['yt:videoId'];
+      const channelId = parsedBody.feed.entry['yt:channelId'];
+      console.log(`Video ID: ${videoId}, Channel ID: ${channelId}`);
+
+      // Check for liveBroadcastEvent to determine if the stream is starting or stopping
+      if (parsedBody.feed.entry['yt:liveBroadcastEvent']) {
+        const eventType = parsedBody.feed.entry['yt:liveBroadcastEvent']['$'].type;
+        console.log(`Live Broadcast Event Type: ${eventType}`);
+        if (eventType === 'complete') {
+            console.log('Live stream has ended');
+            stopffmpegstream(streamKey ,videoId);
+            stopDbStream(streamKey ,videoId);
+        } else if (eventType === 'live') {
+          console.log('Live stream has started');
+        }
+      }
+      
+    } else if (parsedBody.feed['at:deleted-entry']) {
+      console.log("Video deleted:", parsedBody.feed['at:deleted-entry']);
+      stopffmpegstream(streamKey);
+      stopDbStream(streamKey);
+    } else {
+      console.log("Unknown notification type received:", parsedBody);
     }
+
+    res.status(200).send('OK');
+  } catch (err) {
+    console.error('Error parsing XML:', err);
+    res.status(500).send('Internal Server Error');
   }
-  res.status(200).send('OK');
-});
+};
 
 module.exports = { notificationCallback, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
