@@ -1,4 +1,3 @@
-const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const Pricing = require("../db/Pricing");
 const Subscription = require("../db/Subscription");
@@ -19,6 +18,7 @@ const create_pricing_plan = catchAsync ( async (req, res)=>{
     const product =  await stripe.products.create({
         name: req.body.name,
         description: req.body.description
+     
     }); 
 
     const price = await stripe.prices.create({
@@ -44,6 +44,7 @@ const create_pricing_plan = catchAsync ( async (req, res)=>{
       storage: req.body.storage,
       priceId: price.id,
       productId: price.product,
+      resolutions : JSON.stringify(req.body.resolutions)
     });
 
     const result = await plan.save();
@@ -63,7 +64,6 @@ const create_pricing_plan = catchAsync ( async (req, res)=>{
 
 const update_pricing_plan = catchAsync(async (req, res) => {
   try {
-    // Find the existing pricing plan by ID
     const plan = await Pricing.findById(req.params.id);
     if (!plan) {
       return res.status(404).json({
@@ -83,10 +83,7 @@ const update_pricing_plan = catchAsync(async (req, res) => {
     const newPriceInCents = parseInt(req.body.price * 100);
 
     let priceId = plan.priceId;
-
-    // Check if the price has changed
     if (existingPriceInCents !== newPriceInCents) {
-      // Create a new Stripe price
       const newPrice = await stripe.prices.create({
         product: product.id,
         unit_amount: newPriceInCents,
@@ -101,8 +98,6 @@ const update_pricing_plan = catchAsync(async (req, res) => {
           error: 'Error creating the new price.',
         });
       }
-
-      // Archive the old price
       await stripe.prices.update(plan.priceId, { active: false });
       priceId = newPrice.id;
     }
@@ -120,6 +115,7 @@ const update_pricing_plan = catchAsync(async (req, res) => {
     if (result) {
       return res.status(200).json({
         status: true,
+        message: "Pricing plan has been updated.",
         plan: result,
       });
     } else {
@@ -132,11 +128,49 @@ const update_pricing_plan = catchAsync(async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       status: false,
-      error: error.message,
+      message: error.message,
+      error: error
     });
   }
 });
 
+const disable_pricing_plan = catchAsync(async (req, res) => {
+  try {
+    const plan = await Pricing.findById(req.params.id);
+    if (!plan) {
+      return res.status(404).json({
+        status: false,
+        error: 'Pricing plan not found.',
+      });
+    }
+    if(plan.status == "active"){
+      plan.status = "inactive";
+    } else { 
+      plan.status = "active";
+    }
+    const result = await plan.save();
+
+    if (result) {
+      return res.status(200).json({
+        status: true,
+        message: `Pricing marked as ${result.status}.`,
+        plan: result,
+      });
+    } else {
+      return res.status(400).json({
+        status: false,
+        plan: null,
+        error: 'Something went wrong in plan saving.',
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: error.message,
+      error: error
+    });
+  }
+});
 
 const subscribe = catchAsync ( async (req, res)=>{
   try {
@@ -191,7 +225,7 @@ const subscribe = catchAsync ( async (req, res)=>{
 
 const pricing_plan_lists = catchAsync ( async (req, res)=>{
   try {
-    const items = await Pricing.find({});
+    const items = await Pricing.find({ status : "active"});
     if(items){
       res.status(200).json({ 
         status:true, 
@@ -386,4 +420,4 @@ const subscriptionRenew = catchAsync(async (req, res) => {
   }
 });
   
-module.exports = { confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 
+module.exports = { disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 

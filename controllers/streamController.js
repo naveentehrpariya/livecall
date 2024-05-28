@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { ObjectId } = require("mongodb");
 const Stream = require("../db/Stream");
 const catchAsync  = require("../utils/catchAsync");
@@ -13,6 +14,8 @@ const logger = require("../utils/logger");
 const SizeReducer = require("../utils/SizeReducer");
 const JSONerror = require("../utils/jsonErrorHandler");
 const channelDetails = require("../utils/channelDetails");
+const SubscribeYouTubeNotifications = require("../utils/SubscribeYoutubeNotifications");
+const YoutubeNotification = require("../db/YoutubeNotification");
 
 const resolutionSettings = {
   '2160p': {
@@ -39,7 +42,7 @@ const resolutionSettings = {
     preset: 'fast',
     gop: '60', // Keyframe interval for 720p
   },
-  '1080x720': {
+  '720x1080': {
     resolution: '720x1080',
     videoBitrate: '3000k',
     maxrate: '4000k',
@@ -112,12 +115,17 @@ const storeToken = async (token, userId, oAuth2Client) => {
 
 // Get stored token
 const getStoredToken = async (userId) => {
+  console.log("userId", userId)
   try {
      const token = await Token.findOne({ user: userId });
+     console.log("tokenff", token)
      if(!token){
        return null;
      }
-     return JSON.parse(token.token);
+     return {
+      token : JSON.parse(token.token),
+      channel : JSON.parse(token.channel)
+     } 
   } catch (err) {
     console.error('Error getting stored token:', err);
     return null;
@@ -275,30 +283,54 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
 };
 
 let activeStreams = {};
-const start_stream = catchAsync ( async (req, res, next)=>{
+
+const stopffmpegstream = async (streamKey) => {
+  const active = activeStreams[streamKey];
+  if(active){
+    delete activeStreams[streamKey];
+    active.kill('SIGINT');
+  }
+  return true
+}
+  
+const stopDbStream = async (streamKey) => {
+  const stream = await Stream.findOne({ streamKey: streamKey });
+  if (!stream){
+    return {
+      status: false,
+      error: stream
+    };
+  }
+  if (stream.status === '1') {
+    stream.status = '0';
+    stream.endedAt = Date.now();
+    await stream.save();
+    return {
+      status: true,
+      stream: stream
+    }
+  }
+}
+  
+const start_stream = catchAsync(async (req, res, next) => {
   try {
     const { title, description, audio, thumbnail } = req.body;
     const userId = req.user._id;
-    const token = await getStoredToken(userId);
+    const { token, channel } = await getStoredToken(userId);
+    
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
-    await oAuth2Client.setCredentials(token);
-    // Create live broadcast
+    oAuth2Client.setCredentials(token);
+    
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description);
-    console.log("streamData", streamData);
     const streamKey = streamData.stream.cdn.ingestionInfo.streamName;
-    console.log("streamKey", streamKey);
     
-    if(thumbnail){
-      console.log(`uploading thumbnail`);
-      await delay(3000); // 1-s
+    if (thumbnail) {
       const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
       const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
       await downloadThumbnail(thumbnail, thumbnailPath);
-      console.log('Thumbnail downloaded and saved:');
       await SizeReducer(thumbnailPath, OutputPath);
-      console.log('Thumbnail resized and saved:');
       await youtube.thumbnails.set({
         videoId: streamData.broadcast.id,
         media: {
@@ -306,7 +338,6 @@ const start_stream = catchAsync ( async (req, res, next)=>{
           body: fs.createReadStream(OutputPath),
         },
       });
-      console.log('Thumbnail set.');
       fs.unlinkSync(thumbnailPath);
       fs.unlinkSync(OutputPath);
     }
@@ -320,17 +351,17 @@ const start_stream = catchAsync ( async (req, res, next)=>{
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
       streamkey: streamKey,
-      user : req.user._id,
-      streamId:  streamData.broadcast.id
+      user: req.user._id,
+      streamId: streamData.broadcast.id,
     });
     
     const savedStream = await stream.save();
-    if(savedStream){
-     const video = req.body.video
-     if (activeStreams[streamKey]) {
-       console.log('Stream already active.');
+    if (savedStream) {
+      const video = req.body.video;
+      if (activeStreams[streamKey]) {
         return res.status(400).send('Stream already active.');
       }
+      
       const audio = "https://stream.zeno.fm/ez4m4918n98uv";
       const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution || '1080p'];
       const ffmpegCommand = [
@@ -338,176 +369,126 @@ const start_stream = catchAsync ( async (req, res, next)=>{
         '-stream_loop', '-1',
         '-re',
         '-i', video,
+        // '-an',
         '-stream_loop', '-1',
         '-re',
         '-i', audio,
         '-vf', `scale=${resolution}`, 
-        '-c:v', 'libx264', // Video codec
-        '-preset', preset, // Adjust based on your latency vs. quality needs
-        '-tune', 'zerolatency', // Tune for low latency
-        '-pix_fmt', 'yuv420p', // Pixel format
-        '-b:v', videoBitrate, // Video bitrate, adjust based on resolution
-        '-maxrate', maxrate, // Max rate
-        '-bufsize', bufsize, // Buffer size
-        '-g', gop, // GOP size (keyframe interval)
-        '-c:a', 'aac', // Audio codec
-        '-b:a', '128k', // Audio bitrate
-        '-ar', '44100', // Audio sampling rate
-        '-strict', 'experimental', // Allow experimental codecs
+        '-c:v', 'libx264',
+        '-preset', preset,
+        '-tune', 'zerolatency',
+        '-pix_fmt', 'yuv420p',
+        '-b:v', videoBitrate,
+        '-maxrate', maxrate,
+        '-bufsize', bufsize,
+        '-g', gop,
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-ar', '44100',
+        '-strict', 'experimental',
         '-f', 'flv',
         `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
       ];
+
+      const susbcribe = await SubscribeYouTubeNotifications(userId, channel.id, streamKey );
+      console.log("notifications subscribed ",susbcribe);
     
-     const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-     activeStreams[streamKey] = child;
-     
-     child.on('close', () => {
-       console.log(`stream stopped of ${streamKey}`);
-       delete activeStreams[streamKey];
+      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
+      activeStreams[streamKey] = child;
+      
+      child.on('close', () => {
+        stopffmpegstream(streamKey);
       });
       
-      child.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-      });
-      
-      child.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-      });
-      
+      child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
+      child.stderr.on('data', (data) => console.error(`stderr: ${data}`));
       child.on('error', (err) => {
+        stopffmpegstream(streamKey);
         console.error(`Child process error: ${err}`);
       });
-
-      // await delay(7000); 
-      // await startLiveBroadcast(youtube, streamData.broadcast.id);
       
       res.json({
-        status : true,
+        status: true,
         message: 'Stream started.',
-        stream : savedStream,
-        streamUrl : `https://www.youtube.com/watch?v=${streamData.broadcast.id}`
+        stream: savedStream,
+        streamUrl: `https://www.youtube.com/watch?v=${streamData.broadcast.id}`,
       });
 
-   } else { 
-      console.log(`Failed to save stream. ${savedStream}`);
+    } else {
       res.json({
-        status : false,
+        status: false,
         message: 'Failed to create stream.',
-        errors : savedStream
       });
-   }
-  } catch (err){
-    console.log(`Stream create error. ${err}`);
+    }
+  } catch (err) {
+    console.error(`Stream creation error: ${err}`);
     JSONerror(res, err, next);
   }
 });
 
-
 const force_start_stream = catchAsync ( async (req, res, next)=>{
   try {
-    const { streamKey, video, thumbnail } = req.body;
-
-    const audio = "https://stream.zeno.fm/ez4m4918n98uv";
-    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution || '1080p'];
-    const ffmpegCommand = [
-      'ffmpeg',
-      '-stream_loop', '-1',
-      '-re',
-      '-i', video,
-      '-stream_loop', '-1',
-      '-re',
-      '-i', audio,
-      '-vf', `scale=${resolution}`, 
-      '-c:v', 'libx264', // Video codec
-      '-preset', preset, // Adjust based on your latency vs. quality needs
-      '-tune', 'zerolatency', // Tune for low latency
-      '-pix_fmt', 'yuv420p', // Pixel format
-      '-b:v', videoBitrate, // Video bitrate, adjust based on resolution
-      '-maxrate', maxrate, // Max rate
-      '-bufsize', bufsize, // Buffer size
-      '-g', gop, // GOP size (keyframe interval)
-      '-c:a', 'aac', // Audio codec
-      '-b:a', '128k', // Audio bitrate
-      '-ar', '44100', // Audio sampling rate
-      '-strict', 'experimental', // Allow experimental codecs
-      '-f', 'flv',
-      '-report',
-      '-loglevel', 'debug',
-      `rtmp://a.rtmp.youtube.com/live2/ujgq-8qy9-hj8t-twks-by64`,
-    ];
-
-     const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-
-     child.on('close', () => {
-      console.log("FFMPEG CLOSED")
-     });
-
-     child.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-      });
-      
-      child.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-      });
-
-      child.on('error', (err) => {
-        console.error(`Child process error: ${err}`);
-      });
-
-      res.json({
-        status : true,
-        message: 'Stream started.',
-      });
-    
+    const streamKey = "hdkshdfskdjfhks0";
+    const susbcribe = await SubscribeYouTubeNotifications(req.user._id, channel.id, streamKey );
+    console.log("susbcribe",susbcribe)
+    res.send('Notification subscribed !!')
   } catch (err){
     JSONerror(res, err, next);
   }
 });
 
 const stop_stream = catchAsync(async (req, res) => {
-  const { id } = req.body;
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).json({
-      status: false,
-      message: 'Invalid stream id',
+  const { streamKey } = req.body;
+  stopffmpegstream(streamKey);
+  const stop = stopDbStream(streamKey);
+  if (stop.status === true) {
+    return res.status(200).json({
+      status: true,
+      message: 'Live stream stopped successfully.',
+    });
+  } else {
+    return res.status(200).json({
+      status: true,
+      message: 'Live stream stopped successfully.',
     });
   }
-
-  const stream = await Stream.findOne({ _id: ObjectId(id) });
-  if (!stream) {
-    return res.status(404).json({
-      status: false,
-      message: 'Stream not found',
-    });
-  }
-
-  if (stream.status === '0') {
-    return res.status(400).json({
-      status: false,
-      message: 'Stream is already stopped',
-    });
-  }
-
-  stream.endedAt = Date.now();
-  stream.status = '0';
-
-  const result = await stream.save();
-  if (!result) {
-    return res.status(500).json({
-      status: false,
-      message: 'Failed to stop the stream',
-    });
-  }
-
-  const active = activeStreams[stream.streamkey];
-
-  delete activeStreams[stream.streamkey];
-  active.kill('SIGINT');
-
-  res.json({
-    status: true,
-    message: 'Stream has been stopped',
-  });
 });
 
-module.exports = { getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
+const notificationCallback = catchAsync( async (req, res) => {
+  console.log("callback called", req.params )
+  const streamKey = req.params.streamKey;
+  const subscription = await YoutubeNotification.findOne({ streamKey });
+
+  if (!subscription) {
+    return res.status(404).json({
+      status : false,
+      message :`No youtube subscription found for this stream key ${streamKey}`
+    });
+  }
+
+  const signature = req.headers['x-hub-signature'];
+  console.log("req.body",req.body)
+  const computedSignature = 'sha1=' + crypto.createHmac('sha1', subscription.secret).update(req.body).digest('hex');
+
+  if (signature !== computedSignature) {
+    return res.status(400).json({
+      status: false,
+      message: 'Invalid signature',
+    });
+  }
+
+  const notification = req.body.toString();
+  console.log("notification",notification)
+  if (notification.includes('<yt:liveBroadcastEvent>')) {
+    const eventType = notification.match(/<yt:liveBroadcastEvent type="([^"]+)">/)[1];
+    console.log("eventType",eventType)
+    if (eventType === 'complete') {
+       console.log("STREAM COMPLETE");
+       stopffmpegstream(streamKey);
+       stopDbStream(streamKey);
+    }
+  }
+  res.status(200).send('OK');
+});
+
+module.exports = { notificationCallback, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 

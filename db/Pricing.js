@@ -6,6 +6,9 @@ const schema = new mongoose.Schema({
       type:String, 
       required:[true, 'Please enter name your pricing plan.'],
    },
+   resolutions: {
+      type:String,
+   },
    description: {
       type:String,
    },

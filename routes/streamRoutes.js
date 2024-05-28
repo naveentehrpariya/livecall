@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { force_start_stream, start_stream, stop_stream, oauth, oauth2callback} = require('../controllers/streamController');
+const { notificationCallback, force_start_stream, start_stream, stop_stream, oauth, oauth2callback} = require('../controllers/streamController');
 const { unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit } = require('../controllers/youtubeStreamController');
 const { validateToken } = require('../controllers/authController');
 const cacheMiddleware = require('../middlewares/cacheMiddleware');
@@ -22,7 +22,7 @@ router.route('/check-youtube-link-status').get(validateToken, checkIsYoutubeLink
 
 router.route('/unLinkYoutube').get(validateToken, unLinkYoutube);
 
-// router.route('/setlive').post(validateToken, makeStartTransitionToLive);
+router.route('/notification/youtube/callback/:streamKey').post(notificationCallback);
 
 module.exports = router; 
 
