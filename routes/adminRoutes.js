@@ -5,7 +5,7 @@ const { validateToken } = require('../controllers/authController');
 
 router.route('/media/:type').get(validateToken, admin.isAdmin,  admin.medias);
 
-router.route('/users').get(validateToken, admin.isAdmin,  admin.users);
+router.route('/users/:status').get(validateToken, admin.isAdmin,  admin.users);
 router.route('/user/enable-disable-user/:id').get(validateToken, admin.isAdmin,   admin.EnableDisableUser);
 
 router.route('/streams').get(validateToken, admin.isAdmin,  admin.streams);

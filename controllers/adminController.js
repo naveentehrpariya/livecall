@@ -17,20 +17,26 @@ const isAdmin = catchAsync ( async (req, res, next) => {
 });
 
 const dashboard = catchAsync(async (req, res) => {
-   const totalUsers = await User.countDocuments();
+  const totalUsers = await User.countDocuments();
+   const activeUsers = await User.countDocuments({ status: 'active' });
+   const inactiveUsers = await User.countDocuments({ status: 'active' });
    const totalStreams = await Stream.countDocuments();
+   const totalliveStreams = await Stream.countDocuments({ status: 1 });
    const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'active' });
    const totalInactiveSubscriptions = await Subscription.countDocuments({ status: 'inactive' });
  
    res.json({
      status: true,
      message: 'Dashboard data retrieved successfully.',
-     data: {
-       totalUsers,
-       totalStreams,
-       totalActiveSubscriptions,
-       totalInactiveSubscriptions,
-     },
+     result: [
+      { route:"/admin/users", title : 'Total Users', data: totalUsers },
+      { route:"/admin/users/active", title : 'Active Users', data: activeUsers },
+      { route:"/admin/users/inactive", title : 'Inactive Users', data: inactiveUsers },
+      { route:"/admin/streams", title : 'Total Streams', data: totalStreams },
+      { route:"/admin/streams", title : 'Live Streams', data: totalliveStreams },
+      { route:"/admin/subscriptions", title : 'Total Active Subscriptions', data: totalActiveSubscriptions },
+      { route:"/admin/subscriptions", title : 'Total Inactive Subscriptions', data: totalInactiveSubscriptions },
+     ] 
    });
 });
 
@@ -69,8 +75,9 @@ const medias = catchAsync(async (req, res) => {
 
 const users = catchAsync(async (req, res) => {
 
+  const {status} = req.params;
    const Query = new APIFeatures(
-     User.find({}),
+     User.find({status : status}),
      req.query
    ).sort().paginate();
    const users = await Query.query;
