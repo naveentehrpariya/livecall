@@ -22,6 +22,7 @@ const dashboard = catchAsync(async (req, res) => {
    const inactiveUsers = await User.countDocuments({ status: 'active' });
    const totalStreams = await Stream.countDocuments();
    const totalliveStreams = await Stream.countDocuments({ status: 1 });
+   const totalInactiveStreams = await Stream.countDocuments({ status: 0 });
    const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'active' });
    const totalInactiveSubscriptions = await Subscription.countDocuments({ status: 'inactive' });
  
@@ -29,11 +30,15 @@ const dashboard = catchAsync(async (req, res) => {
      status: true,
      message: 'Dashboard data retrieved successfully.',
      result: [
+
       { route:"/admin/users", title : 'Total Users', data: totalUsers },
       { route:"/admin/users/active", title : 'Active Users', data: activeUsers },
       { route:"/admin/users/inactive", title : 'Inactive Users', data: inactiveUsers },
-      { route:"/admin/streams", title : 'Total Streams', data: totalStreams },
-      { route:"/admin/streams", title : 'Live Streams', data: totalliveStreams },
+
+      { route:"/admin/streams/all", title : 'Total Streams', data: totalStreams },
+      { route:"/admin/streams/1", title : 'Live Streams', data: totalliveStreams },
+      { route:"/admin/streams/0", title : 'Ended Streams', data: totalInactiveStreams },
+
       { route:"/admin/subscriptions", title : 'Total Active Subscriptions', data: totalActiveSubscriptions },
       { route:"/admin/subscriptions", title : 'Total Inactive Subscriptions', data: totalInactiveSubscriptions },
      ] 
@@ -74,7 +79,6 @@ const medias = catchAsync(async (req, res) => {
 });
 
 const users = catchAsync(async (req, res) => {
-
   const {status} = req.params;
    const Query = new APIFeatures(
      User.find({status : status}),
@@ -113,10 +117,20 @@ const EnableDisableUser = catchAsync(async (req, res) => {
 });
 
 const streams = catchAsync(async (req, res) => {
-   const Query = new APIFeatures(
-     Stream.find({}),
-     req.query
-   ).sort().paginate();
+   const { type } = req.params;
+    let Query;
+    if(type == 0 || type == 1 ){
+      Query = new APIFeatures(
+        Stream.find({status: type}),
+        req.query
+      ).sort().paginate();
+    }
+    if(type == "all"){
+      Query = new APIFeatures(
+        Stream.find({}),
+        req.query
+      ).sort().paginate();
+    }
    const data = await Query.query;
    res.json({
      status: true,
@@ -127,15 +141,23 @@ const streams = catchAsync(async (req, res) => {
 
 const subscriptions = catchAsync(async (req, res) => {
    const { type } = req.params;
-   const Query = new APIFeatures(
-     Subscription.find({ status : type}),
-     req.query
-   ).sort().paginate();
+   let Query;
+   if(type == 'all'){
+     Query = new APIFeatures(
+       Subscription.find({}).populate("plan").populate("user"),
+       req.query
+     ).sort().paginate();
+    } else {
+      Query = new APIFeatures(
+        Subscription.find({ status : type}).populate("plan").populate("user"),
+        req.query
+      ).sort().paginate();
+   }
    const data = await Query.query;
    res.json({
      status: true,
      result: data || [],
-     message: data.length ? "Subscriptions retrieved successfully !!." : "No files found"
+     message: data.length ? "Subscriptions retrieved successfully !!." : "No files found !!"
    });
 });
 

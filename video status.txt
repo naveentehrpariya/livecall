@@ -1,0 +1,63 @@
+activeStreams [
+  {
+    _id: new ObjectId("665974fbd5ad8a3bb9a99d91"),
+    title: 'NEW STREAM',
+    resolution: '1080p',
+    thumbnail: 'https://runstream.b-cdn.net/1716268828125-257ebde0fcc5d67d68b88846d2c1474d-rollroyce.png',
+    audio: '',
+    video: 'https://runstream.b-cdn.net/1716226581077-d908b366ac9720091904869711ae3454-doctor-video.mp4',
+    status: 1,
+    stream_url: 'rtmp://a.rtmp.youtube.com/live2',
+    streamkey: 'wdre-bwax-1ukt-2jws-449y',
+    streamId: '465b5PPT5CM',
+    user: new ObjectId("6654b7ae3f6a8fea0ffa35c5"),
+    createdAt: 2024-05-31T06:57:20.716Z,
+    __v: 0
+  }
+]
+videoDetails {
+  kind: 'youtube#video',
+  etag: 'zrJN6ukDmRYcRibIXbwCWf4fvi8',
+  id: '465b5PPT5CM',
+  snippet: {
+    publishedAt: '2024-05-31T06:57:48Z',
+    channelId: 'UCdGq1qjb5R27ENhSCBj20gw',
+    title: 'NEW STREAM',
+    description: '',
+    thumbnails: { default: [Object], medium: [Object], high: [Object] },
+    channelTitle: 'Naveen FP',
+    categoryId: '24',
+    liveBroadcastContent: 'live',
+    localized: { title: 'NEW STREAM', description: '' }
+  },
+  liveStreamingDetails: {
+    actualStartTime: '2024-05-31T06:58:16Z',
+    scheduledStartTime: '2024-05-31T06:58:02Z',
+    activeLiveChatId: 'Cg0KCzQ2NWI1UFBUNUNNKicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILNDY1YjVQUFQ1Q00'
+  }
+}
+Live stream is still active for video ID: 465b5PPT5CM
+
+================================================================================================== 
+videoDetails {
+  kind: 'youtube#video',
+  etag: 'wnyijqMrlpCw5sk3QaScDRu_C3Y',
+  id: '465b5PPT5CM',
+  snippet: {
+    publishedAt: '2024-05-31T06:57:48Z',
+    channelId: 'UCdGq1qjb5R27ENhSCBj20gw',
+    title: 'NEW STREAM',
+    description: '',
+    thumbnails: { default: [Object], medium: [Object], high: [Object] },
+    channelTitle: 'Naveen FP',
+    categoryId: '24',
+    liveBroadcastContent: 'none',
+    localized: { title: 'NEW STREAM', description: '' }
+  },
+  liveStreamingDetails: {
+    actualStartTime: '2024-05-31T06:58:16Z',
+    actualEndTime: '2024-05-31T06:58:53Z',
+    scheduledStartTime: '2024-05-31T06:58:02Z',
+    activeLiveChatId: 'Cg0KCzQ2NWI1UFBUNUNNKicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILNDY1YjVQUFQ1Q00'
+  }
+}

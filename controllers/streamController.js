@@ -1,22 +1,17 @@
-const crypto = require('crypto');
-const { ObjectId } = require("mongodb");
 const Stream = require("../db/Stream");
 const catchAsync  = require("../utils/catchAsync");
 const { spawn } = require('child_process');
-const Subscription = require("../db/Subscription");
 const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
-const readline = require('readline');
 const Token = require("../db/Token");
 const axios = require("axios");
 const logger = require("../utils/logger");
 const SizeReducer = require("../utils/SizeReducer");
 const JSONerror = require("../utils/jsonErrorHandler");
 const channelDetails = require("../utils/channelDetails");
-const SubscribeYouTubeNotifications = require("../utils/SubscribeYoutubeNotifications");
-const YoutubeNotification = require("../db/YoutubeNotification");
-const xml2js = require('xml2js');
+const cron = require('node-cron');
+const API_KEY = process.env.YOUTUBE_API_KEY
 
 const resolutionSettings = {
   '2160p': {
@@ -92,7 +87,7 @@ const generateAuthUrl = (oAuth2Client) => {
 };
 
 // Store tokens
-const storeToken = async (token, userId, oAuth2Client) => {
+const storeToken = async (token, userId) => {
   try {
     const channel = await channelDetails(token);
     console.log("channel",channel);
@@ -239,7 +234,7 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
   const broadcastId = broadcastResponse.data.id;
   
   // Step 2: Introduce delay before next API call
-  await delay(3000); // 1-second delay
+  await delay(3000); 
 
   // Step 2: Create the live stream
   const streamResponse = await youtube.liveStreams.insert({
@@ -257,8 +252,7 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
   });
   
   const streamId = streamResponse.data.id;
-  const streamUrl = `https://www.youtube.com/watch?v=${streamId}`;
-  console.log(`stream created `, streamUrl);
+  console.log(`stream created `, streamId);
   await delay(3000);
   
   // Step 3: Bind the broadcast to the stream
@@ -269,6 +263,12 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
   });
   
   console.log(`stream broadcast or live stream created `, {
+    broadcast: broadcastResponse.data,
+    stream: streamResponse.data,
+    bind: bindResponse.data,
+    broadcastId: broadcastId
+  });
+  logger.log(`stream broadcast or live stream created `, {
     broadcast: broadcastResponse.data,
     stream: streamResponse.data,
     bind: bindResponse.data,
@@ -285,17 +285,17 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
 
 let activeStreams = {};
 
-const stopffmpegstream = async (streamKey) => {
-  const active = activeStreams[streamKey];
+const stopffmpegstream = async (videoid) => {
+  const active = activeStreams[videoid];
   if(active){
-    delete activeStreams[streamKey];
+    delete activeStreams[videoid];
     active.kill('SIGINT');
   }
   return true
 }
   
-const stopDbStream = async (streamKey) => {
-  const stream = await Stream.findOne({ streamKey: streamKey });
+const stopDbStream = async (videoId) => {
+  const stream = await Stream.findOne({ streamId: videoId });
   if (!stream){
     return false
   }
@@ -335,6 +335,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       fs.unlinkSync(OutputPath);
     }
 
+    const videoID = streamData.broadcast.id;
     const stream = new Stream({
       title: req.body.title,
       video: req.body.video, 
@@ -346,13 +347,13 @@ const start_stream = catchAsync(async (req, res, next) => {
       streamkey: streamKey,
       user: req.user._id,
       status: '1',
-      streamId: streamData.broadcast.id,
+      streamId: videoID,
     });
     
     const savedStream = await stream.save();
     if (savedStream) {
       const video = req.body.video;
-      if (activeStreams[streamKey]) {
+      if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
       }
       
@@ -384,20 +385,19 @@ const start_stream = catchAsync(async (req, res, next) => {
         `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
       ];
 
-      const susbcribe = await SubscribeYouTubeNotifications(userId, channel.id, streamKey );
-      console.log("notifications subscribed ",susbcribe);
+    
     
       const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-      activeStreams[streamKey] = child;
+      activeStreams[videoID] = child;
       
       child.on('close', () => {
-        stopffmpegstream(streamKey);
+        stopffmpegstream(videoID);
       });
       
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => console.error(`stderr: ${data}`));
       child.on('error', (err) => {
-        stopffmpegstream(streamKey);
+        stopffmpegstream(videoID);
         console.error(`Child process error: ${err}`);
       });
       
@@ -405,7 +405,7 @@ const start_stream = catchAsync(async (req, res, next) => {
         status: true,
         message: 'Stream started.',
         stream: savedStream,
-        streamUrl: `https://www.youtube.com/watch?v=${streamData.broadcast.id}`,
+        streamUrl: `https://www.youtube.com/watch?v=${videoID}`,
       });
 
     } else {
@@ -420,31 +420,26 @@ const start_stream = catchAsync(async (req, res, next) => {
   }
 });
 
-const force_start_stream = catchAsync ( async (req, res, next)=>{
-  try {
-    const streamKey = "hdkshdfskdjfhks0";
-    const susbcribe = await SubscribeYouTubeNotifications(req.user._id, channel.id, streamKey );
-    console.log("susbcribe",susbcribe)
-    res.send('Notification subscribed !!')
-  } catch (err){
-    JSONerror(res, err, next);
-  }
-});
-
 const stop_stream = async (req, res, next) => {
   try {
-    const streamKey  = req.params.streamKey;
-    console.log("params",streamKey);
-    if(streamKey == "" || streamKey == null || streamKey == undefined){
+    const streamId  = req.params.streamId;
+    const stream = await Stream.findOne({streamId : streamId});
+    if(stream.user !== req.user._id){
+      res.json({
+        status:false,
+        message : "You have not permission to stop this stream."
+      })
+    }
+    if(streamId == "" || streamId == null || streamId == undefined){
       res.json({
         status : false,
-        message: 'Stream key is required.'
+        message: 'Stream ID is required.'
       });
       return false;
     }
 
-    const stop = await stopDbStream(streamKey);
-    await stopffmpegstream(streamKey);
+    const stop = await stopDbStream(streamId);
+    await stopffmpegstream(streamId);
     console.log("stop",stop)
     if(stop){
       return res.status(200).json({
@@ -463,92 +458,88 @@ const stop_stream = async (req, res, next) => {
     console.error(`Stream stop error: ${err}`);
     JSONerror(res, err, next);
   }
-  
 };
 
 
-
-const parseXML = (xml) => {
-  return new Promise((resolve, reject) => {
-    xml2js.parseString(xml, { explicitArray: false }, (err, result) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(result);
-    });
-  });
-};
-
-
-const notificationCallback = async (req, res) => {
-  if (req.method === 'GET' && req.query['hub.challenge']) {
-    console.log('Verification request received');
-    return res.status(200).send(req.query['hub.challenge']);
-  }
-
-  console.log("Callback called", req.params);
-  const streamKey = req.params.streamKey;
-  const subscription = await YoutubeNotification.findOne({ streamKey });
-
-  if (!subscription) {
-    return res.status(404).json({
-      status: false,
-      message: `No YouTube subscription found for this stream key ${streamKey}`
-    });
-  }
-
-  const signature = req.headers['x-hub-signature'];
-  console.log("Received signature:", signature);
-
-  const bodyString = req.body;
-  console.log("Request body:", bodyString);
-
-  const computedSignature = 'sha1=' + crypto.createHmac('sha1', subscription.secret).update(bodyString).digest('hex');
-  console.log("Computed signature:", computedSignature);
-
-  if (signature !== computedSignature) {
-    return res.status(400).json({
-      status: false,
-      message: 'Invalid signature',
-    });
-  }
-
+const admin_stop_stream = async (req, res, next) => {
   try {
-    const parsedBody = await parseXML(bodyString);
-    console.log("Parsed body:", parsedBody);
-
-    if (parsedBody.feed.entry) {
-      console.log("Video published or updated:");
-      const videoId = parsedBody.feed.entry['yt:videoId'];
-      const channelId = parsedBody.feed.entry['yt:channelId'];
-      console.log(`Video ID: ${videoId}, Channel ID: ${channelId}`);
-
-      // Check for liveBroadcastEvent to determine if the stream is starting or stopping
-      if (parsedBody.feed.entry['yt:liveBroadcastEvent']) {
-        const eventType = parsedBody.feed.entry['yt:liveBroadcastEvent']['$'].type;
-        console.log(`Live Broadcast Event Type: ${eventType}`);
-        if (eventType === 'complete') {
-            console.log('Live stream has ended');
-            stopffmpegstream(streamKey ,videoId);
-            stopDbStream(streamKey ,videoId);
-        } else if (eventType === 'live') {
-          console.log('Live stream has started');
-        }
-      }
-      
-    } else if (parsedBody.feed['at:deleted-entry']) {
-      console.log("Video deleted:", parsedBody.feed['at:deleted-entry']);
-      stopffmpegstream(streamKey);
-      stopDbStream(streamKey);
-    } else {
-      console.log("Unknown notification type received:", parsedBody);
+    const streamId  = req.params.streamId;
+    if(streamId == "" || streamId == null || streamId == undefined){
+      res.json({
+        status : false,
+        message: 'Stream ID is required.'
+      });
+      return false;
     }
-
-    res.status(200).send('OK');
-  } catch (err) {
-    console.error('Error parsing XML:', err);
-    res.status(500).send('Internal Server Error');
+    const stop = await stopDbStream(streamId);
+    await stopffmpegstream(streamId);
+    if(stop){
+      return res.status(200).json({
+        status: true,
+        message: 'Live stream stopped successfully.',
+        stream : stop
+      });
+    } else {
+      return res.status(200).json({
+        status: false,
+        message: 'Failed to stop live stream.',
+        stream : stop
+      });
+    }
+  } catch(err) {
+    console.error(`Stream stop error: ${err}`);
+    JSONerror(res, err, next);
   }
 };
 
-module.exports = { notificationCallback, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
+// Stream status checker 
+const checkStreamStatus = async () => {
+  try {
+    const activeStreams = await Stream.find({ status: 1 });
+    console.log("activeStreams",activeStreams);
+    if (activeStreams && activeStreams.length < 1) {
+      console.log(`Currently there are not any live streams active.`);
+    }
+    for (const stream of activeStreams) {
+      const videoId = stream.streamId;
+      const response = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
+        params: {
+          part: 'snippet,liveStreamingDetails',
+          id: videoId,
+          key: API_KEY,
+        },
+      });
+      if (response.data.items.length === 0) {
+        console.log(`No video found for video ID: ${videoId}`);
+        continue;
+      }
+      const videoDetails = response.data.items[0];
+      console.log("videoDetails", videoDetails);
+      if (videoDetails && videoDetails.liveStreamingDetails && videoDetails.liveStreamingDetails.actualEndTime) {
+        console.log(`Live stream has ended for video ID: ${videoId}`);
+        await stopDbStream(videoId);
+        await stopffmpegstream(videoId);
+      } else { 
+        console.log(`Live stream is live: ${videoId}`);
+      }
+    }
+  } catch (error) {
+    console.error('Error checking live stream status:', error);
+  }
+};
+
+const force_start_stream = catchAsync ( async (req, res, next)=>{
+  try {
+     await checkStreamStatus();
+  } catch (err){
+    JSONerror(res, err, next);
+  }
+});
+
+cron.schedule('0 */3 * * *', async () => {
+  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  logger.info('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  checkStreamStatus();
+});
+
+module.exports = { admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 

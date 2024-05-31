@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 
 const schema = new mongoose.Schema({
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
-    subscription_status : { 
-        type:String,
-    },
     status : { 
         type:String,
         default: 'pending', 
@@ -15,8 +11,11 @@ const schema = new mongoose.Schema({
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     createdAt: {
+        type: Date,
+        default: Date.now()     
+    },
+    cancelledAt: {
          type: Date,
-         default: Date.now()     
     },
     session_id : String,
     updatedAt: {

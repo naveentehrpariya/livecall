@@ -247,7 +247,7 @@ const pricing_plan_lists = catchAsync ( async (req, res)=>{
 
 const my_subscriptions = catchAsync ( async (req, res)=>{
   try {
-    const items = await Subscription.find({user : req.user._id}).populate('user').populate('plan').sort({createdAt: -1});
+    const items = await Subscription.findOne({user : req.user._id}).populate('plan').sort({createdAt: -1});
     if(items){
       res.status(200).json({ 
         status:true, 
@@ -287,7 +287,7 @@ const confirmSubscription = catchAsync ( async (req, res)=>{
         await User.findByIdAndUpdate(req.user._id, { plan: item.plan });
         const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'paid' });
         if (currentSubscription) {
-          await Subscription.findByIdAndUpdate(currentSubscription._id, { subscription_status: 'inactive' });
+          await Subscription.findByIdAndUpdate(currentSubscription._id, { status: 'inactive' });
         }
         item.upcomingPayment = new Date(endDate*1000);
         item.status = session.payment_status;
@@ -327,10 +327,43 @@ const confirmSubscription = catchAsync ( async (req, res)=>{
   }
 });
 
+const cancelSubscription = catchAsync(async (req, res) => {
+  try {
+    const mysub = await Subscription.findOne({status : "paid"});
+    if(!mysub){
+      res.json({
+        status:false,
+        message: "No active subscription found on this account."
+      });
+    }
+    const deletedSubscription = await stripe.subscriptions.cancel(mysub.subscription_id);
+    if(deletedSubscription.status === 'canceled'){
+      mysub.status = 'canceled'
+      mysub.cancelledAt =  Date.now();
+      await mysub.save();
+      res.status(200).json({
+        status : true,
+        message :"Your subscription has been cancelled."
+      });
+    } else {
+      res.status(400).json({
+        status : false,
+        message :"Failed to cancel your subscription."
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ 
+      status : false,
+      message :"Something went wrong",
+      error: error.message
+     });
+  }
+});
+
+
 const subscriptionRenew = catchAsync(async (req, res) => {
   try {
     const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'paid' }).populate('plan');
-
     if (!currentSubscription) {
       return res.status(400).json({
         status: false,
@@ -339,7 +372,6 @@ const subscriptionRenew = catchAsync(async (req, res) => {
     } 
     
     const currentProduct = await stripe.products.retrieve(currentSubscription.plan.productId);
-
     if (!currentProduct) {
       return res.status(400).json({
         status: false,
@@ -357,7 +389,6 @@ const subscriptionRenew = catchAsync(async (req, res) => {
 
     const subscription = await stripe.subscriptions.retrieve(currentSubscription.subscription_id);
     console.log("subscription",subscription)
-
     if (!subscription) {
       return res.status(400).json({
         status: false,
@@ -380,7 +411,6 @@ const subscriptionRenew = catchAsync(async (req, res) => {
     }
 
     const updatedSubscriptionItem = updatedSubscription.data.items.data.find(item => item.price === newProduct.default_price.id);
-
     if (!updatedSubscriptionItem) {
       return res.status(400).json({
         status: false,
@@ -389,7 +419,6 @@ const subscriptionRenew = catchAsync(async (req, res) => {
     }
 
     const updatedSubscriptionPlan = await Pricing.findOne({ productId: newProduct.id });
-
     if (!updatedSubscriptionPlan) {
       return res.status(400).json({
         status: false,
@@ -399,7 +428,8 @@ const subscriptionRenew = catchAsync(async (req, res) => {
 
     await Subscription.findByIdAndUpdate(currentSubscription._id, {
       plan: updatedSubscriptionPlan._id,
-      subscription_status : 'renewed',
+      status : 'paid',
+      updatedAt : Date.now()
     });
 
     // Update the user's upcoming payment date
@@ -419,5 +449,6 @@ const subscriptionRenew = catchAsync(async (req, res) => {
     });
   }
 });
-  
-module.exports = { disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 
+
+
+module.exports = { cancelSubscription, disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 

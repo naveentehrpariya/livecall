@@ -57,6 +57,13 @@ const validateToken = catchAsync ( async (req, res, next) => {
 
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, avatar, password, confirmPassword } = req.body;
+  const isEmailUsed  =  await User.findOne({email : email});
+  if(isEmailUsed){
+    res.json({
+      status : false,
+      message : "Your given email address is already used."
+    })
+  }
   await User.syncIndexes();
   User.create({
     name: name,
