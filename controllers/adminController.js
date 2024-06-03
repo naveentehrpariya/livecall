@@ -19,12 +19,14 @@ const isAdmin = catchAsync ( async (req, res, next) => {
 const dashboard = catchAsync(async (req, res) => {
   const totalUsers = await User.countDocuments();
    const activeUsers = await User.countDocuments({ status: 'active' });
-   const inactiveUsers = await User.countDocuments({ status: 'active' });
+   const inactiveUsers = await User.countDocuments({ status: 'inactive' });
    const totalStreams = await Stream.countDocuments();
    const totalliveStreams = await Stream.countDocuments({ status: 1 });
    const totalInactiveStreams = await Stream.countDocuments({ status: 0 });
-   const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'active' });
-   const totalInactiveSubscriptions = await Subscription.countDocuments({ status: 'inactive' });
+   const totalSubscriptions = await Subscription.countDocuments();
+   const inactiveSubscriptions = await Subscription.countDocuments({ status: 'inactive' });
+   const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'paid' });
+   const totalExpiredSubscriptions = await Subscription.countDocuments({ status: 'expired' });
  
    res.json({
      status: true,
@@ -39,8 +41,10 @@ const dashboard = catchAsync(async (req, res) => {
       { route:"/admin/streams/1", title : 'Live Streams', data: totalliveStreams },
       { route:"/admin/streams/0", title : 'Ended Streams', data: totalInactiveStreams },
 
-      { route:"/admin/subscriptions", title : 'Total Active Subscriptions', data: totalActiveSubscriptions },
-      { route:"/admin/subscriptions", title : 'Total Inactive Subscriptions', data: totalInactiveSubscriptions },
+      { route:"/admin/subscriptions/all", title : 'Total Subscriptions', data: totalSubscriptions },
+      { route:"/admin/subscriptions/paid", title : 'Active Subscriptions', data: totalActiveSubscriptions },
+      { route:"/admin/subscriptions/inactive", title : 'Inactive Subscriptions', data: inactiveSubscriptions },
+      { route:"/admin/subscriptions/expired", title : 'Expired Subscriptions', data: totalExpiredSubscriptions },
      ] 
    });
 });
@@ -53,17 +57,7 @@ const medias = catchAsync(async (req, res) => {
      audio: 'audio/'
    };
    const { type } = req.params;
-   let mimeFilter;
-   if (type === 'all') {
-     mimeFilter = { $regex: '.*' }; 
-   } else if (mimeTypes[type]) {
-     mimeFilter = { $regex: `^${mimeTypes[type]}` };
-   } else {
-     return res.status(400).json({
-       status: false,
-       message: "Invalid type parameter"
-     });
-   }
+   let mimeFilter = { $regex: `^${mimeTypes[type]}` };
    const Query = new APIFeatures(
       Files.find({
          mime: mimeFilter,
@@ -80,10 +74,19 @@ const medias = catchAsync(async (req, res) => {
 
 const users = catchAsync(async (req, res) => {
   const {status} = req.params;
-   const Query = new APIFeatures(
-     User.find({status : status}),
-     req.query
-   ).sort().paginate();
+
+    let Query;
+    if(status === 'all'){
+      Query = new APIFeatures(
+        User.find({}).populate("plan"),
+        req.query
+      ).sort().paginate();
+    } else {
+      Query = new APIFeatures(
+        User.find({status : status}).populate("plan"),
+        req.query
+      ).sort().paginate();
+    }
    const users = await Query.query;
    res.json({
      status: true,
@@ -119,15 +122,14 @@ const EnableDisableUser = catchAsync(async (req, res) => {
 const streams = catchAsync(async (req, res) => {
    const { type } = req.params;
     let Query;
-    if(type == 0 || type == 1 ){
-      Query = new APIFeatures(
-        Stream.find({status: type}),
-        req.query
-      ).sort().paginate();
-    }
-    if(type == "all"){
+    if(type === "all"){
       Query = new APIFeatures(
         Stream.find({}),
+        req.query
+      ).sort().paginate();
+    } else {  
+      Query = new APIFeatures(
+        Stream.find({status: type}),
         req.query
       ).sort().paginate();
     }
@@ -144,12 +146,12 @@ const subscriptions = catchAsync(async (req, res) => {
    let Query;
    if(type == 'all'){
      Query = new APIFeatures(
-       Subscription.find({}).populate("plan").populate("user"),
+       Subscription.find().populate(["user", 'plan']),
        req.query
      ).sort().paginate();
     } else {
       Query = new APIFeatures(
-        Subscription.find({ status : type}).populate("plan").populate("user"),
+        Subscription.find({ status : type}).populate(["user", 'plan']),
         req.query
       ).sort().paginate();
    }

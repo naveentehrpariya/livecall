@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
     status : { 
         type:String,
         default: 'pending', 
@@ -10,6 +9,7 @@ const schema = new mongoose.Schema({
         type:String,
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
     createdAt: {
         type: Date,
         default: Date.now()     

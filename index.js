@@ -5,7 +5,7 @@ const morgan = require('morgan')
 
 app.use(morgan('dev')); 
 const corsOptions = {
-  origin: '*',
+  origin: 'https://runstream.co',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, 
 }; 

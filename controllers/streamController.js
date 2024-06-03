@@ -357,7 +357,7 @@ const start_stream = catchAsync(async (req, res, next) => {
         return res.status(400).send('Stream already active.');
       }
       
-      const audio = "https://stream.zeno.fm/ez4m4918n98uv";
+      const audio = "https://download.samplelib.com/mp3/sample-12s.mp3";
       const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution || '1080p'];
       const ffmpegCommand = [
         'ffmpeg',
@@ -423,13 +423,13 @@ const start_stream = catchAsync(async (req, res, next) => {
 const stop_stream = async (req, res, next) => {
   try {
     const streamId  = req.params.streamId;
-    const stream = await Stream.findOne({streamId : streamId});
-    if(stream.user !== req.user._id){
-      res.json({
-        status:false,
-        message : "You have not permission to stop this stream."
-      })
-    }
+    // const stream = await Stream.findOne({streamId : streamId}).populate('user');
+    // if(stream.user !== req.user._id){
+    //   res.json({
+    //     status:false,
+    //     message : "You have not permission to stop this stream."
+    //   })
+    // }
     if(streamId == "" || streamId == null || streamId == undefined){
       res.json({
         status : false,

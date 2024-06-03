@@ -5,11 +5,8 @@ const Token = require("../db/Token");
 
 const checkUserStreamLimit = catchAsync ( async (req, res, next) => {
   const user = req.user._id;
-  const userStreams = await Stream.find({ user: user});
-  console.log("userStreams",userStreams)
+  const userStreams = await Stream.find({ user: user, status: 1 }).populate('user');
   const userSubscription = await Subscription.findOne({ user: user, status: 'paid' }).populate('plan');
-  console.log("userSubscription",userSubscription)
-  console.log("req.user.trialStatus",req.user.trialStatus)
   if (userSubscription && userSubscription._id) {
       if ((userStreams.length+1) > userSubscription.plan.allowed_streams) {
         return res.json({

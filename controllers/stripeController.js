@@ -109,6 +109,7 @@ const update_pricing_plan = catchAsync(async (req, res) => {
     plan.allowed_streams = req.body.allowed_streams;
     plan.storage = req.body.storage;
     plan.priceId = priceId;
+    plan.resolutions = JSON.stringify(req.body.resolutions)
 
     const result = await plan.save();
 
@@ -235,6 +236,29 @@ const pricing_plan_lists = catchAsync ( async (req, res)=>{
       res.status(400).json({ 
         status:false, 
         items:null 
+      })
+    }
+  } catch(err){
+    res.status(400).json({ 
+      status:false, 
+      error:err 
+    });
+  }
+});
+
+const planDetail = catchAsync ( async (req, res)=>{
+  try {
+    const {id} = req.params;
+    const item = await Pricing.findById(id);
+    if(item){
+      res.status(200).json({ 
+        status:true, 
+        plan:item 
+      })
+    } else {
+      res.status(400).json({ 
+        status:false, 
+        item:null 
       })
     }
   } catch(err){
@@ -451,4 +475,4 @@ const subscriptionRenew = catchAsync(async (req, res) => {
 });
 
 
-module.exports = { cancelSubscription, disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 
+module.exports = { planDetail, cancelSubscription, disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 
