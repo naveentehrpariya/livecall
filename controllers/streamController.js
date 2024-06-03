@@ -316,44 +316,9 @@ const stopDbStream = async (videoId) => {
 }
   
 
-function createFfmpegCommand({ video, thumbnail, resolution, preset, videoBitrate, maxrate, bufsize, gop, streamKey }) {
-  const ffmpegCommand = ['ffmpeg', '-y', '-loglevel', 'debug'];
-
-  // Include video and thumbnail inputs with processing options
-  ffmpegCommand.push(
-      '-vf', `scale=${resolution}`,  // Move filter before anullsrc
-      '-c:v', 'libx264',
-      '-preset', preset,
-      '-tune', 'zerolatency',
-      '-pix_fmt', 'yuv420p',
-      '-b:v', videoBitrate,
-      '-maxrate', maxrate,
-      '-bufsize', bufsize,
-      '-g', gop,
-      '-r', '30',
-      '-i', video  // Video input after processing options
-  );
-  ffmpegCommand.push('-loop', '1', '-re', '-i', thumbnail);  // Thumbnail input
-
-  // Add silent audio stream 
-  ffmpegCommand.push('-f', 'lavfi', '-i', 'anullsrc');
-
-  // Ensure no audio is encoded from the video file
-  ffmpegCommand.push('-an');
-
-  // Output to YouTube live stream
-  ffmpegCommand.push(
-      '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
-  );
-
-  return ffmpegCommand;
-}
-
-
 const start_stream = catchAsync(async (req, res, next) => {
   try {
-    const { title, description, audio, thumbnail, video } = req.body;
+    const { title, description, audio, thumbnail } = req.body;
     const userId = req.user._id;
     const { token, channel } = await getStoredToken(userId);
     
@@ -398,26 +363,40 @@ const start_stream = catchAsync(async (req, res, next) => {
     
     const savedStream = await stream.save();
     if (savedStream) {
+      const video = req.body.video;
       if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
       }
-      // const audio = "https://download.samplelib.com/mp3/sample-12s.mp3";
+      
+      const audio = "https://stream.zeno.fm/ez4m4918n98uv";
       const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution || '1080p'];
-      const ffmpegCommand = createFfmpegCommand({
-        video,
-        thumbnail,
-        audio,
-        resolution,
-        preset,
-        videoBitrate,
-        maxrate,
-        bufsize,
-        gop,
-        streamKey
-    });
-
-      const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-      activeStreams[videoID] = child;
+      const ffmpegCommand = [
+        'ffmpeg',
+        '-stream_loop', '-1',
+        '-re',
+        '-i', video,
+        '-f', 'lavfi',
+        '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
+        '-vf', `scale=${resolution}`, 
+        '-c:v', 'libx264',
+        '-preset', preset,
+        '-tune', 'zerolatency',
+        '-pix_fmt', 'yuv420p',
+        '-b:v', videoBitrate,
+        '-maxrate', maxrate,
+        '-bufsize', bufsize,
+        '-g', gop,
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-ar', '44100',
+        '-strict', 'experimental',
+        '-f', 'flv',
+        `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
+    ];
+    
+    const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
+    activeStreams[videoID] = child;
+    
       
       child.on('close', () => {
         stopffmpegstream(videoID);
@@ -448,6 +427,7 @@ const start_stream = catchAsync(async (req, res, next) => {
     JSONerror(res, err, next);
   }
 });
+
 
 const stop_stream = async (req, res, next) => {
   try {

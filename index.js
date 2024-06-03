@@ -4,12 +4,12 @@ const cors = require('cors');
 const morgan = require('morgan')
 
 app.use(morgan('dev')); 
-const corsOptions = {
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, 
-}; 
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: '*',
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true, 
+// }; 
+app.use(cors());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
