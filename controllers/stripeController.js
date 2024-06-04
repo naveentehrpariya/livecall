@@ -384,95 +384,39 @@ const cancelSubscription = catchAsync(async (req, res) => {
   }
 });
 
-
-const subscriptionRenew = catchAsync(async (req, res) => {
-  try {
-    const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'paid' }).populate('plan');
-    if (!currentSubscription) {
-      return res.status(400).json({
-        status: false,
-        message: "No active subscription found."
-      });
-    } 
-    
-    const currentProduct = await stripe.products.retrieve(currentSubscription.plan.productId);
-    if (!currentProduct) {
-      return res.status(400).json({
-        status: false,
-        message: "Product not found."
-      });
+const subscriptionWebhook = catchAsync(async (req, res) => {
+    const sig = request.headers['stripe-signature'];
+    const endpointSecret = 'whsec_N2BVT5rKy71GaFpWXSC5q59Gi1wSFRIV'
+    let event;
+    console.log("webhook called")
+  
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      response.status(400).send(`Webhook Error: ${err.message}`);
+      return;
     }
-
-    const newProduct = await stripe.products.retrieve(currentProduct.default_price.product);
-    if (!newProduct) {
-      return res.status(400).json({
-        status: false,
-        message: "New product not found."
-      });
+  
+    console.log("event.type",event.type)
+    // Handle the event
+    switch (event.type) {
+      case 'invoice.updated':
+        const invoiceUpdated = event.data.object;
+        console.log("invoiceUpdated",invoiceUpdated)
+        break;
+      case 'invoice.created':
+        const invoiceCreated = event.data.object;
+        console.log("invoiceUpdated",invoiceCreated)
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
     }
+  
+    // Return a 200 response to acknowledge receipt of the event
+    response.send();
+  });
 
-    const subscription = await stripe.subscriptions.retrieve(currentSubscription.subscription_id);
-    console.log("subscription",subscription)
-    if (!subscription) {
-      return res.status(400).json({
-        status: false,
-        message: "Subscription not found."
-      });
-    }
-
-    const updatedSubscription = await stripe.subscriptions.update(subscription.id, {
-      items: [{
-        price: newProduct.default_price.id,
-        quantity_mode: 1
-      }]
-    });
-
-    if (!updatedSubscription) {
-      return res.status(400).json({
-        status: false,
-        message: "Failed to update subscription."
-      });
-    }
-
-    const updatedSubscriptionItem = updatedSubscription.data.items.data.find(item => item.price === newProduct.default_price.id);
-    if (!updatedSubscriptionItem) {
-      return res.status(400).json({
-        status: false,
-        message: "Failed to update subscription."
-      });
-    }
-
-    const updatedSubscriptionPlan = await Pricing.findOne({ productId: newProduct.id });
-    if (!updatedSubscriptionPlan) {
-      return res.status(400).json({
-        status: false,
-        message: "Failed to update subscription plan."
-      });
-    }
-
-    await Subscription.findByIdAndUpdate(currentSubscription._id, {
-      plan: updatedSubscriptionPlan._id,
-      status : 'paid',
-      updatedAt : Date.now()
-    });
-
-    // Update the user's upcoming payment date
-    const currentUser = await User.findById(req.user._id);
-    if (updatedSubscription.current_period_end && currentUser.upcomingPayment) {
-      const updatedPaymentDate = new Date(updatedSubscription.current_period_end * 1000);
-      await User.findByIdAndUpdate(req.user._id, {
-        upcomingPayment: updatedPaymentDate
-      });
-    }
-    await subscriptionRenew(req, res);
-
-  } catch (error) {
-    res.status(400).json({
-      status: false,
-      message: "Failed to renew subscription."
-    });
-  }
-});
+  
 
 
-module.exports = { planDetail, cancelSubscription, disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionRenew, update_pricing_plan } 
+module.exports = { planDetail, cancelSubscription, disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionWebhook, update_pricing_plan } 

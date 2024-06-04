@@ -8,7 +8,6 @@ const crypto = require("crypto");
 const JSONerror = require("../utils/jsonErrorHandler");
 const SECRET_ACCESS = process.env && process.env.SECRET_ACCESS;
 const key = process && process.env && process.env.SECRET_ACCESS;
-
 const signToken = async (id) => {
   const token = jwt.sign(
     {id}, 
