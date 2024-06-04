@@ -10,7 +10,8 @@ const handleFileUpload = async (file) => {
     const yourStorageZone = process.env.BUNNY_STORAGE_ZONE;
     const url = `https://storage.bunnycdn.com/${yourStorageZone}/${uniqueFilename}`;
     const headers = {
-      AccessKey: process.env.BUNNY_API_KEY,
+      "AccessKey": process.env.BUNNY_API_KEY,
+      "Access-Control-Allow-Origin" :"https://runstream.co"
     };
     const response = await axios.put(url, fileStream, { headers });
     if (response.status === 201 || response.status === 200) {

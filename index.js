@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit:'50mb'}));
 
 const globalErrorHandler = require("./middlewares/gobalErrorHandler");
 const errorHandler = require("./middlewares/errorHandler");
@@ -23,9 +23,6 @@ const AppError = require('./utils/AppError');
 require('./db/config');
 
 const multer = require('multer');
-const multerParse = multer({
-  dest: "uploads/",
-});
 const handleFileUpload = require('./utils/file-upload-util');
 const { validateToken } = require('./controllers/authController');
 const Files = require('./db/Files');
@@ -41,11 +38,18 @@ app.use("", require('./routes/stripeRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 app.use("/admin", require('./routes/adminRoutes'));
 // Specific CORS handling for file upload route
-app.options("/cloud/upload", cors(corsOptions));
- // Handle preflight request
+// Handle preflight request
 
-app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.fields([{ name: "attachment" }]), async (req, res) => {
-  const attachment = req.files?.attachment?.[0];
+
+const multerParse = multer({
+  dest: "uploads/",
+  limits: {
+    fileSize: 1024 * 1024 * 50 // 50MB
+  }
+});
+app.options("/cloud/upload", cors(corsOptions));
+app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.single("attachment"), async (req, res) => {
+  const attachment = req.file;
   if (!attachment) {
     return res.status(400).json({ message: "No file uploaded" });
   }
@@ -68,12 +72,13 @@ app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.fields([
           error: uploadResponse
         });
       }
-
       return res.status(201).json({
         message: "File uploaded to storage.",
         file_data: fileUploaded,
       });
+    
     } else {
+      res.setHeader('Access-Control-Allow-Origin', '*');
       res.status(500).json({
         message: "File upload failed",
         error: uploadResponse

@@ -1,7 +1,7 @@
 const Files = require("../db/Files");
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
-
+const handleFileUpload = require('../utils/file-upload-util');
 // all/ image / video / audio
 const myMedia = catchAsync(async (req, res) => {
    const mimeTypes = {
@@ -64,4 +64,50 @@ const deleteMedia = catchAsync(async (req, res) => {
 });
 
 
-module.exports = { myMedia, deleteMedia } 
+const uploadMedia = catchAsync(async (req, res) => {
+  const attachment = req.files?.attachment?.[0];
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (!attachment) {
+    return res.status(400).json({ message: "Nothing uploaded" });
+  }
+  try {
+    const uploadResponse = await handleFileUpload(attachment);
+    if (uploadResponse) {
+      const file = new Files({
+        name: uploadResponse.file.originalname,
+        mime: uploadResponse.mime,
+        filename: uploadResponse.filename,
+        url: uploadResponse.url,
+        user: req.user?._id,
+        size: uploadResponse.size,
+      });
+      const fileUploaded = await file.save();
+
+      if (!fileUploaded) {
+        return res.status(500).json({
+          message: "File upload failed",
+          error: uploadResponse
+        });
+      }
+
+      return res.status(201).json({
+        message: "File uploaded to storage.",
+        file_data: fileUploaded,
+      });
+   
+    } else {
+      res.status(500).json({
+        message: "File upload failed",
+        error: uploadResponse
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "An error occurred during file upload",
+    });
+  }
+});
+
+
+module.exports = { uploadMedia, myMedia, deleteMedia } 
