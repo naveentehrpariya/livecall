@@ -2,8 +2,18 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
+require('dotenv').config()
+const globalErrorHandler = require("./middlewares/gobalErrorHandler");
+const errorHandler = require("./middlewares/errorHandler");
+const multer = require('multer');
+const handleFileUpload = require('./utils/file-upload-util');
+const { validateToken } = require('./controllers/authController');
+const { subscriptionWebhook } = require('./controllers/stripeController');
+const Files = require('./db/Files');
+const AppError = require('./utils/AppError');
+require('./db/config');
 
-// Apply CORS middleware before other middlewares and routes
 const corsOptions = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -11,24 +21,16 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+
 app.use(morgan('dev'));
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({limit:'50mb'}));
+app.use(errorHandler);
+app.use(globalErrorHandler);
 
-const globalErrorHandler = require("./middlewares/gobalErrorHandler");
-const errorHandler = require("./middlewares/errorHandler");
-const AppError = require('./utils/AppError');
-require('./db/config');
 
-const multer = require('multer');
-const handleFileUpload = require('./utils/file-upload-util');
-const { validateToken } = require('./controllers/authController');
-const Files = require('./db/Files');
-
-app.use(bodyParser.raw({type: 'application/json'}));
-
+app.post('/subscriptionWebhook', bodyParser.raw({ type: 'application/json' }), subscriptionWebhook);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit:'2000mb'}));
 // ROUTES
 app.use("/user", require('./routes/authRoutes'));
 app.use("/product", require('./routes/productsRoutes'));
@@ -37,14 +39,12 @@ app.use("", require('./routes/streamRoutes'));
 app.use("", require('./routes/stripeRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 app.use("/admin", require('./routes/adminRoutes'));
-// Specific CORS handling for file upload route
-// Handle preflight request
 
 
 const multerParse = multer({
   dest: "uploads/",
   limits: {
-    fileSize: 1024 * 1024 * 50 // 50MB
+    fileSize: 1024 * 1024 * 2000 // 50MB
   }
 });
 app.options("/cloud/upload", cors(corsOptions));
@@ -92,9 +92,6 @@ app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.single("
   }
 });
 
-app.use(express.json());
-app.use(errorHandler);
-app.use(globalErrorHandler);
 
 app.get('/', (req, res) => {
   res.send({

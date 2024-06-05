@@ -1,10 +1,11 @@
+const cron = require('node-cron');
 const catchAsync  = require("../utils/catchAsync");
 const Pricing = require("../db/Pricing");
 const Subscription = require("../db/Subscription");
 const User = require("../db/Users");
+const logger = require("../utils/logger");
 const stripe = require('stripe')(process.env.STRIPE_KEY);
-const domainURL = process.env.DOMAIN_URL || "http://localhost:8080";
-
+const domainURL = process.env.DOMAIN_URL;
 const create_pricing_plan = catchAsync ( async (req, res)=>{
     const isAlreadyExist = await Pricing.findOne({name:req.body.name});
     if(isAlreadyExist){
@@ -187,31 +188,31 @@ const subscribe = catchAsync ( async (req, res)=>{
         plan: plan._id,
         user: req.user._id,
         updatedAt: Date.now(),     
-        upcomingPayment: new Date(Date.now() + (1000 * 60 * 60 * 24 * 30)),
+        upcomingPayment: null,
       });
       await subcription.save();
       const session = await stripe.checkout.sessions.create({
-        mode: "subscription",
-        line_items: [
-          { 
-            price_data: {
-              product : productId,
-              unit_amount_decimal : parseInt(plan.price*100),
-              currency: plan.currency || "usd",
-              recurring : {
-                interval : 'month',
-                interval_count : 1,
+          mode: "subscription",
+          line_items: [
+            { 
+              price_data: {
+                product : productId,
+                unit_amount_decimal : parseInt(plan.price*100),
+                currency: plan.currency || "usd",
+                recurring : {
+                  interval : 'month',
+                  interval_count : 1,
+                },
               },
-            },
-            quantity: 1
-          }
-        ],
-        success_url: `${domainURL}/subscription/success/${subcription._id}`,
-        cancel_url: `${domainURL}/subscription/cancel/${subcription._id}`,
-      }); 
+              quantity: 1
+            }
+          ],
+          success_url: `${domainURL}/subscription/success/${subcription._id}`,
+          cancel_url: `${domainURL}/subscription/cancel/${subcription._id}`,
+        } 
+      ); 
       subcription.session_id = session.id;
       await subcription.save();
-
       res.json({
         status:true,
         url: session.url,
@@ -227,6 +228,7 @@ const subscribe = catchAsync ( async (req, res)=>{
 const pricing_plan_lists = catchAsync ( async (req, res)=>{
   try {
     const items = await Pricing.find({ status : "active"});
+
     if(items){
       res.status(200).json({ 
         status:true, 
@@ -311,10 +313,11 @@ const confirmSubscription = catchAsync ( async (req, res)=>{
         await User.findByIdAndUpdate(req.user._id, { plan: item.plan });
         const currentSubscription = await Subscription.findOne({ user: req.user._id, status: 'paid' });
         if (currentSubscription) {
-          await Subscription.findByIdAndUpdate(currentSubscription._id, { status: 'inactive' });
-        }
+          await stripe.subscriptions.cancel(currentSubscription.subscription_id);
+        } 
         item.upcomingPayment = new Date(endDate*1000);
         item.status = session.payment_status;
+        item.subscription_id = session.subscription;
         item.subscription_id = session.subscription;
   
         const updated = await item.save();
@@ -350,7 +353,7 @@ const confirmSubscription = catchAsync ( async (req, res)=>{
     });
   }
 });
-
+ 
 const cancelSubscription = catchAsync(async (req, res) => {
   try {
     const mysub = await Subscription.findOne({status : "paid"});
@@ -384,39 +387,118 @@ const cancelSubscription = catchAsync(async (req, res) => {
   }
 });
 
+
 const subscriptionWebhook = catchAsync(async (req, res) => {
-    const sig = request.headers['stripe-signature'];
-    const endpointSecret = 'whsec_N2BVT5rKy71GaFpWXSC5q59Gi1wSFRIV'
-    let event;
-    console.log("webhook called")
-  
-    try {
-      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-    } catch (err) {
-      response.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
-  
-    console.log("event.type",event.type)
-    // Handle the event
-    switch (event.type) {
-      case 'invoice.updated':
-        const invoiceUpdated = event.data.object;
-        console.log("invoiceUpdated",invoiceUpdated)
-        break;
-      case 'invoice.created':
-        const invoiceCreated = event.data.object;
-        console.log("invoiceUpdated",invoiceCreated)
-        break;
-      default:
-        console.log(`Unhandled event type ${event.type}`);
-    }
-  
-    // Return a 200 response to acknowledge receipt of the event
-    response.send();
-  });
 
+  const endpointSecret = process.env.SUSBCRIPTION_RENEW_SECRET ;
+  const sig = req.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error(`Webhook signature verification failed: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
   
+  switch (event.type) {
+    case 'customer.subscription.deleted':
+      const customerDeleted = event.data.object;
+      const deletedsubscriptionId = customerDeleted.id;
+      const currentSubscription = await Subscription.findOne({ subscription_id : deletedsubscriptionId, status:"paid" });
+      if (currentSubscription) {
+        await Subscription.findByIdAndUpdate(currentSubscription._id, { status: 'inactive', updatedAt:Date.now()});
+      }
+      logger.info(`Subscription DELETED !!`);
+      logger.info(JSON.stringify(customerDeleted));
+      console.log(`Subscription ${deletedsubscriptionId} DELETED !!`);
+      break;
+    case 'invoice.payment_failed':
+      const failedSubscription = event.data.object;
+      const failedSubscriptionId = failedSubscription.id;
+      const currentActive = await Subscription.findOne({ subscription_id : failedSubscriptionId});
+      if (currentActive) {
+        await Subscription.findByIdAndUpdate(currentActive._id, { status:'canceled', cancelledAt:Date.now(), updatedAt:Date.now()});
+      }
+      logger.info(`Subscription DELETED !!`);
+      logger.info(JSON.stringify(failedSubscription));
+      console.log(`Subscription ${failedSubscriptionId} payment_failed !!`);
 
+      break;
+    case 'invoice.updated':
+      console.log("INVOICE updated");
+      break;
+    case 'invoice.payment_succeeded':
+      const srenew = event.data.object;
+      console.log("INVOICE payment succecceed");
+      const renewedId = srenew.id;
+      if(srenew.billing_reason === 'subscription_cycle'){
+        const current = await Subscription.findOne({ subscription_id : renewedId});
+        if (current){
+          await Subscription.findByIdAndUpdate(renewedId._id, { status:'inactive', updatedAt:Date.now()});
+        }
+        const newsubcription = new Subscription({
+          plan: current.plan,
+          user: current.user,
+          createdAt: Date.now(),
+          upcomingPayment : new Date(srenew.period_end*1000), 
+          status : srenew.status,
+          subscription_id : renewedId,
+          session_id : current.session_id
+        });
+        await newsubcription.save();
+         
+      } else {
+        const current = await Subscription.findOne({ subscription_id : renewedId});
+        if (current){
+          await Subscription.findByIdAndUpdate(renewedId._id, { 
+            status:'paid', 
+            updatedAt:Date.now(),
+            subscription_id : renewedId,
+            upcomingPayment : new Date(srenew.period_end*1000), 
+          });
+        }
+      }
+      logger.info(`Subscription renewed !!`);
+      logger.info(JSON.stringify(srenew));
+      console.log(`Subscription ${renewedId} payment_failed !!`);
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+  res.send({ received: true });
+});
+
+const checkPendingSubscriptions = async () => {
+  try {
+    const pendingSubscriptions = await Subscription.find({ status: 'pending' });
+    for (const sub of pendingSubscriptions) {
+      const session = await stripe.checkout.sessions.retrieve(sub.session_id);
+      if (session && session.payment_status === 'paid') {
+        const subscriptionData = await stripe.subscriptions.retrieve(session.subscription);
+        const endDate = subscriptionData.current_period_end;
+        await User.findByIdAndUpdate(sub.user, { plan: sub.plan });
+        const currentSubscription = await Subscription.findOne({ user: sub.user, status: 'paid' });
+        if (currentSubscription) {
+          await stripe.subscriptions.cancel(currentSubscription.subscription_id);
+        }
+        sub.upcomingPayment = new Date(endDate * 1000);
+        sub.status = session.payment_status;
+        sub.subscription_id = session.subscription;
+        await sub.save();
+        logger.info(`Subscription ${sub._id} marked as paid.`);
+      } else {
+        sub.status = 'payment_failed';
+        await sub.save();
+        logger.info(`Subscription ${sub._id} payment failed.`);
+      }
+    }
+  } catch (error) {
+    logger.error(`Error checking pending subscriptions: ${error.message}`);
+  }
+};
+cron.schedule('0 * * * *', () => {
+  logger.info('Running checkPendingSubscriptions cron job');
+  checkPendingSubscriptions();
+});
 
 module.exports = { planDetail, cancelSubscription, disable_pricing_plan, confirmSubscription, subscribe, create_pricing_plan, pricing_plan_lists, my_subscriptions, subscriptionWebhook, update_pricing_plan } 

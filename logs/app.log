@@ -1,34 +1,100 @@
-2024-05-31T07:32:00.553Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:33:00.060Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:34:00.610Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:35:00.289Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:36:00.729Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:37:00.199Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:38:00.796Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:39:00.593Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:40:00.230Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:41:00.772Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:42:00.327Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:43:00.668Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:44:00.229Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:45:00.869Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:46:00.311Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:47:00.774Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:48:00.233Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:49:00.743Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:50:00.222Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:51:00.740Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:52:00.277Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:53:00.747Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T07:54:00.425Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T09:30:00.767Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-05-31T12:30:00.580Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-01T12:30:00.553Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-01T16:04:00.899Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-01T16:05:00.986Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-01T16:06:00.057Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-01T16:07:00.134Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-01T18:30:00.118Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-03T18:30:00.981Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-04T09:30:00.373Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
-2024-06-04T18:30:00.947Z [INFO]: Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>
+2024-06-05T12:33:04.564Z [ERROR]: hello world
+2024-06-05T12:45:47.113Z [ERROR]: hello [object Object]
+2024-06-05T12:46:01.219Z [INFO]: error
+2024-06-05T12:53:19.422Z [INFO]:"Subscription event"
+2024-06-05T12:53:20.384Z [INFO]:"Subscription event"
+2024-06-05T12:53:20.960Z [INFO]:"Subscription event"
+2024-06-05T12:53:21.040Z [INFO]:"Subscription event"
+2024-06-05T12:53:21.730Z [INFO]:"Subscription event"
+2024-06-05T12:53:22.067Z [INFO]:"Subscription event"
+2024-06-05T12:53:23.852Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.026Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.105Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.159Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.184Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.253Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.360Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.374Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.553Z [INFO]:"Subscription event"
+2024-06-05T12:53:24.648Z [INFO]:"Subscription event"
+2024-06-05T12:53:42.901Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:43.828Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:44.430Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:44.519Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:45.236Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:45.524Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:46.999Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.141Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.217Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.410Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.546Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.642Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.650Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.716Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.750Z [INFO]:"Subscription event undefined"
+2024-06-05T12:53:47.837Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:31.769Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:32.656Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:33.257Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:33.319Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:33.996Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:34.269Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.040Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.207Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.293Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.464Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.579Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.692Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.738Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.798Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:36.862Z [INFO]:"Subscription event undefined"
+2024-06-05T12:54:37.007Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:09.191Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:10.234Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:10.785Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:10.859Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:11.625Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:11.913Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:13.526Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:13.790Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:13.824Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:13.971Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:14.059Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:14.155Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:14.203Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:14.207Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:14.279Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:14.396Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:35.562Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:36.537Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:37.141Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:37.215Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:37.898Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:38.241Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:39.982Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.152Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.354Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.393Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.498Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.593Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.686Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.698Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:40.780Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:41.078Z [INFO]:"Subscription event undefined"
+2024-06-05T12:56:59.611Z [INFO]:"Subscription event \"t=1717592219,v1=3d7003a44d4d1ef6e0d5182561f7aab3f4fd83faabebf323b7ed70b8bfe78cd8,v0=e916686b582e6194ba1fdc0b3e0a9ca7e3606de6e8a12cefa000c5776d61e3ce\""
+2024-06-05T12:57:00.615Z [INFO]:"Subscription event \"t=1717592220,v1=a8b914d1cff1de70fe579e0cc78f997dc0aec9a304b3c1a6f4de073a1a22ddab,v0=b726b77b7f96ec293d8f034b55e5474e2d82ae8233cc2d0c468bdede81beeefa\""
+2024-06-05T12:57:01.259Z [INFO]:"Subscription event \"t=1717592221,v1=8de9a7a0e296bf2f87d4c89e8ca7697a6eec1ad55b83346796f34bab1208df84,v0=df71626fa5bf64b684da0badaaa094dfa07cd6b5f9163f203ff59fc6121f0524\""
+2024-06-05T12:57:01.279Z [INFO]:"Subscription event \"t=1717592221,v1=778667aed3df1d2b0c74f84246d9cf72084c828f75bb18c6b7cb98078d26308a,v0=43c8621248c891aa4c6da50f8331642fd5098cf0bced313403ff424ff3b2c8ef\""
+2024-06-05T12:57:01.977Z [INFO]:"Subscription event \"t=1717592222,v1=b069b85c6add80e689f8df6e8a5644c87d8fe3d6991fae277e9f5e2d714bc710,v0=6a5b84b4dc6609f5cea7e7bda30b19d12d30ab075d284d1a6f7c1151d60f1c7e\""
+2024-06-05T12:57:02.273Z [INFO]:"Subscription event \"t=1717592222,v1=4b607a6869187165c11a82121b3c450dfda241a744afc408df2fea34ddd7785c,v0=6a5b84b4dc6609f5cea7e7bda30b19d12d30ab075d284d1a6f7c1151d60f1c7e\""
+2024-06-05T12:57:04.154Z [INFO]:"Subscription event \"t=1717592224,v1=5567a0d945625894f2576037618ed57fabfbc4f1472c462ef3c4050aa80834bd,v0=9fc5613ed83ab208a58cb2c6e5fba0aebf1f6c6c378b395328217d939f72585f\""
+2024-06-05T12:57:04.347Z [INFO]:"Subscription event \"t=1717592224,v1=64ff470f0a19fe54701820dfb92b104ae0bb484623498f9fbc86714e9ca8ea22,v0=9358111e0f151305b0985f414caf5244f53e7b569e9a20a02dbd425e564137d2\""
+2024-06-05T12:57:04.462Z [INFO]:"Subscription event \"t=1717592224,v1=28df551ba978e2fec5fcd2e1a774282b7bb9da88f5c42f69a5fc34d615426b93,v0=861fdfb287db00dbbb58e768050c328af34dbf632a22bb72e0ecf5a7b7e71b36\""
+2024-06-05T12:57:04.599Z [INFO]:"Subscription event \"t=1717592224,v1=c9bab4ee6d2aab3218d92e77b903d8c4a41c0f19fbf9ec164731d76c179fb3a1,v0=6f70a7818145498d2a1d89d59ed154c3f49a5cfdbb8d56db2c507951b69ec1a7\""
+2024-06-05T12:57:04.728Z [INFO]:"Subscription event \"t=1717592224,v1=fec4b309d34fc2faa757868f2fe2f6eeec4fe97b209de8c3f72cc130ab6c2fe6,v0=a3440fa3f4d41c12fd808365aa529499c04ea6121264b7e8098d4d7223cbb0da\""
+2024-06-05T12:57:04.870Z [INFO]:"Subscription event \"t=1717592224,v1=ade44838cd4d3118aa64277bda8556d4448882d85d4951a524c26337c7eafe46,v0=13ad8ee1cdac3ba8b58a740fea9f636e92ec84ffd347642a74db234e47d33ff2\""
+2024-06-05T12:57:04.904Z [INFO]:"Subscription event \"t=1717592224,v1=a738808da547723d599bfaf3ad29b9d7dfb985c6e3487c22d9a7b9040eebe194,v0=6f70a7818145498d2a1d89d59ed154c3f49a5cfdbb8d56db2c507951b69ec1a7\""
+2024-06-05T12:57:04.962Z [INFO]:"Subscription event \"t=1717592225,v1=e2f355a93313806727ab4bbc692e5d611d1a22e9a032307d55a0e6ec1999fee1,v0=e28b9445796f94ed9a085fa0e12b669b64a7c03ac0185204050c74029ab38e4b\""
+2024-06-05T12:57:05.024Z [INFO]:"Subscription event \"t=1717592224,v1=da10404a6a95d744a683431720250e6b0006bd36a2b5764d422c83c584496140,v0=a3440fa3f4d41c12fd808365aa529499c04ea6121264b7e8098d4d7223cbb0da\""
+2024-06-05T12:57:05.142Z [INFO]:"Subscription event \"t=1717592224,v1=f5ac1b5241c9bbf0a917c08041883cafed207cbebb56f04daa32beea6e56b3de,v0=13ad8ee1cdac3ba8b58a740fea9f636e92ec84ffd347642a74db234e47d33ff2\""
+2024-06-05T12:59:22.673Z [INFO]:[{"_id":"665b4bac4102a3857177a8ca","name":"Lite","resolutions":"[\"1080p\",\"720p\",\"720x1080\"]","description":"This is basic test plan.","price":20,"priceId":"price_1PMul6CmFHIIsmOrqO4yYhtw","productId":"prod_QDLSsuCsMLeRiy","allowed_streams":1,"storage":"10","createdAt":"2024-06-01T16:25:33.067Z","currency":"usd","status":"active","recurring":"month","__v":0},{"_id":"665b65e68ba1d93be764732a","name":"Lite Plus","resolutions":"[\"2160p\",\"1080p\",\"720p\",\"720x1080\"]","description":"This is lite plus plan with 4k streams.","price":25,"priceId":"price_1PMwVNCmFHIIsmOrZkVYutDR","productId":"prod_QDNFvvtgbMbHen","allowed_streams":4,"storage":"6","createdAt":"2024-06-01T18:16:13.344Z","currency":"usd","status":"active","recurring":"month","__v":0}]

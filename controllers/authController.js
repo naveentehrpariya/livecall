@@ -6,8 +6,7 @@ const AppError = require("../utils/AppError");
 const SendEmail = require("../utils/Email");
 const crypto = require("crypto");
 const JSONerror = require("../utils/jsonErrorHandler");
-const SECRET_ACCESS = process.env && process.env.SECRET_ACCESS;
-const key = process && process.env && process.env.SECRET_ACCESS;
+const SECRET_ACCESS = process.env && process.env.SECRET_ACCESS || "MYSECRET";
 const signToken = async (id) => {
   const token = jwt.sign(
     {id}, 
@@ -28,7 +27,7 @@ const validateToken = catchAsync ( async (req, res, next) => {
       });
     } else {
       try {
-        const decode = await promisify(jwt.verify)(token, key);
+        const decode = await promisify(jwt.verify)(token, SECRET_ACCESS);
         if(decode){ 
           let result = await User.findById(decode.id).populate('plan');
           req.user = result;
@@ -43,6 +42,7 @@ const validateToken = catchAsync ( async (req, res, next) => {
         res.status(401).json({
           status : false,
           message:'Invalid or expired token',
+          error : err
         });
       }
     }
