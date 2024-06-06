@@ -11,8 +11,9 @@ const SizeReducer = require("../utils/SizeReducer");
 const JSONerror = require("../utils/jsonErrorHandler");
 const channelDetails = require("../utils/channelDetails");
 const cron = require('node-cron');
+const Subscription = require("../db/Subscription");
 const API_KEY = process.env.YOUTUBE_API_KEY
-
+ 
 const resolutionSettings = {
   '2160p': {
     resolution: '3840x2160',
@@ -240,6 +241,7 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
     },
   });
   console.log(`broadcastResponse response `, broadcastResponse);
+  logger(broadcastResponse);
   
   const broadcastId = broadcastResponse.data.id;
   
@@ -278,19 +280,16 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
     bind: bindResponse.data,
     broadcastId: broadcastId
   });
-  logger.log(`stream broadcast or live stream created `, {
-    broadcast: broadcastResponse.data,
-    stream: streamResponse.data,
-    bind: bindResponse.data,
-    broadcastId: broadcastId
-  });
 
-  return {
+
+  const result = {
     broadcast: broadcastResponse.data,
     stream: streamResponse.data,
     bind: bindResponse.data,
     broadcastId: broadcastId
-  };
+  }
+  logger(result);
+  return result ;
 };
 
 let activeStreams = {};
@@ -314,7 +313,6 @@ const stopDbStream = async (videoId) => {
   const savedstream = await stream.save();
   return savedstream;
 }
-  
 
 const start_stream = catchAsync(async (req, res, next) => {
   try {
@@ -367,7 +365,6 @@ const start_stream = catchAsync(async (req, res, next) => {
       if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
       }
-      
       const audio = "https://stream.zeno.fm/ez4m4918n98uv";
       const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution || '1080p'];
       const ffmpegCommand = [
@@ -427,7 +424,6 @@ const start_stream = catchAsync(async (req, res, next) => {
     JSONerror(res, err, next);
   }
 });
-
 
 const stop_stream = async (req, res, next) => {
   try {
@@ -537,18 +533,59 @@ const checkStreamStatus = async () => {
   }
 };
 
+
+
+cron.schedule('0 */3 * * *', async () => {
+  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  checkStreamStatus();
+});
+
+const checkStreamStatusAndSubscription = async () => {
+  try {
+    const activeStreams = await Stream.find({ status: 1 }).populate("user");
+    console.log("activeStreams",activeStreams);
+    if (activeStreams && activeStreams.length < 1) {
+      console.log(`Currently there are not any live streams active.`);
+      return;
+    }
+    for (const stream of activeStreams) {
+      const user = stream.user;
+      const userSubscription = await Subscription.findOne({ user: user, status: 'paid' }).populate("plan");
+      if (!userSubscription) {
+        console.log(`User ${user} does not have an active subscription.`);
+        continue;
+      }
+      const maxStreamsAllowed = userSubscription && userSubscription.plan && userSubscription.plan.allowed_streams || 0;
+      const userActiveStreams = await Stream.find({ user: user, status: 1 });
+      if (userActiveStreams.length >= maxStreamsAllowed) {
+        console.log(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
+        const excessStreams = userActiveStreams.slice(maxStreamsAllowed);
+        for (const excessStream of excessStreams) {
+          logger(`Stopping excess stream: ${excessStream.streamId}`);
+          await stopDbStream(excessStream.streamId);
+          await stopffmpegstream(excessStream.streamId);
+        }
+        continue;
+      }
+    }
+  } catch (error) {
+    console.error('Error checking live stream status and subscription:', error);
+  }
+};
+
 const force_start_stream = catchAsync ( async (req, res, next)=>{
   try {
-     await checkStreamStatus();
+     await checkStreamStatusAndSubscription();
   } catch (err){
     JSONerror(res, err, next);
   }
 });
 
-cron.schedule('0 */3 * * *', async () => {
-  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  logger.info('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  checkStreamStatus();
+cron.schedule('0 * * * *', async () => {
+  console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
+  logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
+  // checkStreamStatusAndSubscription();
 });
 
 module.exports = { admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 

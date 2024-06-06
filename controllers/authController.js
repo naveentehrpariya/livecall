@@ -6,6 +6,7 @@ const AppError = require("../utils/AppError");
 const SendEmail = require("../utils/Email");
 const crypto = require("crypto");
 const JSONerror = require("../utils/jsonErrorHandler");
+const logger = require("../utils/logger");
 const SECRET_ACCESS = process.env && process.env.SECRET_ACCESS || "MYSECRET";
 const signToken = async (id) => {
   const token = jwt.sign(
@@ -106,6 +107,7 @@ const login = catchAsync ( async (req, res, next) => {
     httpOnly:true,
    });
 
+   logger(user);
    res.status(200).json({
     status :true,
     message:"Login Successfully !!",

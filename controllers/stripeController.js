@@ -403,25 +403,23 @@ const subscriptionWebhook = catchAsync(async (req, res) => {
   switch (event.type) {
     case 'customer.subscription.deleted':
       const customerDeleted = event.data.object;
-      const deletedsubscriptionId = customerDeleted.id;
-      const currentSubscription = await Subscription.findOne({ subscription_id : deletedsubscriptionId, status:"paid" });
+      const currentSubscription = await Subscription.findOne({ subscription_id : customerDeleted.id, status:"paid" });
       if (currentSubscription) {
         await Subscription.findByIdAndUpdate(currentSubscription._id, { status: 'inactive', updatedAt:Date.now()});
       }
-      logger.info(`Subscription DELETED !!`);
-      logger.info(JSON.stringify(customerDeleted));
-      console.log(`Subscription ${deletedsubscriptionId} DELETED !!`);
+      logger(`Subscription DELETED !!`);
+      logger(customerDeleted);
+      console.log(`Subscription ${customerDeleted.id} DELETED !!`);
       break;
     case 'invoice.payment_failed':
       const failedSubscription = event.data.object;
-      const failedSubscriptionId = failedSubscription.id;
-      const currentActive = await Subscription.findOne({ subscription_id : failedSubscriptionId});
+      const currentActive = await Subscription.findOne({ subscription_id : failedSubscription.id});
       if (currentActive) {
         await Subscription.findByIdAndUpdate(currentActive._id, { status:'canceled', cancelledAt:Date.now(), updatedAt:Date.now()});
       }
-      logger.info(`Subscription DELETED !!`);
-      logger.info(JSON.stringify(failedSubscription));
-      console.log(`Subscription ${failedSubscriptionId} payment_failed !!`);
+      logger(`Subscription DELETED !!`);
+      logger(failedSubscription);
+      console.log(`Subscription ${failedSubscription.id} payment_failed !!`);
 
       break;
     case 'invoice.updated':
@@ -433,9 +431,7 @@ const subscriptionWebhook = catchAsync(async (req, res) => {
       const renewedId = srenew.id;
       if(srenew.billing_reason === 'subscription_cycle'){
         const current = await Subscription.findOne({ subscription_id : renewedId});
-        if (current){
-          await Subscription.findByIdAndUpdate(renewedId._id, { status:'inactive', updatedAt:Date.now()});
-        }
+        if (current){ await Subscription.findByIdAndUpdate(current._id, { status:'inactive', updatedAt:Date.now()})}
         const newsubcription = new Subscription({
           plan: current.plan,
           user: current.user,
@@ -446,9 +442,8 @@ const subscriptionWebhook = catchAsync(async (req, res) => {
           session_id : current.session_id
         });
         await newsubcription.save();
-         
       } else {
-        const current = await Subscription.findOne({ subscription_id : renewedId});
+        const current = await Subscription.findOne({ subscription_id : renewedId, status : "pending"});
         if (current){
           await Subscription.findByIdAndUpdate(renewedId._id, { 
             status:'paid', 
@@ -458,8 +453,8 @@ const subscriptionWebhook = catchAsync(async (req, res) => {
           });
         }
       }
-      logger.info(`Subscription renewed !!`);
-      logger.info(JSON.stringify(srenew));
+      logger(`Subscription renewed !!`);
+      logger(srenew);
       console.log(`Subscription ${renewedId} payment_failed !!`);
       break;
     default:
@@ -485,19 +480,20 @@ const checkPendingSubscriptions = async () => {
         sub.status = session.payment_status;
         sub.subscription_id = session.subscription;
         await sub.save();
-        logger.info(`Subscription ${sub._id} marked as paid.`);
+        logger(`Subscription ${sub._id} marked as paid.`);
       } else {
         sub.status = 'payment_failed';
         await sub.save();
-        logger.info(`Subscription ${sub._id} payment failed.`);
+        logger(`Subscription ${sub._id} payment failed.`);
       }
     }
   } catch (error) {
-    logger.error(`Error checking pending subscriptions: ${error.message}`);
+    logger(`Error checking pending subscriptions: ${error.message}`);
   }
 };
+
 cron.schedule('0 * * * *', () => {
-  logger.info('Running checkPendingSubscriptions cron job');
+  logger('Running checkPendingSubscriptions cron job');
   checkPendingSubscriptions();
 });
 
