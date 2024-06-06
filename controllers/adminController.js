@@ -4,7 +4,8 @@ const Stream = require("../db/Stream");
 const Subscription = require("../db/Subscription");
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
-
+const path = require("path");
+const fs = require("fs");
 const isAdmin = catchAsync ( async (req, res, next) => {
    // const user = req.user;
    // if (user.role !== '1'){
@@ -74,19 +75,11 @@ const medias = catchAsync(async (req, res) => {
 
 const users = catchAsync(async (req, res) => {
   const {status} = req.params;
-
     let Query;
-    if(status === 'all'){
-      Query = new APIFeatures(
-        User.find({}).populate("plan"),
-        req.query
-      ).sort().paginate();
-    } else {
-      Query = new APIFeatures(
-        User.find({status : status}).populate("plan"),
-        req.query
-      ).sort().paginate();
-    }
+    Query = new APIFeatures(
+      User.find({status : status}).populate("plan"),
+      req.query
+    ).sort().paginate();
    const users = await Query.query;
    res.json({
      status: true,
@@ -163,4 +156,48 @@ const subscriptions = catchAsync(async (req, res) => {
    });
 });
 
-module.exports = { isAdmin, dashboard, medias, users, streams, subscriptions, EnableDisableUser } 
+
+const readLogs = catchAsync(async (req, res) => {
+  const logFile = path.join(__dirname, '..', 'logs', 'app.log');
+  fs.readFile(logFile, 'utf8', (err, data) => {
+    if (err) {
+      res.json({
+        status: false,
+        message: "Error reading logs file."
+      });
+    } else {
+      const logs = data.split('\n').filter(log => log).map(log => {
+        const parts = log.split(' [INFO]:');
+        return {
+          timestamp: parts[0],
+          message: parts[1].replace(/"/g, '')
+        };
+      });
+
+      res.json({
+        status: true,
+        result: logs
+      });
+    }
+  });
+});
+
+const clearlog = catchAsync(async (req, res) => {
+  const logFile = path.join(__dirname, '..', 'logs', 'app.log');
+  fs.writeFile(logFile, '', (err) => {
+    if (err) {
+      res.json({
+        status: false,
+        message: "Error clearing logs file."
+      });
+    } else {
+      res.json({
+        status: true,
+        message: "Logs file cleared successfully."
+      });
+    }
+  });
+});
+
+
+module.exports = { clearlog, readLogs, isAdmin, dashboard, medias, users, streams, subscriptions, EnableDisableUser } 

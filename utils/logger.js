@@ -14,7 +14,7 @@ const log = winston.createLogger({
 });
 
 const logger = (msg) => {
-  log.info(JSON.stringify(msg))
+  log.info(`${JSON.stringify(msg)}\n`);
 }
 
 module.exports = logger;

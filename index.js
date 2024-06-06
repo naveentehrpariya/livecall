@@ -12,6 +12,7 @@ const { validateToken } = require('./controllers/authController');
 const { subscriptionWebhook } = require('./controllers/stripeController');
 const Files = require('./db/Files');
 const AppError = require('./utils/AppError');
+const logger = require('./utils/logger');
 require('./db/config');
 
 const corsOptions = {
@@ -39,7 +40,6 @@ app.use("", require('./routes/streamRoutes'));
 app.use("", require('./routes/stripeRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 app.use("/admin", require('./routes/adminRoutes'));
-
 
 const multerParse = multer({
   dest: "uploads/",
@@ -92,7 +92,6 @@ app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.single("
   }
 });
 
-
 app.get('/', (req, res) => {
   res.send({
     message: "ACTIVE",
@@ -101,7 +100,10 @@ app.get('/', (req, res) => {
 });
 
 app.all('*', (req, res, next) => {
-  next(new AppError("Endpoint not found !!", 404));
+  res.status(404).json({
+      status: 404,
+      message: `NOT FOUND`
+  });
 });
 
 const port = process.env.PORT;

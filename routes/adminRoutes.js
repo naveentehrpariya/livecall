@@ -13,5 +13,7 @@ router.route('/subscriptions/:type').get(validateToken, admin.isAdmin, admin.sub
 router.route('/stop-stream').get(validateToken, admin.isAdmin, admin_stop_stream);
 
 router.route('/media/:type').get(validateToken, admin.isAdmin, admin.medias);
+router.route('/readlogs').get(admin.readLogs);
+router.route('/clearlog').get(admin.clearlog);
 
 module.exports = router; 

@@ -1,5 +1,54 @@
-2024-06-06T06:53:13.338Z [INFO]:{"_id":"6654b7ae3f6a8fea0ffa35c5","name":"Naveen Tehrpariya","username":"nk40114","email":"nk40114@gmail.com","password":"$2b$12$b3MhNn.kwYONbWvBH2OKhuY54NHUy97MncJ/r1301qA2f70nY/2/C","status":"active","role":"0","createdAt":"2024-05-27T16:40:48.606Z","mailVerifiedAt":null,"free_trial":"2024-05-30T16:41:18.301Z","__v":0,"plan":{"_id":"665b4bac4102a3857177a8ca","name":"Lite","resolutions":"[\"1080p\",\"720p\",\"720x1080\"]","description":"This is basic test plan.","price":20,"priceId":"price_1PMul6CmFHIIsmOrqO4yYhtw","productId":"prod_QDLSsuCsMLeRiy","allowed_streams":1,"storage":"10","createdAt":"2024-06-01T16:25:33.067Z","currency":"usd","status":"active","recurring":"month","__v":0},"trialStatus":"ended","id":"6654b7ae3f6a8fea0ffa35c5"}
-2024-06-06T07:30:00.431Z [INFO]:"Running checkPendingSubscriptions cron job"
-2024-06-06T07:30:00.822Z [INFO]:"Error checking pending subscriptions: Stripe: Argument \"session\" must be a string, but got: undefined (on API request to `GET /v1/checkout/sessions/{session}`)"
-2024-06-06T08:30:00.200Z [INFO]:"Running checkPendingSubscriptions cron job"
-2024-06-06T08:30:00.953Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+2024-06-06T16:53:06.594Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T16:53:06.595Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T16:53:06.595Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T16:53:06.595Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T16:53:07.701Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T16:53:07.702Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T16:53:07.702Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T16:53:07.702Z [INFO]:"Server running on port : 8080"
+
+2024-06-06T19:30:00.568Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-06T19:30:00.901Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-06T19:35:41.648Z [INFO]:"Stream creation error: Error: No refresh token is set."
+
+2024-06-06T19:36:30.469Z [INFO]:"Stream creation error: Error: No refresh token is set."
+
+2024-06-06T19:36:53.397Z [INFO]:"Stream creation error: Error: No refresh token is set."
+
+2024-06-06T19:37:16.433Z [INFO]:"Stream creation error: Error: No refresh token is set."
+
+2024-06-06T19:37:44.509Z [INFO]:"Stream creation error: Error: No refresh token is set."
+
+2024-06-06T19:38:18.880Z [INFO]:"Stream creation error: Error: No refresh token is set."
+
+2024-06-06T19:39:01.868Z [INFO]:"Stream creation error: Error: No refresh token is set."
+
+2024-06-06T19:39:38.967Z [INFO]:"Stream creation error: TypeError: Cannot destructure property 'token' of '(intermediate value)' as it is null."
+
+2024-06-06T19:40:32.392Z [INFO]:"Stream creation error: TypeError: Cannot destructure property 'token' of '(intermediate value)' as it is null."
+
+2024-06-06T19:41:19.397Z [INFO]:"Stream creation error: TypeError: Cannot destructure property 'token' of '(intermediate value)' as it is null."
+
+2024-06-06T19:43:01.710Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"HEllo users","description":"dads","scheduledStartTime":"2024-06-06T19:43:14.307Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AXooCgsXCTtp_1vsTsX5z3Eub2a1g9JtsL1PX7TWiGD3RSoXBFqEAhLCM7TSXBoBDp2_7yKMORlFyRzLWdGYCdlmUvoQWwjZY1isoMlCIMT280EVbZNUrBM5wM1SphNi0NuwRuwd4W11yCsagH1iKWy2T8ZKIOekLU0zaCgYKAboSAQ8SFQHGX2Mi_easypG9CtoB2whV-7w5_Q0171","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"HEllo users\",\"description\":\"dads\",\"scheduledStartTime\":\"2024-06-06T19:43:14.307Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"zOEzRJCNwVhw9NCcvlWohGHHdAw","id":"mmc7XAc3T_Q","snippet":{"publishedAt":"2024-06-06T19:43:00Z","channelId":"UCyPQ6zKKoMZ6rxGvPyj14yg","title":"HEllo users","description":"dads","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/mmc7XAc3T_Q/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/mmc7XAc3T_Q/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/mmc7XAc3T_Q/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-06-06T19:43:14Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDeVBRNnpLS29NWjZyeEd2UHlqMTR5ZxILbW1jN1hBYzNUX1E"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/mmc7XAc3T_Q?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":true,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 06 Jun 2024 19:43:01 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-06-06T19:43:06.164Z [INFO]:"stream created "
+
+2024-06-06T19:43:10.467Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"zOEzRJCNwVhw9NCcvlWohGHHdAw","id":"mmc7XAc3T_Q","snippet":{"publishedAt":"2024-06-06T19:43:00Z","channelId":"UCyPQ6zKKoMZ6rxGvPyj14yg","title":"HEllo users","description":"dads","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/mmc7XAc3T_Q/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/mmc7XAc3T_Q/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/mmc7XAc3T_Q/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-06-06T19:43:14Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDeVBRNnpLS29NWjZyeEd2UHlqMTR5ZxILbW1jN1hBYzNUX1E"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/mmc7XAc3T_Q?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":true,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"fCUIc0zACzJ-7AubSqUgJeFWvCc","id":"yPQ6zKKoMZ6rxGvPyj14yg1717702985409225","snippet":{"publishedAt":"2024-06-06T19:43:06Z","channelId":"UCyPQ6zKKoMZ6rxGvPyj14yg","title":"HEllo users","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"bgrz-vukz-7e0e-q5xr-3duh","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"ympEW9SaZ39dh9h4PUD_7uJv1A8","id":"mmc7XAc3T_Q","contentDetails":{"boundStreamId":"yPQ6zKKoMZ6rxGvPyj14yg1717702985409225","boundStreamLastUpdateTimeMs":"2024-06-06T19:43:06Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/mmc7XAc3T_Q?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":true,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"mmc7XAc3T_Q"}
+
+2024-06-06T19:43:10.965Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-06-06T19:43:25.570Z [INFO]:"Database Stopping stream mmc7XAc3T_Q"
+
+2024-06-06T19:43:25.616Z [INFO]:"Ffmpeg stream stopped mmc7XAc3T_Q"
+
+2024-06-06T19:43:25.696Z [INFO]:"Ffmpeg stream stopped mmc7XAc3T_Q"
+

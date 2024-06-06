@@ -70,6 +70,7 @@ const getOAuth2Client = (credentials, redirectUri) => {
     return new google.auth.OAuth2(client_id, client_secret, redirectUri);
   } catch (err) {
     console.error('Error creating OAuth2 client:', err);
+    logger(`Error creating OAuth2 client:${err}`);
     return null;
   }
 };
@@ -93,9 +94,9 @@ const storeToken = async (token, userId) => {
     const channel = await channelDetails(token);
     const isAlreadyExist = await Token.findOne({ user: userId });
     if (isAlreadyExist) {
-      // update token with new channel details
       isAlreadyExist.token = JSON.stringify(token);
       isAlreadyExist.channel = JSON.stringify(channel);
+      isAlreadyExist.status = "active"
       const saved = await isAlreadyExist.save();
       if (saved) {
         console.log('Token updated successfully:', token);
@@ -104,9 +105,11 @@ const storeToken = async (token, userId) => {
       const createToken = new Token({
         token: JSON.stringify(token),
         user: userId,
+        status: "active",
         channel:JSON.stringify(channel)
       });
       const savetoken = await createToken.save();
+      logger(`New token created successfully: ${savetoken}`);
       if(!savetoken){
         res.json({
           status:false,
@@ -122,10 +125,9 @@ const storeToken = async (token, userId) => {
 
 // Get stored token
 const getStoredToken = async (userId) => {
-  console.log("userId", userId)
   try {
      const token = await Token.findOne({ user: userId, status:"active" });
-     console.log("tokenff", token)
+    console.log(token);
      if(!token){
        return null;
      }
@@ -149,13 +151,13 @@ const oauth = async (req, res) => {
       return;
     }
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
-    console.log("OAuth2Client:", oAuth2Client);
     if (!oAuth2Client) {
       res.status(500).send('Error creating OAuth2 client');
       return;
     }
     const authUrl = generateAuthUrl(oAuth2Client);
     if (!authUrl) {
+      logger(`Youtube autorization errror !!. ${authUrl}`);
       res.json({
         status:false,
         message: "Error generating auth URL",
@@ -211,7 +213,7 @@ const downloadThumbnail = async (url, dest) => {
   console.log(`downloading thumbnail`);
   return new Promise((resolve, reject) => {
     const stream = response.data.pipe(fs.createWriteStream(dest));
-    console.log(`downloading thumbnail is about to finish.`);
+    logger(`downloading thumbnail is about to finish.`);
     stream.on('finish', () => resolve());
     stream.on('error', (err) => reject(err));
   });
@@ -220,6 +222,7 @@ const downloadThumbnail = async (url, dest) => {
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const createAndBindLiveBroadcast = async (youtube, title, description) => {
   const scheduledStartTime = new Date(Date.now() + 15000).toISOString();
+  console.log(`scheduledStartTime `, scheduledStartTime);
   const broadcastResponse = await youtube.liveBroadcasts.insert({
     part: 'snippet,status,contentDetails',
     requestBody: {
@@ -240,9 +243,9 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
       },
     },
   });
-  console.log(`broadcastResponse response `, broadcastResponse);
+
+  console.log(`broadcastResponse `, broadcastResponse);
   logger(broadcastResponse);
-  
   const broadcastId = broadcastResponse.data.id;
   
   // Step 2: Introduce delay before next API call
@@ -262,26 +265,21 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
       },
     },
   });
-  
   const streamId = streamResponse.data.id;
   console.log(`stream created `, streamId);
+  logger(`stream created `, streamId);
   await delay(3000);
-  
-  // Step 3: Bind the broadcast to the stream
   const bindResponse = await youtube.liveBroadcasts.bind({
     part: 'id,contentDetails',
     id: broadcastId,
     streamId: streamId,
   });
-  
   console.log(`stream broadcast or live stream created `, {
     broadcast: broadcastResponse.data,
     stream: streamResponse.data,
     bind: bindResponse.data,
     broadcastId: broadcastId
   });
-
-
   const result = {
     broadcast: broadcastResponse.data,
     stream: streamResponse.data,
@@ -293,13 +291,13 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
 };
 
 let activeStreams = {};
-
 const stopffmpegstream = async (videoid) => {
   const active = activeStreams[videoid];
   if(active){
     delete activeStreams[videoid];
     active.kill('SIGINT');
   }
+  logger(`Ffmpeg stream stopped ${videoid}`);
   return true
 }
   
@@ -308,6 +306,7 @@ const stopDbStream = async (videoId) => {
   if (!stream){
     return false
   }
+  logger(`Database Stopping stream ${videoId}`);
   stream.status = 0;
   stream.endedAt = Date.now();
   const savedstream = await stream.save();
@@ -318,11 +317,13 @@ const start_stream = catchAsync(async (req, res, next) => {
   try {
     const { title, description, audio, thumbnail } = req.body;
     const userId = req.user._id;
-    const { token, channel } = await getStoredToken(userId);
-    
+    console.log("userId",userId);
+    const { token } = await getStoredToken(userId);
+    console.log("token",token);
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
     oAuth2Client.setCredentials(token);
+    console.log("Credentials:", credentials);
     
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description);
@@ -393,7 +394,6 @@ const start_stream = catchAsync(async (req, res, next) => {
     
     const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
     activeStreams[videoID] = child;
-    
       
       child.on('close', () => {
         stopffmpegstream(videoID);
@@ -421,6 +421,7 @@ const start_stream = catchAsync(async (req, res, next) => {
     }
   } catch (err) {
     console.error(`Stream creation error: ${err}`);
+    logger(`Stream creation error: ${err}`);
     JSONerror(res, err, next);
   }
 });
@@ -428,13 +429,6 @@ const start_stream = catchAsync(async (req, res, next) => {
 const stop_stream = async (req, res, next) => {
   try {
     const streamId  = req.params.streamId;
-    // const stream = await Stream.findOne({streamId : streamId}).populate('user');
-    // if(stream.user !== req.user._id){
-    //   res.json({
-    //     status:false,
-    //     message : "You have not permission to stop this stream."
-    //   })
-    // }
     if(streamId == "" || streamId == null || streamId == undefined){
       res.json({
         status : false,
@@ -497,11 +491,10 @@ const admin_stop_stream = async (req, res, next) => {
   }
 };
 
-// Stream status checker 
 const checkStreamStatus = async () => {
   try {
     const activeStreams = await Stream.find({ status: 1 });
-    console.log("activeStreams",activeStreams);
+    logger("Youtube status checker is running to check is any stream is live on Youtube or not.");
     if (activeStreams && activeStreams.length < 1) {
       console.log(`Currently there are not any live streams active.`);
     }
@@ -521,7 +514,7 @@ const checkStreamStatus = async () => {
       const videoDetails = response.data.items[0];
       console.log("videoDetails", videoDetails);
       if (videoDetails && videoDetails.liveStreamingDetails && videoDetails.liveStreamingDetails.actualEndTime) {
-        console.log(`Live stream has ended for video ID: ${videoId}`);
+        logger(`Live stream has ended for video ID: ${videoId} via cron job status check is live on Youtube. ??`);
         await stopDbStream(videoId);
         await stopffmpegstream(videoId);
       } else { 
@@ -533,8 +526,6 @@ const checkStreamStatus = async () => {
   }
 };
 
-
-
 cron.schedule('0 */3 * * *', async () => {
   console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
   logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
@@ -544,7 +535,7 @@ cron.schedule('0 */3 * * *', async () => {
 const checkStreamStatusAndSubscription = async () => {
   try {
     const activeStreams = await Stream.find({ status: 1 }).populate("user");
-    console.log("activeStreams",activeStreams);
+    logger('check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>');
     if (activeStreams && activeStreams.length < 1) {
       console.log(`Currently there are not any live streams active.`);
       return;
@@ -554,12 +545,14 @@ const checkStreamStatusAndSubscription = async () => {
       const userSubscription = await Subscription.findOne({ user: user, status: 'paid' }).populate("plan");
       if (!userSubscription) {
         console.log(`User ${user} does not have an active subscription.`);
+        logger(`User ${user} does not have an active subscription.`);
         continue;
       }
       const maxStreamsAllowed = userSubscription && userSubscription.plan && userSubscription.plan.allowed_streams || 0;
       const userActiveStreams = await Stream.find({ user: user, status: 1 });
       if (userActiveStreams.length >= maxStreamsAllowed) {
         console.log(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
+        logger(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
         const excessStreams = userActiveStreams.slice(maxStreamsAllowed);
         for (const excessStream of excessStreams) {
           logger(`Stopping excess stream: ${excessStream.streamId}`);

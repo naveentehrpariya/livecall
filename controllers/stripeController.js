@@ -103,7 +103,6 @@ const update_pricing_plan = catchAsync(async (req, res) => {
       priceId = newPrice.id;
     }
 
-    // Update local database
     plan.name = req.body.name;
     plan.description = req.body.description;
     plan.price = req.body.price;
@@ -111,9 +110,7 @@ const update_pricing_plan = catchAsync(async (req, res) => {
     plan.storage = req.body.storage;
     plan.priceId = priceId;
     plan.resolutions = JSON.stringify(req.body.resolutions)
-
     const result = await plan.save();
-
     if (result) {
       return res.status(200).json({
         status: true,

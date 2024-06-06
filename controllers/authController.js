@@ -17,6 +17,7 @@ const signToken = async (id) => {
   return token
 }
 
+
 const validateToken = catchAsync ( async (req, res, next) => {
   let authHeader = req.headers.Authorization || req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer")) {
@@ -55,6 +56,7 @@ const validateToken = catchAsync ( async (req, res, next) => {
   }
 });
 
+
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, avatar, password, confirmPassword } = req.body;
   const isEmailUsed  =  await User.findOne({email : email});
@@ -80,16 +82,24 @@ const signup = catchAsync(async (req, res, next) => {
     });
   }).catch(err => {
     JSONerror(res, err, next);
+    logger(err);
   });
 });
 
+
 const login = catchAsync ( async (req, res, next) => { 
-   const { email, password } = req.body;
+   const { email, password, admin } = req.body;
    if(!email || !password){
       return next(new AppError("Email and password is required !!", 401))
    }
    const user = await User.findOne({email}).select('+password').populate('plan');
-   if(user.status === 'inactive'){
+   if(admin && user && user.role !== '1'){
+    res.status(200).json({
+      status : false,
+      message:"Invalid credentials.",
+     });
+   }
+   if(user && user.status === 'inactive'){
     res.status(200).json({
       status : false,
       message:"Your account is suspended !!",
@@ -107,7 +117,6 @@ const login = catchAsync ( async (req, res, next) => {
     httpOnly:true,
    });
 
-   logger(user);
    res.status(200).json({
     status :true,
     message:"Login Successfully !!",
@@ -115,6 +124,7 @@ const login = catchAsync ( async (req, res, next) => {
     token
    });
 });
+
 
 const profile = catchAsync ( async (req, res) => {
   if(req.user){
@@ -129,6 +139,7 @@ const profile = catchAsync ( async (req, res) => {
     });
   }
 });
+
 
 const forgotPassword = catchAsync ( async (req, res, next) => {
   // 1. Check is email valid or not
