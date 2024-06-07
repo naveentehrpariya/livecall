@@ -60,32 +60,39 @@ const medias = catchAsync(async (req, res) => {
    const { type } = req.params;
    let mimeFilter = { $regex: `^${mimeTypes[type]}` };
    const Query = new APIFeatures(
-      Files.find({
-         mime: mimeFilter,
-      }),
+      Files.find({mime: mimeFilter}),
       req.query
-   ).sort().paginate();
-   const files = await Query.query;
+   ).sort();
+   const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();
+   const data = await query;
    res.json({
-     status: true,
-     result: files.length ? files : [],
-     message: files.length ? "Files retrieved successfully." : "No files found !!"
+      status: true,
+      total: totalDocuments,
+      current_page: page,
+      total_pages: totalPages,
+      limit:limit,
+      result: data || [],
+      message: data.length ? "Files retrieved successfully." : "No files found !!"
    });
 });
 
 const users = catchAsync(async (req, res) => {
   const {status} = req.params;
-    let Query;
-    Query = new APIFeatures(
-      User.find({status : status}).populate("plan"),
-      req.query
-    ).sort().paginate();
-   const users = await Query.query;
-   res.json({
-     status: true,
-     result: users || [],
-     message: users.length ? "Users retrieved successfully !!." : "No files found"
-   });
+  let Query = new APIFeatures(
+    User.find({status : status}).populate("plan"),
+    req.query
+  ).sort();
+  const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();
+  const users = await query;
+  res.json({
+    status: true,
+    total: totalDocuments,
+    current_page: page,
+    total_pages: totalPages,
+    limit:limit,
+    result: users || [],
+    message: users.length ? "Users retrieved successfully !!." : "No files found"
+  });
 });
 
 const EnableDisableUser = catchAsync(async (req, res) => {
@@ -119,18 +126,25 @@ const streams = catchAsync(async (req, res) => {
       Query = new APIFeatures(
         Stream.find({}),
         req.query
-      ).sort().paginate();
+      ).sort();
     } else {  
       Query = new APIFeatures(
         Stream.find({status: type}),
         req.query
-      ).sort().paginate();
+      ).sort();
     }
-   const data = await Query.query;
+
+  const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();
+    
+   const data = await query;
    res.json({
-     status: true,
-     result: data || [],
-     message: data.length ? "Streams retrieved successfully !!." : "No files found"
+      status: true,
+      total: totalDocuments,
+      current_page: page,
+      total_pages: totalPages,
+      limit:limit,
+      result: data || [],
+      message: data.length ? "Streams retrieved successfully !!." : "No files found"
    });
 });
 
@@ -141,18 +155,23 @@ const subscriptions = catchAsync(async (req, res) => {
      Query = new APIFeatures(
        Subscription.find().populate(["user", 'plan']),
        req.query
-     ).sort().paginate();
+     ).sort();
     } else {
       Query = new APIFeatures(
         Subscription.find({ status : type}).populate(["user", 'plan']),
         req.query
-      ).sort().paginate();
+      ).sort();
    }
-   const data = await Query.query;
+   const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();
+   const data = await query;
    res.json({
-     status: true,
-     result: data || [],
-     message: data.length ? "Subscriptions retrieved successfully !!." : "No files found !!"
+      status: true,
+      total: totalDocuments,
+      current_page: page,
+      total_pages: totalPages,
+      limit:limit,
+      result: data || [],
+      message: data.length ? "Subscriptions retrieved successfully !!." : "No files found !!"
    });
 });
 

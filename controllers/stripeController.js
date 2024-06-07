@@ -384,9 +384,7 @@ const cancelSubscription = catchAsync(async (req, res) => {
   }
 });
 
-
 const subscriptionWebhook = catchAsync(async (req, res) => {
-
   const endpointSecret = process.env.SUSBCRIPTION_RENEW_SECRET ;
   const sig = req.headers['stripe-signature'];
   let event;
@@ -400,24 +398,24 @@ const subscriptionWebhook = catchAsync(async (req, res) => {
   switch (event.type) {
     case 'customer.subscription.deleted':
       const customerDeleted = event.data.object;
-      const currentSubscription = await Subscription.findOne({ subscription_id : customerDeleted.id, status:"paid" });
+      const deletedid = customerDeleted.id;
+      const currentSubscription = await Subscription.findOne({ subscription_id : deletedid, status:"paid" });
       if (currentSubscription) {
         await Subscription.findByIdAndUpdate(currentSubscription._id, { status: 'inactive', updatedAt:Date.now()});
       }
-      logger(`Subscription DELETED !!`);
+      logger(`Subscription DELETED !! ${deletedid} `);
       logger(customerDeleted);
-      console.log(`Subscription ${customerDeleted.id} DELETED !!`);
+      console.log(`Subscription ${deletedid} DELETED !!`);
       break;
     case 'invoice.payment_failed':
       const failedSubscription = event.data.object;
-      const currentActive = await Subscription.findOne({ subscription_id : failedSubscription.id});
+      const currentActive = await Subscription.findOne({ subscription_id : failedSubscription.subscription});
       if (currentActive) {
         await Subscription.findByIdAndUpdate(currentActive._id, { status:'canceled', cancelledAt:Date.now(), updatedAt:Date.now()});
       }
       logger(`Subscription DELETED !!`);
       logger(failedSubscription);
-      console.log(`Subscription ${failedSubscription.id} payment_failed !!`);
-
+      console.log(`Subscription ${failedSubscription.subscription} payment_failed !!`);
       break;
     case 'invoice.updated':
       console.log("INVOICE updated");
@@ -425,20 +423,24 @@ const subscriptionWebhook = catchAsync(async (req, res) => {
     case 'invoice.payment_succeeded':
       const srenew = event.data.object;
       console.log("INVOICE payment succecceed");
-      const renewedId = srenew.id;
+      const renewedId = srenew.subscription || null;
       if(srenew.billing_reason === 'subscription_cycle'){
-        const current = await Subscription.findOne({ subscription_id : renewedId});
-        if (current){ await Subscription.findByIdAndUpdate(current._id, { status:'inactive', updatedAt:Date.now()})}
-        const newsubcription = new Subscription({
-          plan: current.plan,
-          user: current.user,
-          createdAt: Date.now(),
-          upcomingPayment : new Date(srenew.period_end*1000), 
-          status : srenew.status,
-          subscription_id : renewedId,
-          session_id : current.session_id
-        });
-        await newsubcription.save();
+        const current = await Subscription.findOne({ subscription_id : renewedId, status : 'paid'});
+        console.log("renewed current", current)
+        if (current){ 
+          const newsubcription = new Subscription({
+            plan: current.plan,
+            user: current.user,
+            updatedAt: Date.now(),
+            createdAt: Date.now(),
+            upcomingPayment : new Date(srenew.lines.data[0].period.end*1000), 
+            status : srenew.status,
+            subscription_id : renewedId,
+            session_id : current.session_id
+            });
+          await Subscription.findByIdAndUpdate(current._id, { status:'inactive', updatedAt:Date.now()})
+          await newsubcription.save();
+        }
       } else {
         const current = await Subscription.findOne({ subscription_id : renewedId, status : "pending"});
         if (current){
@@ -450,7 +452,7 @@ const subscriptionWebhook = catchAsync(async (req, res) => {
           });
         }
       }
-      logger(`Subscription renewed !!`);
+      logger(`=>>>>>>>>>>>>>>>>>>>>> Subscription id ${renewedId} renewed !! <<<<<<<<<<<<<<<<<<<<<<<=`);
       logger(srenew);
       console.log(`Subscription ${renewedId} payment_failed !!`);
       break;
