@@ -27,7 +27,7 @@ const dashboard = catchAsync(async (req, res) => {
    const totalSubscriptions = await Subscription.countDocuments();
    const inactiveSubscriptions = await Subscription.countDocuments({ status: 'inactive' });
    const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'paid' });
-   const totalExpiredSubscriptions = await Subscription.countDocuments({ status: 'expired' });
+  //  const totalExpiredSubscriptions = await Subscription.countDocuments({ status: 'expired' });
  
    res.json({
      status: true,
@@ -45,7 +45,6 @@ const dashboard = catchAsync(async (req, res) => {
       { route:"/admin/subscriptions/all", title : 'Total Subscriptions', data: totalSubscriptions },
       { route:"/admin/subscriptions/paid", title : 'Active Subscriptions', data: totalActiveSubscriptions },
       { route:"/admin/subscriptions/inactive", title : 'Inactive Subscriptions', data: inactiveSubscriptions },
-      { route:"/admin/subscriptions/expired", title : 'Expired Subscriptions', data: totalExpiredSubscriptions },
      ] 
    });
 });
@@ -124,12 +123,12 @@ const streams = catchAsync(async (req, res) => {
     let Query;
     if(type === "all"){
       Query = new APIFeatures(
-        Stream.find({}),
+        Stream.find({}).populate('user'),
         req.query
       ).sort();
     } else {  
       Query = new APIFeatures(
-        Stream.find({status: type}),
+        Stream.find({status: type}).populate('user'),
         req.query
       ).sort();
     }
