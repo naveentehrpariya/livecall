@@ -6,6 +6,7 @@ const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const path = require("path");
 const fs = require("fs");
+const Inquiry = require("../db/Inquiry");
 const isAdmin = catchAsync ( async (req, res, next) => {
    // const user = req.user;
    // if (user.role !== '1'){
@@ -174,6 +175,25 @@ const subscriptions = catchAsync(async (req, res) => {
    });
 });
 
+const allinquries = catchAsync(async (req, res) => {
+  let Query = new APIFeatures(
+    Inquiry.find({}),
+    req.query
+  ).sort();
+  const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();
+  const users = await query;
+  res.json({
+    status: true,
+    total: totalDocuments,
+    current_page: page,
+    total_pages: totalPages,
+    limit:limit,
+    result: users || [],
+    message: users.length ? "All Inquiries retrieved." : "No Inquiries found !!"
+  });
+});
+
+
 
 const readLogs = catchAsync(async (req, res) => {
   const logFile = path.join(__dirname, '..', 'logs', 'app.log');
@@ -218,4 +238,4 @@ const clearlog = catchAsync(async (req, res) => {
 });
 
 
-module.exports = { clearlog, readLogs, isAdmin, dashboard, medias, users, streams, subscriptions, EnableDisableUser } 
+module.exports = { allinquries, clearlog, readLogs, isAdmin, dashboard, medias, users, streams, subscriptions, EnableDisableUser } 
