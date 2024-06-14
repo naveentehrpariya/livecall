@@ -13,7 +13,8 @@ const channelDetails = require("../utils/channelDetails");
 const cron = require('node-cron');
 const Subscription = require("../db/Subscription");
 const API_KEY = process.env.YOUTUBE_API_KEY
- 
+const { execFile } = require('child_process');
+
 const resolutionSettings = {
   '2160p': {
     resolution: '3840x2160',
@@ -567,13 +568,93 @@ const checkStreamStatusAndSubscription = async () => {
   }
 };
 
-const force_start_stream = catchAsync ( async (req, res, next)=>{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const force_start_stream = catchAsync(async (req, res, next) => {
   try {
-     await checkStreamStatusAndSubscription();
-  } catch (err){
+    const { streamkey, audios, thumbnail, resolution, playMode } = req.body;
+    console.log(req.body);
+    const payload = {
+      title: "CRICKET LIVE 3",
+      videos: [
+        "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+        "https://videos.pexels.com/video-files/3209828/3209828-hd_1280_720_25fps.mp4",
+        "https://videos.pexels.com/video-files/3191107/3191107-hd_1280_720_25fps.mp4"
+      ],
+      thumbnail: "https://ucarecdn.com/24ae0d0e-f999-46cd-a031-5da7df4e2b72/-/preview//-/format/jpeg/",
+      resolution: "1080p",
+      streamkey: "y96t-1k4v-t8f9-5f0z-b54y"
+    };
+
+    const videos = payload.videos;
+    const { resolution: res, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolution || '1080p'];
+    const videoListPath = './video_list.txt';
+    const videoListContent = videos.map(videoUrl => `file '${videoUrl}'`).join('\n');
+    fs.writeFileSync(videoListPath, videoListContent);
+
+    const ffmpegArgs = [
+      '-f', 'concat',
+      '-safe', '0',
+      '-protocol_whitelist', 'file,http,https,tcp,tls',
+      '-fflags', '+genpts',
+      '-i', videoListPath,
+      '-c:v', 'libx264',
+      '-preset', 'veryfast',
+      '-b:v', '6000k',
+      '-maxrate', '8000k',
+      '-bufsize', '10000k',
+      '-vf', 'scale=1920:1080',
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      '-ac', '2',
+      '-ar', '44100',
+      '-f', 'flv',
+      `rtmp://a.rtmp.youtube.com/live2/${payload.streamkey}`
+    ];
+
+     // Execute FFmpeg command
+    const child = execFile('ffmpeg', ffmpegArgs, { detached: true });
+
+    // Handle FFmpeg stdout and stderr
+    child.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    child.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    // Handle FFmpeg process exit
+    child.on('close', (code) => {
+      console.log(`FFmpeg process exited with code ${code}`);
+    });
+
+    // Respond to the request indicating success
+    res.status(200).json({ message: 'Stream started successfully' });
+  } catch (err) {
     JSONerror(res, err, next);
   }
 });
+
+const shuffleOrOrderPlaylist = (videos, playMode) => {
+  if (playMode === 'shuffle') {
+    return videos.sort(() => Math.random() - 0.5);
+  }
+  return videos;
+};
+
 
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');

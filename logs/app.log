@@ -162,3 +162,37 @@
 
 2024-06-12T06:30:00.705Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
 
+2024-06-14T06:48:30.622Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-14T07:08:59.875Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-14T07:10:01.265Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-14T07:10:38.650Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-14T07:11:47.474Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-14T07:11:59.607Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-14T07:13:37.191Z [INFO]:"Ffmpeg stream stopped y96t-1k4v-t8f9-5f0z-b54y"
+
+2024-06-14T07:23:26.373Z [INFO]:"Ffmpeg stream stopped y96t-1k4v-t8f9-5f0z-b54y"
+
+2024-06-14T07:23:59.427Z [INFO]:"Ffmpeg stream stopped y96t-1k4v-t8f9-5f0z-b54y"
+
+2024-06-14T07:27:25.738Z [INFO]:"Ffmpeg stream stopped y96t-1k4v-t8f9-5f0z-b54y"
+
+2024-06-14T07:30:00.124Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-14T07:30:00.138Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-14T07:32:48.554Z [INFO]:"Ffmpeg stream stopped y96t-1k4v-t8f9-5f0z-b54y"
+
+2024-06-14T07:34:35.250Z [INFO]:"Ffmpeg stream stopped y96t-1k4v-t8f9-5f0z-b54y"
+
+2024-06-14T07:48:28.446Z [INFO]:"Ffmpeg stream stopped y96t-1k4v-t8f9-5f0z-b54y"
+
+2024-06-14T08:30:00.525Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-14T08:30:00.603Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
