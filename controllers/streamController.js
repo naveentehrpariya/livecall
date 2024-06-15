@@ -14,6 +14,7 @@ const cron = require('node-cron');
 const Subscription = require("../db/Subscription");
 const API_KEY = process.env.YOUTUBE_API_KEY
 const { execFile } = require('child_process');
+const ffmpeg = require('fluent-ffmpeg');
 
 const resolutionSettings = {
   '2160p': {
@@ -578,75 +579,166 @@ const checkStreamStatusAndSubscription = async () => {
 
 
 
-
-
-
-
-const force_start_stream = catchAsync(async (req, res, next) => {
+const force_start_stream = async (req, res, next) => {
   try {
-    const { streamkey, audios, thumbnail, resolution, playMode } = req.body;
-    console.log(req.body);
-    const payload = {
-      title: "CRICKET LIVE 3",
-      videos: [
-        "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
-        "https://videos.pexels.com/video-files/3209828/3209828-hd_1280_720_25fps.mp4",
-        "https://videos.pexels.com/video-files/3191107/3191107-hd_1280_720_25fps.mp4"
-      ],
-      thumbnail: "https://ucarecdn.com/24ae0d0e-f999-46cd-a031-5da7df4e2b72/-/preview//-/format/jpeg/",
-      resolution: "1080p",
-      streamkey: "y96t-1k4v-t8f9-5f0z-b54y"
-    };
+      const { streamkey, audios, thumbnail, resolution, playMode } = req.body;
+      let videos = req.body.videos || [];
 
-    const videos = payload.videos;
-    const { resolution: res, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolution || '1080p'];
-    const videoListPath = './video_list.txt';
-    const videoListContent = videos.map(videoUrl => `file '${videoUrl}'`).join('\n');
-    fs.writeFileSync(videoListPath, videoListContent);
+      if (videos.length === 0) {
+          return res.status(400).json({ message: 'No videos provided' });
+      }
 
-    const ffmpegArgs = [
-      '-f', 'concat',
-      '-safe', '0',
-      '-protocol_whitelist', 'file,http,https,tcp,tls',
-      '-fflags', '+genpts',
-      '-i', videoListPath,
-      '-c:v', 'libx264',
-      '-preset', 'veryfast',
-      '-b:v', '6000k',
-      '-maxrate', '8000k',
-      '-bufsize', '10000k',
-      '-vf', 'scale=1920:1080',
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ac', '2',
-      '-ar', '44100',
-      '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${payload.streamkey}`
-    ];
+      const videoListPath = path.join(__dirname, 'video_list.txt');
+      const videoListContent = videos.map(videoUrl => `file '${videoUrl}'`).join('\n');
+      fs.writeFileSync(videoListPath, videoListContent);
 
-     // Execute FFmpeg command
-    const child = execFile('ffmpeg', ffmpegArgs, { detached: true });
+      // Function to detect codecs of all videos
+      const detectCodecs = (videoFiles) => {
+          return new Promise((resolve, reject) => {
+              let codecs = [];
+              let promises = [];
 
-    // Handle FFmpeg stdout and stderr
-    child.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
+              videoFiles.forEach((videoFile) => {
+                  promises.push(new Promise((resolveInner, rejectInner) => {
+                      ffmpeg.ffprobe(videoFile, (err, metadata) => {
+                          if (err) {
+                              console.error(`Error detecting codec for ${videoFile}: ${err.message}`);
+                              codecs.push(null);
+                              resolveInner();
+                          } else {
+                              if (metadata.streams && metadata.streams.length > 0) {
+                                  let codecName = metadata.streams[0].codec_name;
+                                  codecs.push(codecName);
+                              } else {
+                                  console.error(`No streams found for ${videoFile}`);
+                                  codecs.push(null);
+                              }
+                              resolveInner();
+                          }
+                      });
+                  }));
+              });
 
-    child.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-    });
+              Promise.all(promises)
+                  .then(() => resolve(codecs))
+                  .catch((err) => reject(err));
+          });
+      };
 
-    // Handle FFmpeg process exit
-    child.on('close', (code) => {
-      console.log(`FFmpeg process exited with code ${code}`);
-    });
+      // Function to convert videos to a common codec
+      const convertToCommonCodec = (videoFiles, outputDir) => {
+          return new Promise((resolve, reject) => {
+              let convertedFiles = [];
+              let promises = [];
 
-    // Respond to the request indicating success
-    res.status(200).json({ message: 'Stream started successfully' });
+              videoFiles.forEach((videoFile) => {
+                  let outputFileName = `${path.basename(videoFile, path.extname(videoFile))}_converted.mp4`;
+                  let outputPath = path.join(outputDir, outputFileName);
+
+                  promises.push(new Promise((resolveInner, rejectInner) => {
+                      ffmpeg(videoFile)
+                          .videoCodec('libx264')
+                          .audioCodec('aac')
+                          .on('error', (err) => {
+                              console.error(`Error converting ${videoFile}: ${err.message}`);
+                              resolveInner();
+                          })
+                          .on('end', () => {
+                              console.log(`Converted ${videoFile} to ${outputPath}`);
+                              convertedFiles.push(outputPath);
+                              resolveInner();
+                          })
+                          .save(outputPath);
+                  }));
+              });
+
+              Promise.all(promises)
+                  .then(() => resolve(convertedFiles))
+                  .catch((err) => reject(err));
+          });
+      };
+
+      // Start the process
+      const startStreamProcess = async () => {
+          try {
+              console.log(`Streaming videos: ${videos.join(', ')}`);
+
+              // Detect codecs of all videos
+              const codecs = await detectCodecs(videos);
+              console.log('Detected Codecs:', codecs);
+
+              // Check if all videos have the same codec
+              const allSameCodec = codecs.every((codec, index, array) => codec === array[0]);
+              if (!allSameCodec) {
+                  console.log('Videos have different codecs. Converting to a common codec...');
+                  const outputDir = path.join(__dirname, 'converted_videos');
+                  videos = await convertToCommonCodec(videos, outputDir);
+              } else {
+                  console.log('All videos have the same codec.');
+              }
+
+              // FFmpeg command arguments
+              const ffmpegArgs = [
+                  '-protocol_whitelist', 'file,http,https,tcp,tls',
+                  '-stream_loop', '-1',
+                  '-f', 'concat',
+                  '-safe', '0',
+                  '-rw_timeout', '5000000',
+                  '-i', videoListPath,
+                  '-c:v', 'libx264',
+                  '-preset', 'veryfast',
+                  '-b:v', '6000k',
+                  '-maxrate', '8000k',
+                  '-bufsize', '20000k',
+                  '-vf', 'scale=1920:1080',
+                  '-c:a', 'aac',
+                  '-b:a', '128k',
+                  '-ac', '2',
+                  '-ar', '44100',
+                  '-f', 'flv',
+                  `rtmp://a.rtmp.youtube.com/live2/${streamkey}`,
+                  '-tune', 'zerolatency',
+                  '-timeout', '5000000', // RTMP timeout
+                  '-loglevel', 'debug'
+              ];
+
+              // Execute FFmpeg command
+              const child = execFile('ffmpeg', ffmpegArgs, { detached: true });
+              child.on('close', (code) => {
+                  console.log(`FFmpeg process exited with code ${code}`);
+              });
+
+              // Handle FFmpeg output
+              child.stdout.on('data', (data) => {
+                  console.log(`stdout: ${data}`);
+              });
+
+              child.stderr.on('data', (data) => {
+                  console.error(`stderr: ${data}`);
+              });
+
+              res.json({ message: 'Stream started successfully' });
+          } catch (err) {
+              console.error('Error starting stream:', err);
+              res.status(500).json({ message: 'Failed to start stream' });
+          }
+      };
+
+      // Start the streaming process
+      startStreamProcess();
   } catch (err) {
-    JSONerror(res, err, next);
+      next(err); // Use the next middleware for error handling
   }
-});
+};
+
+module.exports = { force_start_stream };
+
+
+// ffmpeg -stream_loop -1 -f concat -safe 0 -i video_list.txt -c:v libx264 -preset veryfast -b:v 6000k -maxrate 8000k -bufsize 10000k -vf scale=1920:1080 -c:a aac -b:a 128k -ac 2 -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/y96t-1k4v-t8f9-5f0z-b54y -loglevel debug
+
+
+
+module.exports = { force_start_stream };
 
 const shuffleOrOrderPlaylist = (videos, playMode) => {
   if (playMode === 'shuffle') {

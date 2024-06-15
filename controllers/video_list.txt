@@ -1,1 +1,2 @@
+file 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4'
 file 'https://videocdn.cdnpk.net/euphony/content/video/partners0499/large_watermarked/he1e2fc69_3121560_preview.mp4'
