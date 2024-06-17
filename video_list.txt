@@ -1,1 +1,2 @@
-file 'https://videocdn.cdnpk.net/euphony/content/video/partners0499/large_watermarked/he1e2fc69_3121560_preview.mp4'
+file 'video1.mp4'
+file 'video2.mp4'

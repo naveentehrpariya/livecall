@@ -15,6 +15,8 @@ const Subscription = require("../db/Subscription");
 const API_KEY = process.env.YOUTUBE_API_KEY
 const { execFile } = require('child_process');
 const ffmpeg = require('fluent-ffmpeg');
+const { v4: uuidv4 } = require('uuid'); 
+const os = require('os');
 
 const resolutionSettings = {
   '2160p': {
@@ -27,11 +29,11 @@ const resolutionSettings = {
   },
   '1080p': {
     resolution: '1920x1080',
-    videoBitrate: '6000k',
-    maxrate: '8000k',
+    videoBitrate: '5000k',
+    maxrate: '6000k',
     bufsize: '10000k',
-    preset: 'fast', // Good balance between quality and performance
-    gop: '60', // Keyframe interval for 1080p (assuming 30fps, keyframe every 2 seconds)
+    preset: 'veryfast',
+    gop: '60'
   },
   '720p': {
     resolution: '1280x720',
@@ -595,83 +597,103 @@ const checkStreamStatusAndSubscription = async () => {
 
 
 
-
-
-
-
-
-
-
-
-
 const force_start_stream = async (req, res, next) => {
   try {
-    const { streamkey, audios, thumbnail, resolution, playMode } = req.body;
-    const videos = req.body.videos || []; // Assuming the videos are passed in the request body
+    const { streamkey, audios, thumbnail, playMode, videos, resolution: resolutionKey = '1080p' } = req.body;
+    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolutionKey];
 
-    if (videos.length === 0) {
-      return res.status(400).json({ message: 'No videos provided' });
-    }
-
-    const videoListPath = path.join(__dirname, 'video_list.txt');
-    const videoListContent = videos.map(videoUrl => `file '${videoUrl}'`).join('\n');
-    fs.writeFileSync(videoListPath, videoListContent);
-
-    const ffmpegArgs = [
-      '-protocol_whitelist', 'file,http,https,tcp,tls',
-      '-f', 'concat',
-      '-safe', '0',
-      '-i', videoListPath,
+    // Construct path to playlist
+    const playlistPath = path.join(__dirname, '..', 'playlist.m3u8');
+    console.log(`Playlist path: ${playlistPath}`);
+    const ffmpegCommand = [
+      '-re',
+      '-stream_loop', '-1',
+      '-i', playlistPath,
+      '-vf', `scale=${resolution}`,
       '-c:v', 'libx264',
-      '-vf', 'fps=30',
-      '-crf', '18',
+      '-preset', preset,
+      '-tune', 'zerolatency',
+      '-pix_fmt', 'yuv420p',
+      '-b:v', videoBitrate,
+      '-maxrate', maxrate,
+      '-bufsize', bufsize,
+      '-r', '30',
+      '-g', gop,
       '-c:a', 'aac',
       '-b:a', '128k',
       '-ar', '44100',
-      '-bufsize', '512k',
-      '-max_muxing_queue_size', '1024',
-      '-strict', 'experimental',
-      '-video_track_timescale', '100',
       '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`,
-      '-loglevel', 'debug'
+      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
     ];
 
+    const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
 
-    console.log(`Streaming videos: ${videos.join(', ')}`);
-    const child = execFile('ffmpeg', ffmpegArgs, { detached: true });
-
-    // Handle FFmpeg process exit
     child.on('close', (code) => {
       console.log(`FFmpeg process exited with code ${code}`);
+      if (code !== 0) {
+        console.error('FFmpeg process exited unexpectedly, restarting...');
+      }
     });
+
     child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
-    child.stderr.on('data', (data) => console.error(`stderr: ${data}`));
+    child.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+      if (data.includes('HTTP error 404 Not Found')) {
+        console.error('The provided video URL returned a 404 error');
+      }
+    });
+
     child.on('error', (err) => {
-      stopffmpegstream(videoID);
       console.error(`Child process error: ${err}`);
+      next(err);
     });
 
-    // Respond to the request indicating success
-    res.json({ 
-      message: 'Stream started successfully' 
-    });
+    res.json({ message: 'Stream started successfully' });
   } catch (err) {
-    next(err); // Use the next middleware for error handling
+    next(err);
   }
 };
 
-// ffmpeg -stream_loop -1 -f concat -safe 0 -i video_list.txt -c:v libx264 -preset veryfast -b:v 6000k -maxrate 8000k -bufsize 10000k -vf scale=1920:1080 -c:a aac -b:a 128k -ac 2 -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/y96t-1k4v-t8f9-5f0z-b54y -loglevel debug
+
+// Function to concatenate two videos into a single file locally
+async function concatenateVideosToLocalFile(video1, video2, outputFileName) {
+  const { spawn } = require('child_process');
+
+  return new Promise((resolve, reject) => {
+    const ffmpegProcess = spawn('ffmpeg', [
+      '-i', video1,
+      '-i', video2,
+      '-filter_complex', '[0:v:0][1:v:0]concat=n=2:v=1:a=0[outv]', // Concatenate video streams
+      '-map', '[outv]',
+      outputFileName,
+      '-y' // Overwrite output file if it exists
+    ]);
+
+    ffmpegProcess.on('close', (code) => {
+      if (code === 0) {
+        console.log('Video concatenation successful');
+        resolve();
+      } else {
+        reject(new Error(`Video concatenation failed with code ${code}`));
+      }
+    });
+
+    ffmpegProcess.stderr.on('data', (data) => {
+      console.error(`FFmpeg stderr: ${data}`);
+      reject(new Error(`FFmpeg encountered an error: ${data}`));
+    });
+
+    ffmpegProcess.on('error', (err) => {
+      console.error(`FFmpeg process error: ${err}`);
+      reject(err);
+    });
+  });
+}
 
 
 
-const shuffleOrOrderPlaylist = (videos, playMode) => {
-  if (playMode === 'shuffle') {
-    return videos.sort(() => Math.random() - 0.5);
-  }
-  return videos;
-};
-
+ 
+ 
 
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
@@ -680,3 +702,10 @@ cron.schedule('0 * * * *', async () => {
 });
 
 module.exports = { admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
+
+// "videos": [
+//   "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+//   "https://www.shutterstock.com/shutterstock/videos/1093044355/preview/stock-footage-generic-d-car-crash-test-car-destruction-realistic-animation-d-illustration.webm"
+// ],
+
+

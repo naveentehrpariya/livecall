@@ -1,5 +1,0 @@
-file 'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_100KB_MP3.mp3'
-file 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_f34ad8292e.mp3?filename=wowowowowowowow-103214.mp3'
-file 'https://s2.ezgif.com/tmp/ezgif-2-ae7b0d13c9.gif'
-file 'path/to/loopable/gif/file.gif'
-loop 1
