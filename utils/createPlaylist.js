@@ -23,17 +23,14 @@ function generateVideoList(videos, listPath) {
 async function downloadVideo(url, downloadDir) {
   const response = await fetch(url);
   const fileName = path.basename(url);
-  const filePath = path.join(downloadDir, fileName);
-
+  const filePath = path.join(downloadDir, Date.now().toString()+fileName);
   await fs.ensureDir(downloadDir);
-
   const fileStream = fs.createWriteStream(filePath);
   await new Promise((resolve, reject) => {
     response.body.pipe(fileStream);
     response.body.on('error', reject);
     fileStream.on('finish', resolve);
   });
-
   return filePath;
 }
 
@@ -42,19 +39,20 @@ async function downloadVideo(url, downloadDir) {
  * @param {string[]} videoUrls - Array of video URLs.
  */
 async function createHLSPlaylist(videoUrls, id) {
-  const downloadDir = path.join(__dirname, '..', Date.now().toString());
+  const downloadDir = path.join(__dirname, '..', 'downloads');
   const videoPaths = [];
-
   for (const url of videoUrls) {
     const videoPath = await downloadVideo(url, downloadDir);
     videoPaths.push(videoPath);
   }
 
-  const listPath = path.join(downloadDir, 'videolist-test.txt');
-  const outputPath = path.join(downloadDir, 'playlist-test.m3u8');
-
+  const listName = `list-${id}-${Date.now().toString()}.txt`;
+  const playlistName = `playlist-${id}-${Date.now().toString()}.m3u8`;
+  const listPath = path.join(downloadDir, listName);
+  const outputPath = path.join(downloadDir, playlistName);
   generateVideoList(videoPaths, listPath);
-
+  console.log("listPath",listPath)
+  console.log("outputPath",outputPath)
   const ffmpegCommand = `ffmpeg -f concat -safe 0 -i "${listPath}" -codec copy -hls_time 10 -hls_list_size 0 -f hls "${outputPath}"`;
 
   exec(ffmpegCommand, (error, stdout, stderr) => {
@@ -68,7 +66,9 @@ async function createHLSPlaylist(videoUrls, id) {
     }
     console.log(`FFmpeg stdout: ${stdout}`);
     console.log('HLS playlist created successfully.');
+    return
   });
+  return outputPath
 }
 
 module.exports = createHLSPlaylist;

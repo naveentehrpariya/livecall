@@ -587,26 +587,13 @@ const checkStreamStatusAndSubscription = async () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
 const force_start_stream = async (req, res, next) => {
   try {
     const { streamkey, audios, thumbnail, playMode, videos, resolution: resolutionKey = '1080p' } = req.body;
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolutionKey];
 
-    await createHLSPlaylist(videos, req.user._id);
-    return false;
-    // Construct path to playlist
-    const playlistPath = path.join(__dirname, '..', 'playlist.m3u8');
-    console.log(`Playlist path: ${playlistPath}`);
+    const playlistPath  = await createHLSPlaylist(videos, req.user._id);
+
     const ffmpegCommand = [
       '-re',
       '-stream_loop', '-1',

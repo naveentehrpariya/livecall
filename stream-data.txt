@@ -9,3 +9,11 @@ https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlaze
 
 file 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
 file 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
+
+
+
+ // try {
+    //   await axios.head(videos);
+    // } catch (error) {
+    //   return res.status(404).json({ error: 'Video URL not found or inaccessible' });
+    // }
