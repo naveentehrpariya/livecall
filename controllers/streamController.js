@@ -17,6 +17,7 @@ const { execFile } = require('child_process');
 const ffmpeg = require('fluent-ffmpeg');
 const { v4: uuidv4 } = require('uuid'); 
 const os = require('os');
+const createHLSPlaylist = require("../utils/createPlaylist");
 
 const resolutionSettings = {
   '2160p': {
@@ -596,12 +597,13 @@ const checkStreamStatusAndSubscription = async () => {
 
 
 
-
 const force_start_stream = async (req, res, next) => {
   try {
     const { streamkey, audios, thumbnail, playMode, videos, resolution: resolutionKey = '1080p' } = req.body;
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolutionKey];
 
+    await createHLSPlaylist(videos, req.user._id);
+    return false;
     // Construct path to playlist
     const playlistPath = path.join(__dirname, '..', 'playlist.m3u8');
     console.log(`Playlist path: ${playlistPath}`);
@@ -689,11 +691,6 @@ async function concatenateVideosToLocalFile(video1, video2, outputFileName) {
     });
   });
 }
-
-
-
- 
- 
 
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');

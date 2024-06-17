@@ -26,6 +26,7 @@
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^7.2.0",
     "fluent-ffmpeg": "^2.1.2",
+    "fs-extra": "^11.2.0",
     "google-auth-library": "^9.10.0",
     "googleapis": "^137.1.0",
     "http-proxy-middleware": "^2.0.6",
