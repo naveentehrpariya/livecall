@@ -18,41 +18,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const { v4: uuidv4 } = require('uuid'); 
 const os = require('os');
 const createHLSPlaylist = require("../utils/createPlaylist");
-
-const resolutionSettings = {
-  '2160p': {
-    resolution: '3840x2160',
-    videoBitrate: '20000k',
-    maxrate: '30000k',
-    bufsize: '40000k',
-    preset: 'slow', // Higher quality but more CPU usage
-    gop: '120', // Keyframe interval for 4K (assuming 30fps, keyframe every 4 seconds)
-  },
-  '1080p': {
-    resolution: '1920x1080',
-    videoBitrate: '5000k',
-    maxrate: '6000k',
-    bufsize: '10000k',
-    preset: 'veryfast',
-    gop: '60'
-  },
-  '720p': {
-    resolution: '1280x720',
-    videoBitrate: '3000k',
-    maxrate: '4000k',
-    bufsize: '5000k',
-    preset: 'fast',
-    gop: '60', // Keyframe interval for 720p
-  },
-  '720x1080': {
-    resolution: '720x1080',
-    videoBitrate: '3000k',
-    maxrate: '4000k',
-    bufsize: '5000k',
-    preset: 'fast',
-    gop: '60',
-  }
-};
+const resolutionSettings = require("../utils/resolutionSettings"); // Adjusted resolutionSettings
 
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
@@ -575,24 +541,15 @@ const checkStreamStatusAndSubscription = async () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 const force_start_stream = async (req, res, next) => {
   try {
     const { streamkey, audios, thumbnail, playMode, videos, resolution: resolutionKey = '1080p' } = req.body;
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolutionKey];
-
-    const playlistPath  = await createHLSPlaylist(videos, req.user._id);
+    const playlistPath = await createHLSPlaylist(videos, streamkey);
+    const directoryPath = path.dirname(playlistPath);
+    if (!fs.existsSync(directoryPath)) {
+      return next(new Error('Directory does not exist'));
+    } 
 
     const ffmpegCommand = [
       '-re',
@@ -611,37 +568,49 @@ const force_start_stream = async (req, res, next) => {
       '-c:a', 'aac',
       '-b:a', '128k',
       '-ar', '44100',
+      '-use_wallclock_as_timestamps', '1',
+      '-err_detect', 'ignore_err',
+      '-avoid_negative_ts', 'make_zero',
+      '-strict', '-2',
       '-f', 'flv',
       `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
     ];
 
-    const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
+    const startFFmpegProcess = () => {
+      const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
 
-    child.on('close', (code) => {
-      console.log(`FFmpeg process exited with code ${code}`);
-      if (code !== 0) {
-        console.error('FFmpeg process exited unexpectedly, restarting...');
-      }
-    });
+      child.on('close', (code) => {
+        console.log(`FFmpeg process exited with code ${code}`);
+        if (code !== 0) {
+          console.error('FFmpeg process exited unexpectedly, restarting...');
+          // Implement a delay before restarting to avoid immediate restart loops
+          setTimeout(startFFmpegProcess, 5000);
+        }
+      });
 
-    child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
-    child.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-      if (data.includes('HTTP error 404 Not Found')) {
-        console.error('The provided video URL returned a 404 error');
-      }
-    });
+      child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
+      child.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        if (data.includes('HTTP error 404 Not Found')) {
+          console.error('The provided video URL returned a 404 error');
+        }
+      });
 
-    child.on('error', (err) => {
-      console.error(`Child process error: ${err}`);
-      next(err);
-    });
+      child.on('error', (err) => {
+        console.error(`Child process error: ${err}`);
+        next(err);
+      });
+    };
+
+    startFFmpegProcess();
 
     res.json({ message: 'Stream started successfully' });
   } catch (err) {
     next(err);
   }
 };
+
+
 
 
 // Function to concatenate two videos into a single file locally

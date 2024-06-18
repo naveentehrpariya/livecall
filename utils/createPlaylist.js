@@ -2,73 +2,113 @@ const fs = require('fs-extra');
 const path = require('path');
 const { exec } = require('child_process');
 const fetch = require('node-fetch');
-
-/**
- * Generates a video list file for FFmpeg concatenation.
- * @param {string[]} videos - Array of video file paths.
- * @param {string} listPath - Path where the video list file should be saved.
- */
-function generateVideoList(videos, listPath) {
-  const listContent = videos.map(videoPath => `file '${videoPath}'`).join('\n');
-  fs.writeFileSync(listPath, listContent, 'utf8');
-  console.log(`Video list created at ${listPath}`);
+const logger = require('./logger');
+const ffmpeg = require('fluent-ffmpeg');
+const ffprobePath = require('ffprobe-static').path;
+const ffmpegPath = require('ffmpeg-static');
+ffmpeg.setFfmpegPath(ffmpegPath);
+ 
+async function downloadVideo(url, downloadDir, id) {
+    const response = await fetch(url);
+    const fileName = path.basename(url);
+    const filePath = path.join(downloadDir, `${id}_${fileName}`);
+    await fs.ensureDir(downloadDir);
+    const fileStream = fs.createWriteStream(filePath);
+    await new Promise((resolve, reject) => {
+        response.body.pipe(fileStream);
+        response.body.on('error', reject);
+        fileStream.on('finish', resolve);
+    });
+    return filePath;
 }
 
-/**
- * Downloads a video from the given URL and saves it locally.
- * @param {string} url - URL of the video to download.
- * @param {string} downloadDir - Directory where the video will be saved.
- * @returns {Promise<string>} - The local path of the downloaded video.
- */
-async function downloadVideo(url, downloadDir) {
-  const response = await fetch(url);
-  const fileName = path.basename(url);
-  const filePath = path.join(downloadDir, Date.now().toString()+fileName);
-  await fs.ensureDir(downloadDir);
-  const fileStream = fs.createWriteStream(filePath);
-  await new Promise((resolve, reject) => {
-    response.body.pipe(fileStream);
-    response.body.on('error', reject);
-    fileStream.on('finish', resolve);
-  });
-  return filePath;
+async function checkVideoFile(videoPath) {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(videoPath, (err, metadata) => {
+            if (err) {
+                resolve({ valid: false, message: err.message });
+            } else {
+                const codec = metadata.streams[0].codec_name;
+                const format = metadata.format.format_name;
+                if (codec === 'h264' && format === 'mpegts') {
+                    resolve({ valid: true });
+                } else {
+                    resolve({ valid: false, message: 'Video does not meet codec/format criteria' });
+                }
+            }
+        });
+    });
 }
 
-/**
- * Creates an HLS playlist from a list of video URLs using FFmpeg.
- * @param {string[]} videoUrls - Array of video URLs.
- */
+async function convertVideo(inputPath, outputPath) {
+    return new Promise((resolve, reject) => {
+        ffmpeg(inputPath)
+            .videoCodec('libx264')
+            .audioCodec('aac')
+            .on('end', () => {
+                console.log(`Conversion of ${inputPath} finished successfully.`);
+                  return {
+                      status:true
+                  }
+            })
+            .on('error', (err) => {
+                console.error(`Error converting ${inputPath}: ${err.message}`);
+                return {
+                  status:false
+              }
+            })
+            .save(outputPath);
+    });
+}
+
+function generateVideoList(videoPaths, listPath) {
+    const listContent = videoPaths.map(videoPath => `file '${videoPath.replace(/\\/g, '\\\\')}'`).join('\n');
+    fs.writeFileSync(listPath, listContent, 'utf8');
+    console.log(`Video list created at ${listPath}`);
+}
+
 async function createHLSPlaylist(videoUrls, id) {
-  const downloadDir = path.join(__dirname, '..', 'downloads');
-  const videoPaths = [];
-  for (const url of videoUrls) {
-    const videoPath = await downloadVideo(url, downloadDir);
-    videoPaths.push(videoPath);
-  }
+    const downloadDir = path.join(__dirname, '..', 'downloads');
+    const listPath = path.join(downloadDir, `${id}.txt`);
+    const outputPath = path.join(downloadDir, `playlist-${id}.m3u8`);
 
-  const listName = `list-${id}-${Date.now().toString()}.txt`;
-  const playlistName = `playlist-${id}-${Date.now().toString()}.m3u8`;
-  const listPath = path.join(downloadDir, listName);
-  const outputPath = path.join(downloadDir, playlistName);
-  generateVideoList(videoPaths, listPath);
-  console.log("listPath",listPath)
-  console.log("outputPath",outputPath)
-  const ffmpegCommand = `ffmpeg -f concat -safe 0 -i "${listPath}" -codec copy -hls_time 10 -hls_list_size 0 -f hls "${outputPath}"`;
+    try {
+        const videoPaths = [];
+        for (const url of videoUrls) {
+            const videoPath = await downloadVideo(url, downloadDir, id);
+            const validation = await checkVideoFile(videoPath);
+            if (validation.valid) {
+                videoPaths.push(videoPath);
+            } else {
+                console.log(`Invalid video: ${videoPath}. Reason: ${validation.message}`);
+                const convertedPath = path.join(downloadDir, `converted_${path.basename(videoPath)}`);
+                const convert = await convertVideo(videoPath, convertedPath);
+                if(convert && convert.status){
+                  videoPaths.push(convertedPath);
+                }
+                console.log(`Converted video: ${videoPath} to ${convertedPath}`);
+            }
+        }
+        generateVideoList(videoPaths, listPath);
 
-  exec(ffmpegCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`);
-      return;
+        const ffmpegCommand = `"${ffmpegPath}" -f concat -safe 0 -i "${listPath}" -c:v copy -c:a aac -b:a 128k -hls_time 10 -hls_list_size 0 -f hls "${outputPath}"`;
+        exec(ffmpegCommand, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error creating HLS playlist: ${error.message}`);
+                throw error;
+            }
+            if (stderr) {
+                console.error(`FFmpeg stderr: ${stderr}`);
+            }
+            console.log(`FFmpeg stdout: ${stdout}`);
+            console.log(`HLS playlist-${id}.m3u8 created successfully.`);
+        });
+
+        return outputPath;
+    } catch (err) {
+        console.error(`Error processing videos: ${err.message}`);
+        throw err;
     }
-    if (stderr) {
-      console.error(`FFmpeg stderr: ${stderr}`);
-      return;
-    }
-    console.log(`FFmpeg stdout: ${stdout}`);
-    console.log('HLS playlist created successfully.');
-    return
-  });
-  return outputPath
 }
 
 module.exports = createHLSPlaylist;

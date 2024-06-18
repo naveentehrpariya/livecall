@@ -28,7 +28,6 @@ app.use(morgan('dev'));
 app.use(errorHandler);
 app.use(globalErrorHandler);
 
-
 app.post('/subscriptionWebhook', bodyParser.raw({ type: 'application/json' }), subscriptionWebhook);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({limit:'2000mb'}));

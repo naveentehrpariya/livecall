@@ -1,11 +1,6 @@
 /node_modules
 node_modules
-/backend/node_modules
-backend/node_modules
-/e-com/node_modules
-e-com/node_modules
 config.env
 .env
-uploads
 uploads
 client_secret.json
