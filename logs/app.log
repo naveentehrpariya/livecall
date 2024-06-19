@@ -220,3 +220,19 @@
 
 2024-06-18T12:51:15.969Z [INFO]:"Error converting F:\\livecall\\downloads\\p7m0-bxyj-msrj-8h2f-5ffb_he1e2fc69_3121560_preview.mp4: Error converting F:\\livecall\\downloads\\p7m0-bxyj-msrj-8h2f-5ffb_he1e2fc69_3121560_preview.mp4: ffmpeg exited with code 1: F:\\livecall\\downloads\\p7m0-bxyj-msrj-8h2f-5ffb_he1e2fc69_3121560_preview.mp4: No such file or directory\n"
 
+2024-06-19T05:30:00.512Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-19T05:30:00.515Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-19T06:30:00.438Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-06-19T06:30:00.446Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-19T06:30:00.461Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-19T06:30:00.758Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-06-19T07:30:00.850Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-19T07:30:00.886Z [INFO]:"Running checkPendingSubscriptions cron job"
+

@@ -6,13 +6,13 @@ file 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBigge
 https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4
 https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4
 
-
 file 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
 file 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
 
+https://runstream.b-cdn.net/1716226581077-d908b366ac9720091904869711ae3454-doctor-video.mp4
 
- // try {
-    //   await axios.head(videos);
-    // } catch (error) {
-    //   return res.status(404).json({ error: 'Video URL not found or inaccessible' });
-    // }
+// try {
+//   await axios.head(videos);
+// } catch (error) {
+//   return res.status(404).json({ error: 'Video URL not found or inaccessible' });
+// }

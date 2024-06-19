@@ -538,15 +538,16 @@ const checkStreamStatusAndSubscription = async () => {
   }
 };
 
-
-
-
 const force_start_stream = async (req, res, next) => {
   try {
     const { streamkey, audios, thumbnail, playMode, videos, resolution: resolutionKey = '1080p' } = req.body;
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolutionKey];
+    // const videos = [
+    //   'video1.mp4','video2.mp4' 
+    // ]
     const playlistPath = await createHLSPlaylist(videos, streamkey);
     const directoryPath = path.dirname(playlistPath);
+
     if (!fs.existsSync(directoryPath)) {
       return next(new Error('Directory does not exist'));
     } 
