@@ -17,7 +17,8 @@ const { execFile } = require('child_process');
 const ffmpeg = require('fluent-ffmpeg');
 const { v4: uuidv4 } = require('uuid'); 
 const os = require('os');
-const createHLSPlaylist = require("../utils/createPlaylist");
+const createVideoPlaylist = require("../utils/createPlaylist");
+const createAudioPlaylist = require("../utils/createAudioPlaylist");
 const resolutionSettings = require("../utils/resolutionSettings"); // Adjusted resolutionSettings
 
 const CLIENT_SECRETS_FILE = 'client_secret.json';
@@ -542,16 +543,11 @@ const force_start_stream = async (req, res, next) => {
   try {
     const { streamkey, audios, thumbnail, playMode, videos, resolution: resolutionKey = '1080p' } = req.body;
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolutionKey];
-    // const videos = [
-    //   'video1.mp4','video2.mp4' 
-    // ]
-    const playlistPath = await createHLSPlaylist(videos, streamkey);
+    const playlistPath = await createAudioPlaylist(audios, thumbnail, streamkey);
     const directoryPath = path.dirname(playlistPath);
-
     if (!fs.existsSync(directoryPath)) {
       return next(new Error('Directory does not exist'));
     } 
-
     const ffmpegCommand = [
       '-re',
       '-stream_loop', '-1',
