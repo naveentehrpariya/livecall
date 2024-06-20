@@ -290,9 +290,11 @@ const stopDbStream = async (videoId) => {
 }
 
 
-async function start_ffmpeg (streamkey, audio, video, res, videoID) {
+async function start_ffmpeg(data) {
+  console.log(data);
+  const { streamKey, audio, video, res, videoID } = data
   try {
-    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res];
+    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
     let ffmpegCommand = [
       '-re',
       '-stream_loop', '-1',
@@ -312,8 +314,9 @@ async function start_ffmpeg (streamkey, audio, video, res, videoID) {
       '-avoid_negative_ts', 'make_zero',
       '-strict', '-2',
       '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
+      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
     ];
+
     if (audio) {
       ffmpegCommand = [
         '-re',
@@ -341,13 +344,13 @@ async function start_ffmpeg (streamkey, audio, video, res, videoID) {
         '-avoid_negative_ts', 'make_zero',
         '-strict', '-2',
         '-f', 'flv',
-        `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
+        `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
       ];
     } else {
       ffmpegCommand.splice(ffmpegCommand.indexOf('-strict'), 0, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100');
     }
     const startFFmpegProcess = () => {
-      if (!streamkey || !video) {
+      if (!streamKey) {
         throw new Error('Required parameters missing');
       }
       const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
@@ -421,7 +424,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
-      streamkey: streamKey,
+      streamKey: streamKey,
       user: req.user._id,
       status: '1',
       streamId: videoID,
@@ -433,7 +436,14 @@ const start_stream = catchAsync(async (req, res, next) => {
       if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
       }
-      start_ffmpeg( streamKey, audio, video, req.body.resolution || '1080p', videoID );
+      const payload = {
+        streamKey : streamKey, 
+        audio : audio, 
+        video : video, 
+        res: req.body.resolution, 
+        videoID : videoID
+      }
+      await start_ffmpeg(payload);
       res.json({
         status: true,
         message: 'Stream started.',
@@ -677,11 +687,19 @@ const createPlaylist = async (req, res, next) => {
 
 const force_start_stream = async (req, res, next) => {
   try {
-    const { streamKey, audios, thumbnail, playMode, videos, resolution = '1080p' } = req.body;
+    const { streamKey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
     const downloadsDir = path.join(__dirname, '..', 'downloads');
     const mergedAudioPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-merged.mp3`);
     const imageToVideoPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-image-to-video.mp4`);
-    await start_ffmpeg(streamKey, mergedAudioPath, imageToVideoPath, resolution);
+    
+    const payload = {
+      streamKey : req.body.streamKey, 
+      audio : radio, 
+      video : imageToVideoPath, 
+      res: resolution, 
+      videoID : null
+    }
+    await start_ffmpeg(payload);
     res.json({ message: 'Stream started successfully' });
   } catch (error) {
     next(error);
