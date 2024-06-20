@@ -20,6 +20,10 @@ const os = require('os');
 const createVideoPlaylist = require("../utils/createPlaylist");
 const createAudioPlaylist = require("../utils/createAudioPlaylist");
 const resolutionSettings = require("../utils/resolutionSettings"); // Adjusted resolutionSettings
+const downloadAndMergeVideos = require("../utils/downloadAndMergeVideos");
+const downloadAndMergeAudios = require("../utils/downloadAndMergeAudios");
+const deleteFilesStartingWithName = require("../utils/deleteFilesStartingWithName");
+const convertImageToVideo = require("../utils/convertImageToVideo");
 
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
@@ -285,6 +289,97 @@ const stopDbStream = async (videoId) => {
   return savedstream;
 }
 
+
+async function start_ffmpeg (streamkey, audio, video, res, videoID) {
+  try {
+    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res];
+    let ffmpegCommand = [
+      '-re',
+      '-stream_loop', '-1',
+      '-i', video,
+      '-vf', `scale=${resolution}`,
+      '-c:v', 'libx264',
+      '-preset', preset,
+      '-tune', 'zerolatency',
+      '-pix_fmt', 'yuv420p',
+      '-b:v', videoBitrate,
+      '-maxrate', maxrate,
+      '-bufsize', bufsize,
+      '-r', '30',
+      '-g', gop,
+      '-use_wallclock_as_timestamps', '1',
+      '-err_detect', 'ignore_err',
+      '-avoid_negative_ts', 'make_zero',
+      '-strict', '-2',
+      '-f', 'flv',
+      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
+    ];
+    if (audio) {
+      ffmpegCommand = [
+        '-re',
+        '-stream_loop', '-1',
+        '-i', audio, 
+        '-stream_loop', '-1',
+        '-i', video,  
+        '-vf', `scale=${resolution}`,
+        '-c:v', 'libx264',
+        '-preset', preset,
+        '-tune', 'zerolatency',
+        '-pix_fmt', 'yuv420p',
+        '-b:v', videoBitrate,
+        '-maxrate', maxrate,
+        '-bufsize', bufsize,
+        '-r', '30',
+        '-g', gop,
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-ar', '44100',
+        '-map', '1:v', 
+        '-map', '0:a',
+        '-use_wallclock_as_timestamps', '1',
+        '-err_detect', 'ignore_err',
+        '-avoid_negative_ts', 'make_zero',
+        '-strict', '-2',
+        '-f', 'flv',
+        `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
+      ];
+    } else {
+      ffmpegCommand.splice(ffmpegCommand.indexOf('-strict'), 0, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100');
+    }
+    const startFFmpegProcess = () => {
+      if (!streamkey || !video) {
+        throw new Error('Required parameters missing');
+      }
+      const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
+      activeStreams[videoID] = child;
+      child.on('close', (code) => {
+        console.log(`FFmpeg process exited with code ${code}`);
+        stopffmpegstream(videoID);
+        if (code !== 0) {
+          console.error('FFmpeg process exited unexpectedly, restarting...');
+          setTimeout(startFFmpegProcess, 5000);
+        }
+      });
+      child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
+      child.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        if (data.includes('HTTP error 404 Not Found')) {
+          console.error('The provided video URL returned a 404 error');
+        }
+      });
+      child.on('error', (err) => {
+        console.error(`Child process error: ${err}`);
+        stopffmpegstream(videoID);
+        throw err;
+      });
+    };
+    startFFmpegProcess();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
 const start_stream = catchAsync(async (req, res, next) => {
   try {
     const { title, description, audio, thumbnail } = req.body;
@@ -338,46 +433,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
       }
-      const audio = "https://stream.zeno.fm/ez4m4918n98uv";
-      const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[req.body.resolution || '1080p'];
-      const ffmpegCommand = [
-        'ffmpeg',
-        '-stream_loop', '-1',
-        '-re',
-        '-i', video,
-        '-f', 'lavfi',
-        '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
-        '-vf', `scale=${resolution}`, 
-        '-c:v', 'libx264',
-        '-preset', preset,
-        '-tune', 'zerolatency',
-        '-pix_fmt', 'yuv420p',
-        '-b:v', videoBitrate,
-        '-maxrate', maxrate,
-        '-bufsize', bufsize,
-        '-g', gop,
-        '-c:a', 'aac',
-        '-b:a', '128k',
-        '-ar', '44100',
-        '-strict', 'experimental',
-        '-f', 'flv',
-        `rtmp://a.rtmp.youtube.com/live2/${streamKey}`,
-    ];
-    
-    const child = spawn(ffmpegCommand[0], ffmpegCommand.slice(1));
-    activeStreams[videoID] = child;
-      
-      child.on('close', () => {
-        stopffmpegstream(videoID);
-      });
-      
-      child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
-      child.stderr.on('data', (data) => console.error(`stderr: ${data}`));
-      child.on('error', (err) => {
-        stopffmpegstream(videoID);
-        console.error(`Child process error: ${err}`);
-      });
-      
+      start_ffmpeg( streamKey, audio, video, req.body.resolution || '1080p', videoID );
       res.json({
         status: true,
         message: 'Stream started.',
@@ -430,7 +486,6 @@ const stop_stream = async (req, res, next) => {
     JSONerror(res, err, next);
   }
 };
-
 
 const admin_stop_stream = async (req, res, next) => {
   try {
@@ -538,120 +593,108 @@ const checkStreamStatusAndSubscription = async () => {
     console.error('Error checking live stream status and subscription:', error);
   }
 };
-
-const force_start_stream = async (req, res, next) => {
+ 
+const createPlaylist = async (req, res, next) => {
   try {
-    const { streamkey, audios, thumbnail, playMode, videos, resolution: resolutionKey = '1080p' } = req.body;
-    const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[resolutionKey];
-    const playlistPath = await createAudioPlaylist(audios, thumbnail, streamkey);
-    const directoryPath = path.dirname(playlistPath);
+    const { audios, videos, radio, thumbnail, type  } = req.body;
+    const stream_unique_key = req.user._id || "runstream-test";
+    const downloadDir = path.join(__dirname, '..', 'downloads');
+    await deleteFilesStartingWithName(downloadDir, stream_unique_key);
+    let videoPath = null;
+    let audiosPath = null;
+
+    if(type == 'gif'){
+      console.log('Processing GIF type');
+      if(thumbnail){
+        const imageVideoPath = path.join(downloadDir, `${stream_unique_key}-image-to-video.mp4`);
+        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, stream_unique_key);
+        videoPath = thumbvideo;
+        console.log('GIF video created:', videoPath);
+      }
+      if(audios && audios.length > 0){
+        console.log('Processing audio for GIF');
+        if(audios && audios.length > 1){
+          audiosPath = await downloadAndMergeAudios(audios, stream_unique_key);
+        } else{
+          audiosPath = audios[0];
+        } 
+        console.log('GIF audio created:', audiosPath);
+      } 
+    }
+    if(type == 'radio'){
+      console.log('Processing radio type');
+      if(thumbnail){
+        const imageVideoPath = path.join(downloadDir, `${stream_unique_key}-image-to-video.mp4`);
+        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath);
+        videoPath = thumbvideo;
+        console.log('Radio video created:', videoPath);
+      }
+      audiosPath = radio;
+      console.log('Radio audio created:', audiosPath);
+    }
+
+    if(type == 'video'){
+      console.log('Processing video type');
+      if(videos && videos.length > 1){
+        videoPath = await downloadAndMergeVideos(videos, stream_unique_key);
+        console.log('Merged video created:', videoPath);
+      } else {
+        videoPath = videos[0];
+        console.log('Single video created:', videoPath);
+      }
+
+      if(audios && audios.length > 0){
+        console.log('Processing audio for video');
+        if(audios && audios.length > 1){
+          audiosPath = await downloadAndMergeAudios(audios, stream_unique_key);
+        } else{
+          audiosPath = audios[0];
+        } 
+        console.log('Video audio created:', audiosPath);
+      } 
+    }
+
+    const directoryPath = path.dirname(videoPath);
     if (!fs.existsSync(directoryPath)) {
+      console.error('Directory does not exist:', directoryPath);
       return next(new Error('Directory does not exist'));
-    } 
-    const ffmpegCommand = [
-      '-re',
-      '-stream_loop', '-1',
-      '-i', playlistPath,
-      '-vf', `scale=${resolution}`,
-      '-c:v', 'libx264',
-      '-preset', preset,
-      '-tune', 'zerolatency',
-      '-pix_fmt', 'yuv420p',
-      '-b:v', videoBitrate,
-      '-maxrate', maxrate,
-      '-bufsize', bufsize,
-      '-r', '30',
-      '-g', gop,
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ar', '44100',
-      '-use_wallclock_as_timestamps', '1',
-      '-err_detect', 'ignore_err',
-      '-avoid_negative_ts', 'make_zero',
-      '-strict', '-2',
-      '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
-    ];
-
-    const startFFmpegProcess = () => {
-      const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
-
-      child.on('close', (code) => {
-        console.log(`FFmpeg process exited with code ${code}`);
-        if (code !== 0) {
-          console.error('FFmpeg process exited unexpectedly, restarting...');
-          // Implement a delay before restarting to avoid immediate restart loops
-          setTimeout(startFFmpegProcess, 5000);
-        }
-      });
-
-      child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
-      child.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-        if (data.includes('HTTP error 404 Not Found')) {
-          console.error('The provided video URL returned a 404 error');
-        }
-      });
-
-      child.on('error', (err) => {
-        console.error(`Child process error: ${err}`);
-        next(err);
-      });
-    };
-
-    startFFmpegProcess();
-
-    res.json({ message: 'Stream started successfully' });
+    }
+    console.log('Playlist created successfully:', { 
+      message: 'Video playlist created successfully.',
+      audio : audiosPath,
+      video : videoPath
+    });
+    res.json({ 
+      message: 'Video playlist created successfully.',
+      audio : audiosPath,
+      video : videoPath
+    });
   } catch (err) {
+    console.error('Error creating playlist:', err);
     next(err);
   }
 };
 
-
-
-
-// Function to concatenate two videos into a single file locally
-async function concatenateVideosToLocalFile(video1, video2, outputFileName) {
-  const { spawn } = require('child_process');
-
-  return new Promise((resolve, reject) => {
-    const ffmpegProcess = spawn('ffmpeg', [
-      '-i', video1,
-      '-i', video2,
-      '-filter_complex', '[0:v:0][1:v:0]concat=n=2:v=1:a=0[outv]', // Concatenate video streams
-      '-map', '[outv]',
-      outputFileName,
-      '-y' // Overwrite output file if it exists
-    ]);
-
-    ffmpegProcess.on('close', (code) => {
-      if (code === 0) {
-        console.log('Video concatenation successful');
-        resolve();
-      } else {
-        reject(new Error(`Video concatenation failed with code ${code}`));
-      }
-    });
-
-    ffmpegProcess.stderr.on('data', (data) => {
-      console.error(`FFmpeg stderr: ${data}`);
-      reject(new Error(`FFmpeg encountered an error: ${data}`));
-    });
-
-    ffmpegProcess.on('error', (err) => {
-      console.error(`FFmpeg process error: ${err}`);
-      reject(err);
-    });
-  });
-}
-
+const force_start_stream = async (req, res, next) => {
+  try {
+    const { streamKey, audios, thumbnail, playMode, videos, resolution = '1080p' } = req.body;
+    const downloadsDir = path.join(__dirname, '..', 'downloads');
+    const mergedAudioPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-merged.mp3`);
+    const imageToVideoPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-image-to-video.mp4`);
+    await start_ffmpeg(streamKey, mergedAudioPath, imageToVideoPath, resolution);
+    res.json({ message: 'Stream started successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+ 
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   // checkStreamStatusAndSubscription();
 });
 
-module.exports = { admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
+module.exports = { createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
 
 // "videos": [
 //   "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",

@@ -29,7 +29,6 @@ async function createHLSPlaylist(audioFilePaths, id, imageFilePath) {
     try {
         const audioPaths = [];
         for (const url of audioFilePaths) {
-         console.log("url", url)
             try {
                 console.log("item", url);
                 const videoPath = await downloadVideo(url, downloadDir, id);
@@ -42,8 +41,8 @@ async function createHLSPlaylist(audioFilePaths, id, imageFilePath) {
         }
 
         // Convert image to video
-        const imageVideoPath = path.join(downloadDir, `${id}-image-video.mp4`);
         console.log("Image video path:", imageVideoPath);
+        const imageVideoPath = path.join(downloadDir, `${id}-image-video.mp4`);
         const thumbvideo = await convertImageToVideo(imageFilePath, imageVideoPath);
         console.log("Converted thumb video:", thumbvideo);
         audioPaths.push(thumbvideo);
@@ -53,7 +52,6 @@ async function createHLSPlaylist(audioFilePaths, id, imageFilePath) {
         }
 
         generateVideoList(audioPaths, listPath);
-
         const ffmpegCommand = `"${ffmpegPath}" -f concat -safe 0 -i "${listPath}" -c:v copy -c:a aac -b:a 128k -hls_time 10 -hls_list_size 0 -f hls "${outputPath}"`;
         console.log("Executing FFmpeg command: ", ffmpegCommand);
 
@@ -72,7 +70,6 @@ async function createHLSPlaylist(audioFilePaths, id, imageFilePath) {
                 }
             });
         });
-
         return outputPath;
     } catch (err) {
         console.error(`Error processing videos: ${err.message}`);

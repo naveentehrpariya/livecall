@@ -9,17 +9,13 @@ function sanitizeFileName(fileName) {
 async function downloadAudio(url, downloadDir, id) {
     const fileName = sanitizeFileName(path.basename(url));
     const filePath = path.join(downloadDir, `${id}_${Date.now().toString()}.mp3`);
-    
     await fs.ensureDir(downloadDir);
-
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
     }
-
     const fileStream = fs.createWriteStream(filePath);
     response.body.pipe(fileStream);
-
     await new Promise((resolve, reject) => {
         fileStream.on('finish', () => {
             resolve();
@@ -28,7 +24,6 @@ async function downloadAudio(url, downloadDir, id) {
             reject(err);
         });
     });
-
     const stats = await fs.stat(filePath);
     if (stats.size === 0) {
         throw new Error(`Downloaded file ${filePath} is empty`);

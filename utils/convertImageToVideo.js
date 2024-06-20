@@ -7,7 +7,7 @@ const ffmpegPath = require('ffmpeg-static');
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-async function convertImageToVideo(imageUrl, videoPath) {
+async function convertImageToVideo(imageUrl, videoPath, id) {
     try {
         // Download image from URL
         const response = await fetch(imageUrl);
@@ -18,7 +18,7 @@ async function convertImageToVideo(imageUrl, videoPath) {
         console.log("Response status:", response.status);
 
         // Create a temporary file path for the image
-        const tempImagePath = path.join(__dirname, 'downloads', 'image.jpg');
+        const tempImagePath = path.join(__dirname, 'downloads', '..', `${id}-image.jpg`);
         
         // Ensure the directory exists
         await fs.ensureDir(path.dirname(tempImagePath));
