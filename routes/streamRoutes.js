@@ -9,7 +9,7 @@ router.route('/create-playlist').post(validateToken, createPlaylist);
 
 router.route('/force-create-stream').post(validateToken, force_start_stream);
 
-router.route('/create-stream').post(validateToken, checkUserStreamLimit, start_stream);
+router.route('/create-stream').post(validateToken, start_stream);
 
 router.route('/kill-stream/:streamId').get(validateToken, stop_stream); 
 

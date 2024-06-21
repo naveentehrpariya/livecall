@@ -289,9 +289,7 @@ const stopDbStream = async (videoId) => {
   return savedstream;
 }
 
-
 async function start_ffmpeg(data) {
-  console.log(data);
   const { streamKey, audio, video, res, videoID } = data
   try {
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
@@ -382,18 +380,15 @@ async function start_ffmpeg(data) {
   }
 };
 
-
 const start_stream = catchAsync(async (req, res, next) => {
   try {
-    const { title, description, audio, thumbnail } = req.body;
+    const { title, description, audio, thumbnail, type, ordered } = req.body;
     const userId = req.user._id;
-    console.log("userId",userId);
     const { token } = await getStoredToken(userId);
     console.log("token",token);
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
     oAuth2Client.setCredentials(token);
-    console.log("Credentials:", credentials);
     
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description);
@@ -418,9 +413,10 @@ const start_stream = catchAsync(async (req, res, next) => {
     const videoID = streamData.broadcast.id;
     const stream = new Stream({
       title: req.body.title,
-      video: req.body.video, 
-      audio: req.body.audio,
+      video: JSON.stringify(req.body.video), 
+      audio: JSON.stringify(req.body.audio),
       description: req.body.description,
+      playlistId: req.body.playlistId,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
@@ -428,6 +424,8 @@ const start_stream = catchAsync(async (req, res, next) => {
       user: req.user._id,
       status: '1',
       streamId: videoID,
+      stream_type:type,
+      ordered:ordered
     });
     
     const savedStream = await stream.save();
@@ -435,7 +433,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       const video = req.body.video;
       if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
-      }
+      } 
       const payload = {
         streamKey : streamKey, 
         audio : audio, 
@@ -450,7 +448,6 @@ const start_stream = catchAsync(async (req, res, next) => {
         stream: savedStream,
         streamUrl: `https://www.youtube.com/watch?v=${videoID}`,
       });
-
     } else {
       res.json({
         status: false,
@@ -606,25 +603,25 @@ const checkStreamStatusAndSubscription = async () => {
  
 const createPlaylist = async (req, res, next) => {
   try {
+    const playlistId = Date.now().toString();
     const { audios, videos, radio, thumbnail, type  } = req.body;
-    const stream_unique_key = req.user._id || "runstream-test";
     const downloadDir = path.join(__dirname, '..', 'downloads');
-    await deleteFilesStartingWithName(downloadDir, stream_unique_key);
+    await deleteFilesStartingWithName(downloadDir, playlistId);
     let videoPath = null;
     let audiosPath = null;
 
     if(type == 'gif'){
       console.log('Processing GIF type');
       if(thumbnail){
-        const imageVideoPath = path.join(downloadDir, `${stream_unique_key}-image-to-video.mp4`);
-        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, stream_unique_key);
+        const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
+        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, playlistId);
         videoPath = thumbvideo;
         console.log('GIF video created:', videoPath);
       }
       if(audios && audios.length > 0){
         console.log('Processing audio for GIF');
         if(audios && audios.length > 1){
-          audiosPath = await downloadAndMergeAudios(audios, stream_unique_key);
+          audiosPath = await downloadAndMergeAudios(audios, playlistId);
         } else{
           audiosPath = audios[0];
         } 
@@ -634,7 +631,7 @@ const createPlaylist = async (req, res, next) => {
     if(type == 'radio'){
       console.log('Processing radio type');
       if(thumbnail){
-        const imageVideoPath = path.join(downloadDir, `${stream_unique_key}-image-to-video.mp4`);
+        const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
         const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath);
         videoPath = thumbvideo;
         console.log('Radio video created:', videoPath);
@@ -642,28 +639,25 @@ const createPlaylist = async (req, res, next) => {
       audiosPath = radio;
       console.log('Radio audio created:', audiosPath);
     }
-
     if(type == 'video'){
       console.log('Processing video type');
       if(videos && videos.length > 1){
-        videoPath = await downloadAndMergeVideos(videos, stream_unique_key);
+        videoPath = await downloadAndMergeVideos(videos, playlistId);
         console.log('Merged video created:', videoPath);
       } else {
         videoPath = videos[0];
         console.log('Single video created:', videoPath);
       }
-
       if(audios && audios.length > 0){
         console.log('Processing audio for video');
         if(audios && audios.length > 1){
-          audiosPath = await downloadAndMergeAudios(audios, stream_unique_key);
+          audiosPath = await downloadAndMergeAudios(audios, playlistId);
         } else{
           audiosPath = audios[0];
         } 
         console.log('Video audio created:', audiosPath);
       } 
     }
-
     const directoryPath = path.dirname(videoPath);
     if (!fs.existsSync(directoryPath)) {
       console.error('Directory does not exist:', directoryPath);
@@ -672,12 +666,14 @@ const createPlaylist = async (req, res, next) => {
     console.log('Playlist created successfully:', { 
       message: 'Video playlist created successfully.',
       audio : audiosPath,
-      video : videoPath
+      video : videoPath,
+      playlistId:playlistId
     });
     res.json({ 
       message: 'Video playlist created successfully.',
       audio : audiosPath,
-      video : videoPath
+      video : videoPath,
+      playlistId:playlistId
     });
   } catch (err) {
     console.error('Error creating playlist:', err);
@@ -705,15 +701,13 @@ const force_start_stream = async (req, res, next) => {
     next(error);
   }
 };
- 
+  
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   // checkStreamStatusAndSubscription();
 });
-
 module.exports = { createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
-
 // "videos": [
 //   "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
 //   "https://www.shutterstock.com/shutterstock/videos/1093044355/preview/stock-footage-generic-d-car-crash-test-car-destruction-realistic-animation-d-illustration.webm"

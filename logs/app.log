@@ -288,3 +288,67 @@
 
 2024-06-20T17:30:00.994Z [INFO]:"Running checkPendingSubscriptions cron job"
 
+2024-06-21T09:30:00.179Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-06-21T09:30:00.193Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-21T09:30:00.194Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-21T09:30:00.569Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-06-21T10:30:00.247Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-21T10:30:00.257Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-21T11:30:00.181Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-21T11:30:00.188Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-06-21T12:16:07.548Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:12.645Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:17.970Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:23.107Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:28.200Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:33.305Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:38.398Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:43.584Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:48.735Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:53.845Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:16:58.964Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:04.097Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:09.205Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:14.368Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:19.478Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:24.789Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:29.951Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:35.101Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:40.237Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:45.422Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:50.559Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:17:55.717Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:18:00.807Z [INFO]:"Ffmpeg stream stopped undefined"
+
+2024-06-21T12:20:26.493Z [INFO]:"Ffmpeg stream stopped undefined"
+

@@ -21,10 +21,7 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-
-
 app.use(morgan('dev'));
-
 app.use(errorHandler);
 app.use(globalErrorHandler);
 
@@ -46,6 +43,7 @@ const multerParse = multer({
     fileSize: 1024 * 1024 * 2000 // 50MB
   }
 });
+
 app.options("/cloud/upload", cors(corsOptions));
 app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.single("attachment"), async (req, res) => {
   const attachment = req.file;

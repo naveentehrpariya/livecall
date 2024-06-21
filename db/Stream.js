@@ -6,6 +6,9 @@ const schema = new mongoose.Schema({
         type:String, 
         required:[true, 'Please enter your stream title.'],
     },
+    stream_type: {
+        type:String, 
+    },
     resolution: {
         type:String,
         // required:[true, 'Please choose a resolution for your stream.'],
@@ -27,14 +30,19 @@ const schema = new mongoose.Schema({
         type:String,
     },
     streamkey: {
-        // required:[true, 'Please enter your stream key.'],
         type:String,
-        // minLength:[10, 'Stream key is too short or invalid.'],
     },
     streamId: {
         type:String,
     },
+    ordered: {
+        type:Boolean,
+        default:true,
+    },
     description: {
+        type:String,
+    },
+    playlistId: {
         type:String,
     },
     active : { 

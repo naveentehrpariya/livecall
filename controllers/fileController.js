@@ -63,7 +63,6 @@ const deleteMedia = catchAsync(async (req, res) => {
    }
 });
 
-
 const uploadMedia = catchAsync(async (req, res) => {
   const attachment = req.files?.attachment?.[0];
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -82,14 +81,12 @@ const uploadMedia = catchAsync(async (req, res) => {
         size: uploadResponse.size,
       });
       const fileUploaded = await file.save();
-
       if (!fileUploaded) {
         return res.status(500).json({
           message: "File upload failed",
           error: uploadResponse
         });
       }
-
       return res.status(201).json({
         message: "File uploaded to storage.",
         file_data: fileUploaded,
