@@ -22,6 +22,9 @@ const schema = new mongoose.Schema({
     video: {
         type:String,
     },
+    radio: {
+        type:String,
+    },
     status: {
         type:Number,
         default:1,

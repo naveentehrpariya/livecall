@@ -14,11 +14,6 @@ const cron = require('node-cron');
 const Subscription = require("../db/Subscription");
 const API_KEY = process.env.YOUTUBE_API_KEY
 const { execFile } = require('child_process');
-const ffmpeg = require('fluent-ffmpeg');
-const { v4: uuidv4 } = require('uuid'); 
-const os = require('os');
-const createVideoPlaylist = require("../utils/createPlaylist");
-const createAudioPlaylist = require("../utils/createAudioPlaylist");
 const resolutionSettings = require("../utils/resolutionSettings"); // Adjusted resolutionSettings
 const downloadAndMergeVideos = require("../utils/downloadAndMergeVideos");
 const downloadAndMergeAudios = require("../utils/downloadAndMergeAudios");
@@ -293,6 +288,7 @@ async function start_ffmpeg(data) {
   const { streamKey, audio, video, res, videoID } = data
   try {
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
+    
     let ffmpegCommand = [
       '-re',
       '-stream_loop', '-1',
@@ -376,13 +372,15 @@ async function start_ffmpeg(data) {
     };
     startFFmpegProcess();
   } catch (err) {
-    console.log(err);
+    console.log("ffmpeg stopping error =>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",err);
   }
 };
 
+
+
 const start_stream = catchAsync(async (req, res, next) => {
   try {
-    const { title, description, audio, thumbnail, type, ordered } = req.body;
+    const { title, description, audio, thumbnail, type } = req.body;
     const userId = req.user._id;
     const { token } = await getStoredToken(userId);
     console.log("token",token);
@@ -416,16 +414,17 @@ const start_stream = catchAsync(async (req, res, next) => {
       video: JSON.stringify(req.body.video), 
       audio: JSON.stringify(req.body.audio),
       description: req.body.description,
-      playlistId: req.body.playlistId,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
       streamKey: streamKey,
       user: req.user._id,
       status: '1',
+      radio : req.body.radio,
       streamId: videoID,
+      playlistId: req.body.playlistId,
       stream_type:type,
-      ordered:ordered
+      ordered:req.body.ordered
     });
     
     const savedStream = await stream.save();
@@ -610,35 +609,6 @@ const createPlaylist = async (req, res, next) => {
     let videoPath = null;
     let audiosPath = null;
 
-    if(type == 'gif'){
-      console.log('Processing GIF type');
-      if(thumbnail){
-        const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
-        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, playlistId);
-        videoPath = thumbvideo;
-        console.log('GIF video created:', videoPath);
-      }
-      if(audios && audios.length > 0){
-        console.log('Processing audio for GIF');
-        if(audios && audios.length > 1){
-          audiosPath = await downloadAndMergeAudios(audios, playlistId);
-        } else{
-          audiosPath = audios[0];
-        } 
-        console.log('GIF audio created:', audiosPath);
-      } 
-    }
-    if(type == 'radio'){
-      console.log('Processing radio type');
-      if(thumbnail){
-        const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
-        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath);
-        videoPath = thumbvideo;
-        console.log('Radio video created:', videoPath);
-      }
-      audiosPath = radio;
-      console.log('Radio audio created:', audiosPath);
-    }
     if(type == 'video'){
       console.log('Processing video type');
       if(videos && videos.length > 1){
@@ -648,33 +618,58 @@ const createPlaylist = async (req, res, next) => {
         videoPath = videos[0];
         console.log('Single video created:', videoPath);
       }
-      if(audios && audios.length > 0){
-        console.log('Processing audio for video');
-        if(audios && audios.length > 1){
-          audiosPath = await downloadAndMergeAudios(audios, playlistId);
-        } else{
-          audiosPath = audios[0];
+      if(radio){
+        audiosPath = radio;
+      } else {
+        if(audios && audios.length > 0){
+          console.log('Processing audio for video');
+          if(audios && audios.length > 1){
+            audiosPath = await downloadAndMergeAudios(audios, playlistId);
+          } else{
+            audiosPath = audios[0];
+          } 
+          console.log('Video audio created:', audiosPath);
         } 
-        console.log('Video audio created:', audiosPath);
-      } 
+      }
     }
-    const directoryPath = path.dirname(videoPath);
-    if (!fs.existsSync(directoryPath)) {
-      console.error('Directory does not exist:', directoryPath);
-      return next(new Error('Directory does not exist'));
+
+    if(type == 'image'){
+      console.log('Processing GIF type');
+      if(thumbnail){
+        const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
+        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, playlistId);
+        videoPath = thumbvideo;
+        console.log('GIF video created:', videoPath);
+      }
+      if(radio){
+        audiosPath = radio;
+      } else {
+        if(audios && audios.length > 0){
+          console.log('Processing audio for GIF');
+          if(audios && audios.length > 1){
+            audiosPath = await downloadAndMergeAudios(audios, playlistId);
+          } else{
+            audiosPath = audios[0];
+          } 
+          console.log('GIF audio created:', audiosPath);
+        } 
+      }
     }
+   
     console.log('Playlist created successfully:', { 
       message: 'Video playlist created successfully.',
       audio : audiosPath,
       video : videoPath,
       playlistId:playlistId
     });
+
     res.json({ 
       message: 'Video playlist created successfully.',
       audio : audiosPath,
       video : videoPath,
       playlistId:playlistId
     });
+
   } catch (err) {
     console.error('Error creating playlist:', err);
     next(err);
@@ -689,10 +684,10 @@ const force_start_stream = async (req, res, next) => {
     const imageToVideoPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-image-to-video.mp4`);
     
     const payload = {
-      streamKey : req.body.streamKey, 
-      audio : radio, 
-      video : imageToVideoPath, 
-      res: resolution, 
+      streamKey : 'kxfb-udcp-wjrb-pp0g-e7j6', 
+      audio : "/Users/naveentehrpariya/Work/upstream/livecall/downloads/1719331616657-merged.mp3", 
+      video : 'https://runstream.b-cdn.net/1719331574146-6727e20eeb3bc0cf5f44fce044a733a4-doctor-video.mp4', 
+      res: resolution || "1080p", 
       videoID : null
     }
     await start_ffmpeg(payload);

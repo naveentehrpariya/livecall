@@ -42,7 +42,6 @@ async function convertVideo(inputPath, outputPath) {
             .save(outputPath);
     });
 }
-
 function generateVideoList(videoPaths, listPath) {
     const listContent = videoPaths.map(videoPath => `file '${videoPath.replace(/\\/g, '\\\\')}'`).join('\n');
     fs.writeFileSync(listPath, listContent, 'utf8');
