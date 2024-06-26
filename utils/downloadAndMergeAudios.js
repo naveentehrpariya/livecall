@@ -40,11 +40,11 @@ function mergeAudioFiles(inputFiles, outputFile) {
 }
 
 
-async function downloadAndMergeAudios(videoUrls, id) {
+async function downloadAndMergeAudios(videoUrls, id, loop) {
     const downloadDir = path.join(__dirname, '..', 'downloads');
     const outputPath = path.join(downloadDir, `${id}-merged.mp3`);
     try {
-        const videoPaths = [];
+        let videoPaths = [];
         for (const url of videoUrls) {
             try {
                 await isValidVideo(url);
@@ -57,6 +57,20 @@ async function downloadAndMergeAudios(videoUrls, id) {
         if (videoPaths.length === 0) {
             throw new Error("No valid videos available to create HLS playlist");
         }
+        if(!loop && videoPaths.length > 0){
+            const shuffleArray = (array) => {
+                let shuffledArray = array.slice();
+                for (let i = shuffledArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+                }
+                return shuffledArray;
+            };
+            const array1 = shuffleArray(videoPaths);
+            const array2 = shuffleArray(array1);
+            videoPaths = [...array1, ...array2];
+        }
+        console.log("suffled audios",videoPaths)
         await mergeAudioFiles(videoPaths, outputPath);
         return outputPath;
     } catch (err) {

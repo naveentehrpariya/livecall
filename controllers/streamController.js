@@ -603,7 +603,7 @@ const checkStreamStatusAndSubscription = async () => {
 const createPlaylist = async (req, res, next) => {
   try {
     const playlistId = Date.now().toString();
-    const { audios, videos, radio, thumbnail, type  } = req.body;
+    const { audios, videos, radio, thumbnail, type, loop  } = req.body;
     const downloadDir = path.join(__dirname, '..', 'downloads');
     await deleteFilesStartingWithName(downloadDir, playlistId);
     let videoPath = null;
@@ -624,7 +624,7 @@ const createPlaylist = async (req, res, next) => {
         if(audios && audios.length > 0){
           console.log('Processing audio for video');
           if(audios && audios.length > 1){
-            audiosPath = await downloadAndMergeAudios(audios, playlistId);
+            audiosPath = await downloadAndMergeAudios(audios, playlistId, loop);
           } else{
             audiosPath = audios[0];
           } 
