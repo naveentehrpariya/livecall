@@ -376,8 +376,6 @@ async function start_ffmpeg(data) {
   }
 };
 
-
-
 const start_stream = catchAsync(async (req, res, next) => {
   try {
     const { title, description, audio, thumbnail, type } = req.body;
@@ -411,8 +409,8 @@ const start_stream = catchAsync(async (req, res, next) => {
     const videoID = streamData.broadcast.id;
     const stream = new Stream({
       title: req.body.title,
-      video: JSON.stringify(req.body.video), 
-      audio: JSON.stringify(req.body.audio),
+      video: JSON.stringify(req.body.videos), 
+      audio: JSON.stringify(req.body.audios),
       description: req.body.description,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
