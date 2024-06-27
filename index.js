@@ -91,7 +91,7 @@ app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.single("
 
 app.get('/', (req, res) => {
   res.send({
-    message: "ACTIVE last",
+    message: "ACTIVE last2",
     status: 200
   });
 });

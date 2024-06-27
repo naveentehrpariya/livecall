@@ -286,6 +286,8 @@ const stopDbStream = async (videoId) => {
 
 async function start_ffmpeg(data) {
   const { streamKey, audio, video, res, videoID } = data
+  console.log("ffmpeg data",data)
+  logger(`Starting ffmpeg stream ${data}`);
   try {
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
     
@@ -311,7 +313,8 @@ async function start_ffmpeg(data) {
       `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
     ];
 
-    if (audio) {
+    if (audio && audio !== null && audio !== '') {
+      console.log("ENTERED STREAM WITH AUDIO INPUT`);")
       ffmpegCommand = [
         '-re',
         '-stream_loop', '-1',
@@ -341,7 +344,28 @@ async function start_ffmpeg(data) {
         `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
       ];
     } else {
-      ffmpegCommand.splice(ffmpegCommand.indexOf('-strict'), 0, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100');
+      ffmpegCommand = [
+      '-stream_loop', '-1',
+      '-re',
+      '-i', video,
+      '-f', 'lavfi',
+      '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
+      '-vf', `scale=${resolution}`, 
+      '-c:v', 'libx264',
+      '-preset', preset,
+      '-tune', 'zerolatency',
+      '-pix_fmt', 'yuv420p',
+      '-b:v', videoBitrate,
+      '-maxrate', maxrate,
+      '-bufsize', bufsize,
+      '-g', gop,
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      '-ar', '44100',
+      '-strict', 'experimental',
+      '-f', 'flv',
+      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`]
+      // ffmpegCommand.splice(ffmpegCommand.indexOf('-strict'), 0, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100');
     }
     const startFFmpegProcess = () => {
       if (!streamKey) {
@@ -352,10 +376,10 @@ async function start_ffmpeg(data) {
       child.on('close', (code) => {
         console.log(`FFmpeg process exited with code ${code}`);
         stopffmpegstream(videoID);
-        if (code !== 0) {
-          console.error('FFmpeg process exited unexpectedly, restarting...');
-          setTimeout(startFFmpegProcess, 5000);
-        }
+        // if (code !== 0) {
+        //   console.error('FFmpeg process exited unexpectedly, restarting...');
+        //   setTimeout(startFFmpegProcess, 5000);
+        // }
       });
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
@@ -390,21 +414,21 @@ const start_stream = catchAsync(async (req, res, next) => {
     const streamData = await createAndBindLiveBroadcast(youtube, title, description);
     const streamKey = streamData.stream.cdn.ingestionInfo.streamName;
     
-    if (thumbnail) {
-      const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
-      const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
-      await downloadThumbnail(thumbnail, thumbnailPath);
-      await SizeReducer(thumbnailPath, OutputPath);
-      await youtube.thumbnails.set({
-        videoId: streamData.broadcast.id,
-        media: {
-          mimeType: 'image/jpeg',
-          body: fs.createReadStream(OutputPath),
-        },
-      });
-      fs.unlinkSync(thumbnailPath);
-      fs.unlinkSync(OutputPath);
-    }
+    // if (thumbnail) {
+    //   const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
+    //   const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
+    //   await downloadThumbnail(thumbnail, thumbnailPath);
+    //   await SizeReducer(thumbnailPath, OutputPath);
+    //   await youtube.thumbnails.set({
+    //     videoId: streamData.broadcast.id,
+    //     media: {
+    //       mimeType: 'image/jpeg',
+    //       body: fs.createReadStream(OutputPath),
+    //     },
+    //   });
+    //   fs.unlinkSync(thumbnailPath);
+    //   fs.unlinkSync(OutputPath);
+    // }
 
     const videoID = streamData.broadcast.id;
     const stream = new Stream({
@@ -431,6 +455,8 @@ const start_stream = catchAsync(async (req, res, next) => {
       if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
       } 
+
+      console.log("audio added ",audio)
       const payload = {
         streamKey : streamKey, 
         audio : audio, 
@@ -662,6 +688,7 @@ const createPlaylist = async (req, res, next) => {
     });
 
     res.json({ 
+      status:true,
       message: 'Video playlist created successfully.',
       audio : audiosPath,
       video : videoPath,
