@@ -68,6 +68,8 @@ const schema = new mongoose.Schema({
     changedPasswordAt: Date,
     passwordResetToken: String,
     resetTokenExpire: Date,
+    mailVerificationToken: String,
+    mailTokenExpire: Date,
     deletedAt: {
         type: Date
     },
@@ -104,6 +106,13 @@ schema.methods.createPasswordResetToken = async function () {
     const token = crypto.randomBytes(32).toString('hex');
     this.passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
     this.resetTokenExpire = Date.now() + 10 * 60 * 1000;
+    return token;
+}
+
+schema.methods.createMailVerificationToken = async function () {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.mailVerificationToken = crypto.createHash('sha256').update(token).digest('hex');
+    this.mailTokenExpire = Date.now() + 10 * 60 * 1000;
     return token;
 }
 

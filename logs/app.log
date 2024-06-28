@@ -918,3 +918,7 @@
 
 2024-06-27T19:11:47.016Z [INFO]:"Ffmpeg stream stopped kAFTbUKKOeg"
 
+2024-06-28T05:30:00.864Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-06-28T05:30:00.930Z [INFO]:"Running checkPendingSubscriptions cron job"
+

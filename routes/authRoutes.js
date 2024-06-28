@@ -9,5 +9,7 @@ router.route('/forgotpassword').post(authController.forgotPassword);
 router.route('/resetpassword/:token').patch(authController.resetpassword); 
 router.route('/profile').get(validateToken, authController.profile);
 router.route('/contact_us').post(validateToken, authController.contact_us);
+router.route('/sendVerifyEmail').get(validateToken, authController.sendVerifyEmail);
+router.route('/verifymail/:token').get(validateToken, authController.verifymail);
 
-module.exports = router; 
+module.exports = router;
