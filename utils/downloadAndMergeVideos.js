@@ -34,7 +34,7 @@ async function downloadAndMergeVideos(videoUrls, id) {
         if (videoPaths.length === 0) {
             throw new Error("No valid videos available to create HLS playlist");
         }
-        await mergeVideos(videoPaths, outputPath);
+        await mergeVideos(videoPaths, outputPath, id);
         return outputPath;
     } catch (err) {
       console.error(`Error processing videos: ${err.message}`);

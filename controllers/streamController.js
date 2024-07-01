@@ -19,9 +19,9 @@ const downloadAndMergeVideos = require("../utils/downloadAndMergeVideos");
 const downloadAndMergeAudios = require("../utils/downloadAndMergeAudios");
 const deleteFilesStartingWithName = require("../utils/deleteFilesStartingWithName");
 const convertImageToVideo = require("../utils/convertImageToVideo");
-
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
+
 
 // Load client secrets from a local file
 const loadClientSecrets = () => {
@@ -446,7 +446,9 @@ const start_stream = catchAsync(async (req, res, next) => {
       streamId: videoID,
       playlistId: req.body.playlistId,
       stream_type:type,
-      ordered:req.body.ordered
+      ordered:req.body.ordered,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     });
     
     const savedStream = await stream.save();
@@ -455,8 +457,6 @@ const start_stream = catchAsync(async (req, res, next) => {
       if (activeStreams[videoID]) {
         return res.status(400).send('Stream already active.');
       } 
-
-      console.log("audio added ",audio)
       const payload = {
         streamKey : streamKey, 
         audio : audio, 
@@ -478,9 +478,10 @@ const start_stream = catchAsync(async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.error(`Stream creation error: ${err}`);
-    logger(`Stream creation error: ${err}`);
     JSONerror(res, err, next);
+    console.error(`Stream creation error: ${err}`);
+    logger(err);
+    await deleteFilesStartingWithName(req.body.playlistId);
   }
 });
 
@@ -583,11 +584,6 @@ const checkStreamStatus = async () => {
   }
 };
 
-cron.schedule('0 */3 * * *', async () => {
-  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  checkStreamStatus();
-});
 
 const checkStreamStatusAndSubscription = async () => {
   try {
@@ -624,15 +620,12 @@ const checkStreamStatusAndSubscription = async () => {
   }
 };
  
-const createPlaylist = async (req, res, next) => {
+const createPlaylist = catchAsync (async (req, res, next) => {
+  const playlistId = Date.now().toString();
   try {
-    const playlistId = Date.now().toString();
     const { audios, videos, radio, thumbnail, type, loop  } = req.body;
-    const downloadDir = path.join(__dirname, '..', 'downloads');
-    await deleteFilesStartingWithName(downloadDir, playlistId);
     let videoPath = null;
     let audiosPath = null;
-
     if(type == 'video'){
       console.log('Processing video type');
       if(videos && videos.length > 1){
@@ -660,6 +653,7 @@ const createPlaylist = async (req, res, next) => {
     if(type == 'image'){
       console.log('Processing GIF type');
       if(thumbnail){
+        const downloadDir = path.join(__dirname, '..', 'downloads');
         const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
         const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, playlistId);
         videoPath = thumbvideo;
@@ -697,9 +691,10 @@ const createPlaylist = async (req, res, next) => {
 
   } catch (err) {
     console.error('Error creating playlist:', err);
+    await deleteFilesStartingWithName(playlistId);
     next(err);
   }
-};
+});
 
 const force_start_stream = async (req, res, next) => {
   try {
@@ -722,6 +717,13 @@ const force_start_stream = async (req, res, next) => {
   }
 };
   
+
+cron.schedule('0 */3 * * *', async () => {
+  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  checkStreamStatus();
+});
+
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');

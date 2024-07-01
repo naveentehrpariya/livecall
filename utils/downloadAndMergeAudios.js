@@ -70,7 +70,6 @@ async function downloadAndMergeAudios(videoUrls, id, loop) {
             const array2 = shuffleArray(array1);
             videoPaths = [...array1, ...array2];
         }
-        console.log("suffled audios",videoPaths)
         await mergeAudioFiles(videoPaths, outputPath);
         return outputPath;
     } catch (err) {

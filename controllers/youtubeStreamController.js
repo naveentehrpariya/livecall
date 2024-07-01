@@ -31,7 +31,7 @@ const checkUserStreamLimit = catchAsync ( async (req, res, next) => {
         status: false,
         message: "You free trial has been ended. You don't have any active subscription plan to start a live stream."
       });
-    }
+  }
   }
 });
 

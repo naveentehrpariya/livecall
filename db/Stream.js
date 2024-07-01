@@ -55,8 +55,7 @@ const schema = new mongoose.Schema({
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     createdAt: {
-         type: Date,
-         default: Date.now()     
+         type: Date
    },
    endedAt : Date,
 });
