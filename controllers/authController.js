@@ -217,7 +217,6 @@ const verifymail = catchAsync ( async (req, res, next) => {
   }); 
 });
 
-
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, avatar, password, confirmPassword } = req.body;
   const isEmailUsed  =  await User.findOne({email : email});
@@ -285,7 +284,6 @@ const login = catchAsync ( async (req, res, next) => {
    });
 });
 
-
 const profile = catchAsync ( async (req, res) => {
   if(req.user){
      res.status(200).json({
@@ -299,7 +297,6 @@ const profile = catchAsync ( async (req, res) => {
     });
   }
 });
-
 
 const forgotPassword = catchAsync ( async (req, res, next) => {
   // 1. Check is email valid or not
