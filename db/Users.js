@@ -8,13 +8,6 @@ const schema = new mongoose.Schema({
         type: String,
         required: [true, 'Please enter your name.'],
     },
-    username: {
-        required: [true, 'Please enter your username.'],
-        unique: [true, 'Username is already taken.'],
-        type: String,
-        minLength: 5,
-        maxLength: 10
-    },
     email: {
         type: String,
         required: [true, 'Please enter your email address.'],

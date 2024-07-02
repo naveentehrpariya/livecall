@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
 const sendEmail = async (options) => { 
    try {
-      // Create a transporter object using SMTP transport
       const transporter = nodemailer.createTransport({
          service: "gmail",
          port: 25,
@@ -23,12 +22,9 @@ const sendEmail = async (options) => {
          subject: options.subject,
          html: options.message,
       };
-   
-      // Send the email
       const result = await transporter.sendMail(mailOptions);
       console.log('Email sent:', result);
-   
-      return result; // Optional: Return result for further processing
+      return result; 
    } catch (error) {
       console.error('Error sending email:', error);
       throw error; // Rethrow error for higher-level error handling
