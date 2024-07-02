@@ -51,6 +51,24 @@ const active_stream_lists = catchAsync ( async (req, res)=>{
   }
 });
 
+const streamDetails = catchAsync ( async (req, res)=>{
+  const streamId  = req.params.streamId;
+  const record = await Stream.findOne({streamId});
+  if (record) {
+    res.json({
+      status : true,
+      stream : record
+    });
+  } else {
+    res.json({
+      status : false,
+      stream : null,
+      message:"Stream not found.",
+      error:record
+    });
+  }
+});
+
 const checkIsYoutubeLinked = catchAsync ( async (req, res)=>{
   const tokens = await Token.findOne({user: req.user._id, status:"active"});
   if (tokens) {
@@ -83,4 +101,4 @@ const unLinkYoutube = catchAsync ( async (req, res)=>{
   }
 });
  
-module.exports = {  unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 
+module.exports = {  streamDetails, unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 

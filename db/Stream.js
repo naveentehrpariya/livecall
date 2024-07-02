@@ -6,58 +6,34 @@ const schema = new mongoose.Schema({
         type:String, 
         required:[true, 'Please enter your stream title.'],
     },
-    stream_type: {
-        type:String, 
-    },
-    resolution: {
-        type:String,
-        // required:[true, 'Please choose a resolution for your stream.'],
-    },
-    thumbnail: {
-        type:String,
-    },
-    audio: {
-        type:String,
-    },
-    video: {
-        type:String,
-    },
-    radio: {
-        type:String,
-    },
+    stream_type: String,
+    resolution:String,
+    thumbnail: String,
+    audio:String,
+    video: String,
+    radio: String,
     status: {
         type:Number,
         default:1,
     },
-    stream_url: {
-        type:String,
-    },
-    streamkey: {
-        type:String,
-    },
-    streamId: {
-        type:String,
-    },
+    stream_url: String,
+    streamkey: String,
+    streamId: String,
     ordered: {
         type:Boolean,
         default:true,
     },
-    description: {
-        type:String,
-    },
-    playlistId: {
-        type:String,
-    },
+    description: String,
+    playlistId: String,
     active : { 
         type:Boolean,
         default:true,
         select:false,
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-    createdAt: {
-         type: Date
-   },
-   endedAt : Date,
+    createdAt: Date,
+    updatedAt: Date,
+    endedAt : Date,
 });
 
 

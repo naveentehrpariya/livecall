@@ -22,8 +22,6 @@ const convertImageToVideo = require("../utils/convertImageToVideo");
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
 
-
-// Load client secrets from a local file
 const loadClientSecrets = () => {
   try {
     const content = fs.readFileSync(CLIENT_SECRETS_FILE);
@@ -280,9 +278,86 @@ const stopDbStream = async (videoId) => {
   logger(`Database Stopping stream ${videoId}`);
   stream.status = 0;
   stream.endedAt = Date.now();
+  deleteFilesStartingWithName(stream.playlistId);
   const savedstream = await stream.save();
   return savedstream;
 }
+
+const createPlaylist = catchAsync (async (req, res, next) => {
+  const playlistId = Date.now().toString();
+  try {
+    const { audios, videos, radio, thumbnail, type, loop  } = req.body;
+    let videoPath = null;
+    let audiosPath = null;
+    if(type == 'video'){
+      console.log('Processing video type');
+      if(videos && videos.length > 1){
+        videoPath = await downloadAndMergeVideos(videos, playlistId);
+        console.log('Merged video created:', videoPath);
+      } else {
+        videoPath = videos[0];
+        console.log('Single video created:', videoPath);
+      }
+      if(radio){
+        audiosPath = radio;
+      } else {
+        if(audios && audios.length > 0){
+          console.log('Processing audio for video');
+          if(audios && audios.length > 1){
+            audiosPath = await downloadAndMergeAudios(audios, playlistId, loop);
+          } else{
+            audiosPath = audios[0];
+          } 
+          console.log('Video audio created:', audiosPath);
+        } 
+      }
+    }
+
+    if(type == 'image'){
+      console.log('Processing GIF type');
+      if(thumbnail){
+        const downloadDir = path.join(__dirname, '..', 'downloads');
+        const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
+        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, playlistId);
+        videoPath = thumbvideo;
+        console.log('GIF video created:', videoPath);
+      }
+      if(radio){
+        audiosPath = radio;
+      } else {
+        if(audios && audios.length > 0){
+          console.log('Processing audio for GIF');
+          if(audios && audios.length > 1){
+            audiosPath = await downloadAndMergeAudios(audios, playlistId);
+          } else{
+            audiosPath = audios[0];
+          } 
+          console.log('GIF audio created:', audiosPath);
+        } 
+      }
+    }
+   
+    console.log('Playlist created successfully:', { 
+      message: 'Video playlist created successfully.',
+      audio : audiosPath,
+      video : videoPath,
+      playlistId:playlistId
+    });
+
+    res.json({ 
+      status:true,
+      message: 'Video playlist created successfully.',
+      audio : audiosPath,
+      video : videoPath,
+      playlistId:playlistId
+    });
+
+  } catch (err) {
+    console.error('Error creating playlist:', err);
+    await deleteFilesStartingWithName(playlistId);
+    next(err);
+  }
+});
 
 async function start_ffmpeg(data) {
   const { streamKey, audio, video, res, videoID } = data
@@ -376,10 +451,6 @@ async function start_ffmpeg(data) {
       child.on('close', (code) => {
         console.log(`FFmpeg process exited with code ${code}`);
         stopffmpegstream(videoID);
-        // if (code !== 0) {
-        //   console.error('FFmpeg process exited unexpectedly, restarting...');
-        //   setTimeout(startFFmpegProcess, 5000);
-        // }
       });
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
@@ -413,22 +484,24 @@ const start_stream = catchAsync(async (req, res, next) => {
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description);
     const streamKey = streamData.stream.cdn.ingestionInfo.streamName;
-    
-    // if (thumbnail) {
-    //   const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
-    //   const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
-    //   await downloadThumbnail(thumbnail, thumbnailPath);
-    //   await SizeReducer(thumbnailPath, OutputPath);
-    //   await youtube.thumbnails.set({
-    //     videoId: streamData.broadcast.id,
-    //     media: {
-    //       mimeType: 'image/jpeg',
-    //       body: fs.createReadStream(OutputPath),
-    //     },
-    //   });
-    //   fs.unlinkSync(thumbnailPath);
-    //   fs.unlinkSync(OutputPath);
-    // }
+    if (thumbnail) {
+      const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
+      const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
+      const removeUplodedFile = () => {
+        fs.unlinkSync(thumbnailPath);
+        fs.unlinkSync(OutputPath);
+      }
+      await downloadThumbnail(thumbnail, thumbnailPath);
+      await SizeReducer(thumbnailPath, OutputPath);
+      await youtube.thumbnails.set({
+        videoId: streamData.broadcast.id,
+        media: {
+          mimeType: 'image/jpeg',
+          body: fs.createReadStream(OutputPath),
+        },
+      });
+      removeUplodedFile();
+    }
 
     const videoID = streamData.broadcast.id;
     const stream = new Stream({
@@ -485,6 +558,72 @@ const start_stream = catchAsync(async (req, res, next) => {
   }
 });
 
+const edit_stream = catchAsync(async (req, res, next) => {
+  try {
+    const { streamId, title, description, thumbnail, resolution, stream_url } = req.body;
+    const userId = req.user._id;
+    const stream = await Stream.findOne({ streamId, user: userId, status: 1 });
+    if (!stream){
+      return res.status(404).json({ status: false, message: 'Stream has been ended or not found.' });
+    }
+
+    const { token } = await getStoredToken(userId);
+    const credentials = loadClientSecrets();
+    const oAuth2Client = getOAuth2Client(credentials, redirectUri);
+    oAuth2Client.setCredentials(token);
+    const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
+    await youtube.liveBroadcasts.update({
+      part: 'snippet,contentDetails,status',
+      resource: {
+        id: streamId,
+        snippet: {
+          title: title || stream.title,
+          description: description || stream.description,
+        },
+        contentDetails: {
+          resolution: resolution || stream.resolution,
+        },
+        status: {
+          streamStatus: 'active',
+        },
+      },
+    });
+    if (thumbnail) {
+      await handleThumbnail(thumbnail, title, youtube, streamId);
+    }
+
+    // Update local database
+    stream.title = title || stream.title;
+    stream.description = description || stream.description;
+    stream.thumbnail = thumbnail || stream.thumbnail;
+    stream.resolution = resolution || stream.resolution;
+    stream.stream_url = stream_url || stream.stream_url;
+    stream.updatedAt = Date.now();
+    stream.video = JSON.stringify(req.body.videos) || stream.video, 
+    stream.audio = JSON.stringify(req.body.audios) || stream.audio,
+    stream.radio = req.body.radio || stream.radio,
+    stream.ordered = req.body.ordered || stream.ordered,
+    stream.stream_type = req.body.stream_type || stream.stream_type,
+    stream.playlistId = req.body.playlistId || stream.playlistId
+    const updatedStream = await stream.save();
+    
+    stopffmpegstream(streamId);
+    setTimeout(()=>{
+      start_ffmpeg(streamId);
+    },1000);
+
+    res.json({
+      status: true,
+      message: 'Stream updated successfully.',
+      stream: updatedStream,
+    });
+  } catch (err) {
+    console.error(`Stream update error: ${err}`);
+    logger(err);
+    JSONerror(res, err, next);
+  }
+});
+ 
 const stop_stream = async (req, res, next) => {
   try {
     const streamId  = req.params.streamId;
@@ -584,7 +723,6 @@ const checkStreamStatus = async () => {
   }
 };
 
-
 const checkStreamStatusAndSubscription = async () => {
   try {
     const activeStreams = await Stream.find({ status: 1 }).populate("user");
@@ -619,82 +757,6 @@ const checkStreamStatusAndSubscription = async () => {
     console.error('Error checking live stream status and subscription:', error);
   }
 };
- 
-const createPlaylist = catchAsync (async (req, res, next) => {
-  const playlistId = Date.now().toString();
-  try {
-    const { audios, videos, radio, thumbnail, type, loop  } = req.body;
-    let videoPath = null;
-    let audiosPath = null;
-    if(type == 'video'){
-      console.log('Processing video type');
-      if(videos && videos.length > 1){
-        videoPath = await downloadAndMergeVideos(videos, playlistId);
-        console.log('Merged video created:', videoPath);
-      } else {
-        videoPath = videos[0];
-        console.log('Single video created:', videoPath);
-      }
-      if(radio){
-        audiosPath = radio;
-      } else {
-        if(audios && audios.length > 0){
-          console.log('Processing audio for video');
-          if(audios && audios.length > 1){
-            audiosPath = await downloadAndMergeAudios(audios, playlistId, loop);
-          } else{
-            audiosPath = audios[0];
-          } 
-          console.log('Video audio created:', audiosPath);
-        } 
-      }
-    }
-
-    if(type == 'image'){
-      console.log('Processing GIF type');
-      if(thumbnail){
-        const downloadDir = path.join(__dirname, '..', 'downloads');
-        const imageVideoPath = path.join(downloadDir, `${playlistId}-image-to-video.mp4`);
-        const thumbvideo = await convertImageToVideo(thumbnail, imageVideoPath, playlistId);
-        videoPath = thumbvideo;
-        console.log('GIF video created:', videoPath);
-      }
-      if(radio){
-        audiosPath = radio;
-      } else {
-        if(audios && audios.length > 0){
-          console.log('Processing audio for GIF');
-          if(audios && audios.length > 1){
-            audiosPath = await downloadAndMergeAudios(audios, playlistId);
-          } else{
-            audiosPath = audios[0];
-          } 
-          console.log('GIF audio created:', audiosPath);
-        } 
-      }
-    }
-   
-    console.log('Playlist created successfully:', { 
-      message: 'Video playlist created successfully.',
-      audio : audiosPath,
-      video : videoPath,
-      playlistId:playlistId
-    });
-
-    res.json({ 
-      status:true,
-      message: 'Video playlist created successfully.',
-      audio : audiosPath,
-      video : videoPath,
-      playlistId:playlistId
-    });
-
-  } catch (err) {
-    console.error('Error creating playlist:', err);
-    await deleteFilesStartingWithName(playlistId);
-    next(err);
-  }
-});
 
 const force_start_stream = async (req, res, next) => {
   try {
@@ -716,7 +778,6 @@ const force_start_stream = async (req, res, next) => {
     next(error);
   }
 };
-  
 
 cron.schedule('0 */3 * * *', async () => {
   console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
@@ -729,10 +790,6 @@ cron.schedule('0 * * * *', async () => {
   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   // checkStreamStatusAndSubscription();
 });
-module.exports = { createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
-// "videos": [
-//   "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
-//   "https://www.shutterstock.com/shutterstock/videos/1093044355/preview/stock-footage-generic-d-car-crash-test-car-destruction-realistic-animation-d-illustration.webm"
-// ],
 
+module.exports = { edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
 
