@@ -92,3 +92,15 @@
 
 2024-06-29T11:00:53.255Z [INFO]:"Starting ffmpeg stream [object Object]"
 
+2024-07-01T17:30:00.592Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-07-01T17:30:00.614Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-07-01T18:30:00.230Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-07-01T18:30:00.267Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-07-01T18:30:00.272Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-07-01T18:30:00.490Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
