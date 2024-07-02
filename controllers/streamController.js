@@ -278,9 +278,11 @@ const stopDbStream = async (videoId) => {
   logger(`Database Stopping stream ${videoId}`);
   stream.status = 0;
   stream.endedAt = Date.now();
+  deleteFilesStartingWithName(stream.playlistId);
   const savedstream = await stream.save();
   return savedstream;
 }
+
 const createPlaylist = catchAsync (async (req, res, next) => {
   const playlistId = Date.now().toString();
   try {
@@ -449,10 +451,6 @@ async function start_ffmpeg(data) {
       child.on('close', (code) => {
         console.log(`FFmpeg process exited with code ${code}`);
         stopffmpegstream(videoID);
-        // if (code !== 0) {
-        //   console.error('FFmpeg process exited unexpectedly, restarting...');
-        //   setTimeout(startFFmpegProcess, 5000);
-        // }
       });
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
@@ -486,22 +484,24 @@ const start_stream = catchAsync(async (req, res, next) => {
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description);
     const streamKey = streamData.stream.cdn.ingestionInfo.streamName;
-    
-    // if (thumbnail) {
-    //   const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
-    //   const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
-    //   await downloadThumbnail(thumbnail, thumbnailPath);
-    //   await SizeReducer(thumbnailPath, OutputPath);
-    //   await youtube.thumbnails.set({
-    //     videoId: streamData.broadcast.id,
-    //     media: {
-    //       mimeType: 'image/jpeg',
-    //       body: fs.createReadStream(OutputPath),
-    //     },
-    //   });
-    //   fs.unlinkSync(thumbnailPath);
-    //   fs.unlinkSync(OutputPath);
-    // }
+    if (thumbnail) {
+      const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
+      const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
+      const removeUplodedFile = () => {
+        fs.unlinkSync(thumbnailPath);
+        fs.unlinkSync(OutputPath);
+      }
+      await downloadThumbnail(thumbnail, thumbnailPath);
+      await SizeReducer(thumbnailPath, OutputPath);
+      await youtube.thumbnails.set({
+        videoId: streamData.broadcast.id,
+        media: {
+          mimeType: 'image/jpeg',
+          body: fs.createReadStream(OutputPath),
+        },
+      });
+      removeUplodedFile();
+    }
 
     const videoID = streamData.broadcast.id;
     const stream = new Stream({

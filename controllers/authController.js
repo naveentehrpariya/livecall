@@ -66,7 +66,7 @@ const sendVerifyEmail = catchAsync ( async (req, res, next) => {
   }
   const mailToken = await user.createMailVerificationToken();
   await user.save({validateBeforeSave:false});
-  const mailTokenUrl = `${req.protocol}://${req.get('host')}/user/verify-email/${mailToken}`;
+  const mailTokenUrl = `${process.env.DOMAIN_URL}/verify-email/${mailToken}`;
   const message = `<!doctype html>
       <html>
       <head>
@@ -194,9 +194,7 @@ const sendVerifyEmail = catchAsync ( async (req, res, next) => {
 });
 
 const verifymail = catchAsync ( async (req, res, next) => {
-  // 1. get user token
   const hashToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
-  // 2. Find token user and set new password 
   const user = await User.findOne({
     mailVerificationToken:hashToken,
     mailTokenExpire : { $gt: Date.now()}
@@ -204,13 +202,15 @@ const verifymail = catchAsync ( async (req, res, next) => {
   if(!user){ 
     res.json({
       status:false,
-      message:"Link expired or invalid token"
-    })
+      message:"Link expired or invalid token",
+      error:user
+    });
   }
   user.mailVerifiedAt = Date.now();
   user.mailVerificationToken = undefined;
   user.mailTokenExpire = undefined;
   await user.save({validateBeforeSave:false});
+  
   res.json({
     status:true,
     message:"Mail verified successfully.",

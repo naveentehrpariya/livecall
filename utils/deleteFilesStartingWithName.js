@@ -4,11 +4,11 @@ const path = require('path');
 async function deleteFilesStartingWithName(name) {
   const dirPath = path.join(__dirname, '..', 'downloads');
    try {
-     const files = await fs.readdir(dirPath); // Using fs.promises.readdir for promise-based operation
+     const files = await fs.readdir(dirPath);
      for (const file of files) {
        if (file.startsWith(name)) {
          const filePath = path.join(dirPath, file);
-         await fs.unlink(filePath); // Use fs.promises.unlink for deleting files
+         await fs.unlink(filePath);
          console.log(`Deleted file starting with "${name}": ${filePath}`);
        }
      }
