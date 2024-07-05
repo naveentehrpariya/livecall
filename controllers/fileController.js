@@ -2,6 +2,8 @@ const Files = require("../db/Files");
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const handleFileUpload = require('../utils/file-upload-util');
+
+
 // all/ image / video / audio
 const myMedia = catchAsync(async (req, res) => {
    const mimeTypes = {
@@ -21,19 +23,25 @@ const myMedia = catchAsync(async (req, res) => {
        message: "Invalid type parameter"
      });
    }
-   const Query = new APIFeatures(
-     Files.find({
-       user: req.user._id,
-       mime: mimeFilter,
-       deletedAt : null || ''
-     }),
-     req.query
-   ).sort();
-   const files = await Query.query;
+
+    const Query = new APIFeatures(
+      Files.find({
+        user: req.user._id,
+        mime: mimeFilter,
+        deletedAt : null || ''
+      }),
+      req.query
+    ).sort();
+
+    const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();
+    const data = await query;
+
    res.json({
      status: true,
-     files: files,
-     message: files.length ? undefined : "No files found"
+     files: data,
+     page : page,
+     totalPages : totalPages,
+     message: data.length ? undefined : "No files found"
    });
 });
 
