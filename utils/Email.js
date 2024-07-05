@@ -2,19 +2,18 @@ const nodemailer = require('nodemailer');
 const sendEmail = async (options) => { 
    try {
       const transporter = nodemailer.createTransport({
-         service: "gmail",
-         port: 25,
-         secure: false,
+         host: 'smtp.hostinger.com', // Use your Hostinger SMTP server address
+         port: 587, // Usually 587 for TLS or 465 for SSL
+         secure: false, // Set to true if using port 465
          auth: {
-           user: process.env.EMAIL_USERNAME,
-           pass: process.env.EMAIL_PASSWORD,
+           user: process.env.EMAIL_USERNAME, // Your Hostinger email username
+           pass: process.env.EMAIL_PASSWORD, // Your Hostinger email password
          },
          tls: {
            rejectUnauthorized: false,
          },
-       }) 
+       });
       console.log('Transporter created:', transporter);
-   
       // Define email options
       const mailOptions = { 
          from: process.env.EMAIL_FROM,

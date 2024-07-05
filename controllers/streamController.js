@@ -365,7 +365,6 @@ async function start_ffmpeg(data) {
   logger(`Starting ffmpeg stream ${data}`);
   try {
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
-    
     let ffmpegCommand = [
       '-re',
       '-stream_loop', '-1',
@@ -461,8 +460,8 @@ async function start_ffmpeg(data) {
       });
       child.on('error', (err) => {
         console.error(`Child process error: ${err}`);
+        logger(err);
         stopffmpegstream(videoID);
-        throw err;
       });
     };
     startFFmpegProcess();
@@ -560,12 +559,15 @@ const start_stream = catchAsync(async (req, res, next) => {
 
 const edit_stream = catchAsync(async (req, res, next) => {
   try {
-    const { streamId, title, description, thumbnail, resolution, stream_url } = req.body;
+    const { streamId, description, thumbnail, resolution, stream_url } = req.body;
+    console.log("req.body",req.body)
     const userId = req.user._id;
-    const stream = await Stream.findOne({ streamId, user: userId, status: 1 });
-    if (!stream){
-      return res.status(404).json({ status: false, message: 'Stream has been ended or not found.' });
-    }
+    const stream = await Stream.findOne({ streamId, user: userId });
+    console.log("stream",stream)
+    // const stream = await Stream.findOne({ streamId, user: userId, status: 1 });
+    // if (!stream){
+    //   return res.status(200).json({ status: false, message: 'Stream has been ended or not found.' });
+    // }
 
     const { token } = await getStoredToken(userId);
     const credentials = loadClientSecrets();
@@ -591,9 +593,8 @@ const edit_stream = catchAsync(async (req, res, next) => {
     if (thumbnail) {
       await handleThumbnail(thumbnail, title, youtube, streamId);
     }
-
     // Update local database
-    stream.title = title || stream.title;
+    stream.title = req.body.title || stream.title;
     stream.description = description || stream.description;
     stream.thumbnail = thumbnail || stream.thumbnail;
     stream.resolution = resolution || stream.resolution;
@@ -603,7 +604,7 @@ const edit_stream = catchAsync(async (req, res, next) => {
     stream.audio = JSON.stringify(req.body.audios) || stream.audio,
     stream.radio = req.body.radio || stream.radio,
     stream.ordered = req.body.ordered || stream.ordered,
-    stream.stream_type = req.body.stream_type || stream.stream_type,
+    stream.stream_type = req.body.type || stream.stream_type,
     stream.playlistId = req.body.playlistId || stream.playlistId
     const updatedStream = await stream.save();
     
