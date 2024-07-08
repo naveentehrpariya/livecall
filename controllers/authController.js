@@ -99,22 +99,19 @@ const sendVerifyEmail = catchAsync ( async (req, res, next) => {
           <tr>
             <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
             <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px; width: 580px; Margin: 0 auto;" width="580" valign="top">
-              <div class="header" style="padding: 10px 0;">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;">
-                  <tr>
-                    <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
-                      <a href="https://" style="color: #0d9dda; text-decoration: underline;"><img src="https://image.exct.net/lib/fe641570776d02757515/m/4/SF-MC-logo_blue.png" height="80" alt="Salesforce Marketing Cloud" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
-                    </td>
-                  </tr>
-                </table>
-              </div>
+              
               <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
                 <!-- START CENTERED WHITE CONTAINER -->
                 <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">This is preheader text. Some clients will show this text as a preview.</span>
                 <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background: #ffffff; border-radius: 3px; width: 100%;" width="100%">
                   <tr>
-                    <td style="list-style:30px;height:30px;" ></td>
+                    <td style="list-style:10px;height:10px;" ></td>
                   </tr>
+                  <tr>
+                     <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
+                       <a href="https://runstream.co" style="color: #0d9dda; text-decoration: underline;"><img src="https://runstream.co/logo-white.png" height="80" alt="Salesforce Marketing Cloud" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
+                     </td>
+                   </tr>
                   <tr>
                     <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top">
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
@@ -134,7 +131,9 @@ const sendVerifyEmail = catchAsync ( async (req, res, next) => {
                                         <tr>
                                           <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; 
                                           text-align: center; background-color: #ffffff;" valign="top" 
-                                          align="center" bgcolor="#ffffff"> <a href=${mailTokenUrl} target="_blank" style="border: solid 1px #0d9dda; border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 10px 33px; text-decoration: none; text-transform: capitalize; background-color: #0d9dda; border-color: #0d9dda; color: #ffffff;">Verify email</a> </td>
+                                          align="center" bgcolor="#ffffff"> 
+                                          <a href=${mailTokenUrl} target="_blank"  style="border: solid 1px #df3939;border-radius: 13px;box-sizing: border-box;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 10px 33px;text-decoration: none;text-transform: capitalize;background-color: #df3939;border-color: #df3939;color: #ffffff;" >Verify email</a>
+                                       </td>
                                         </tr>
                                       </tbody>
                                     </table>
@@ -156,7 +155,7 @@ const sendVerifyEmail = catchAsync ( async (req, res, next) => {
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
                     <tr>
                       <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #747474; font-size: 11px; text-align: center;" valign="top" align="center">
-                        <a href="runstream.co" style="color: #747474; font-size: 14px; font-weight: 300; text-align: center; letter-spacing: -.75px; text-decoration: none;">Powered by runstream.co</a>
+                        <a href="https://runstream.co" style="color: #747474; font-size: 14px; font-weight: 300; text-align: center; letter-spacing: -.75px; text-decoration: none;">Powered by runstream.co</a>
                       </td>
                     </tr>
                   </table>
@@ -342,22 +341,19 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
           <tr>
             <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
             <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px; width: 580px; Margin: 0 auto;" width="580" valign="top">
-              <div class="header" style="padding: 10px 0;">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;">
-                  <tr>
-                    <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
-                      <a href="https://" style="color: #0d9dda; text-decoration: underline;"><img src="https://image.exct.net/lib/fe641570776d02757515/m/4/SF-MC-logo_blue.png" height="80" alt="Salesforce Marketing Cloud" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
-                    </td>
-                  </tr>
-                </table>
-              </div>
+              
               <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
                 <!-- START CENTERED WHITE CONTAINER -->
                 <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">This is preheader text. Some clients will show this text as a preview.</span>
                 <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background: #ffffff; border-radius: 3px; width: 100%;" width="100%">
                   <tr>
-                    <td style="list-style:30px;height:30px;" ></td>
+                    <td style="list-style:10px;height:10px;" ></td>
                   </tr>
+                  <tr>
+                     <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
+                       <a href="https://runstream.co" style="color: #0d9dda; text-decoration: underline;"><img src="https://runstream.co/logo-white.png" height="80" alt="Salesforce Marketing Cloud" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
+                     </td>
+                   </tr>
                   <tr>
                     <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top">
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
@@ -365,7 +361,7 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
                           <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
                             <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px;">Welcome to runstream</p>
                             <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px;">
-                              You've entered ${req.body.email} as the email address of your email account.
+                              You've entered ${user.email} as the email address of your email account.
                             </p>
                             <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;"><strong>Please verify this email address by clicking button below.</strong></p>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; box-sizing: border-box; width: 100%;" width="100%">
@@ -377,7 +373,9 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
                                         <tr>
                                           <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; 
                                           text-align: center; background-color: #ffffff;" valign="top" 
-                                          align="center" bgcolor="#ffffff"> <a href=${resetTokenUrl} target="_blank" style="border: solid 1px #0d9dda; border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 10px 33px; text-decoration: none; text-transform: capitalize; background-color: #0d9dda; border-color: #0d9dda; color: #ffffff;">Verify email</a> </td>
+                                          align="center" bgcolor="#ffffff"> 
+                                          <a href=${mailTokenUrl} target="_blank"  style="border: solid 1px #df3939;border-radius: 13px;box-sizing: border-box;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 10px 33px;text-decoration: none;text-transform: capitalize;background-color: #df3939;border-color: #df3939;color: #ffffff;" >Verify email</a>
+                                       </td>
                                         </tr>
                                       </tbody>
                                     </table>
@@ -399,7 +397,7 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
                     <tr>
                       <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #747474; font-size: 11px; text-align: center;" valign="top" align="center">
-                        <a href="runstream.co" style="color: #747474; font-size: 14px; font-weight: 300; text-align: center; letter-spacing: -.75px; text-decoration: none;">Powered by runstream.co</a>
+                        <a href="https://runstream.co" style="color: #747474; font-size: 14px; font-weight: 300; text-align: center; letter-spacing: -.75px; text-decoration: none;">Powered by runstream.co</a>
                       </td>
                     </tr>
                   </table>

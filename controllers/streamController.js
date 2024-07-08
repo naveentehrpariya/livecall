@@ -260,13 +260,17 @@ const createAndBindLiveBroadcast = async (youtube, title, description) => {
 };
 
 let activeStreams = {};
+const stopFlags = {}; 
 const stopffmpegstream = async (videoid) => {
-  const active = activeStreams[videoid];
-  if(active){
-    delete activeStreams[videoid];
-    active.kill('SIGINT');
+  const child = activeStreams[videoid];
+  if(child){
+    stopFlags[videoid] = true; // Set stop flag to indicate intentional stop
+    child.kill('SIGINT'); // Gracefully terminate the process
+    delete activeStreams[videoid]; 
+    logger(`Ffmpeg stream stopped ${videoid}`);
+  }else {
+    logger(`there is no any ffmpeg proccess running - ${videoid}`);
   }
-  logger(`Ffmpeg stream stopped ${videoid}`);
   return true
 }
   
@@ -359,13 +363,16 @@ const createPlaylist = catchAsync (async (req, res, next) => {
   }
 });
 
+
 async function start_ffmpeg(data) {
-  const { streamKey, audio, video, res, videoID } = data
-  console.log("ffmpeg data",data)
+  const { streamKey, audio, video, res, videoID } = data;
+  console.log("ffmpeg data", data);
   logger(`Starting ffmpeg stream ${data}`);
+
   try {
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
     let ffmpegCommand = [
+      '-loglevel', 'verbose',  // Increase logging level
       '-re',
       '-stream_loop', '-1',
       '-i', video,
@@ -388,13 +395,14 @@ async function start_ffmpeg(data) {
     ];
 
     if (audio && audio !== null && audio !== '') {
-      console.log("ENTERED STREAM WITH AUDIO INPUT`);")
+      console.log("ENTERED STREAM WITH AUDIO INPUT");
       ffmpegCommand = [
+        '-loglevel', 'verbose',  // Increase logging level
         '-re',
         '-stream_loop', '-1',
-        '-i', audio, 
+        '-i', audio,
         '-stream_loop', '-1',
-        '-i', video,  
+        '-i', video,
         '-vf', `scale=${resolution}`,
         '-c:v', 'libx264',
         '-preset', preset,
@@ -408,7 +416,7 @@ async function start_ffmpeg(data) {
         '-c:a', 'aac',
         '-b:a', '128k',
         '-ar', '44100',
-        '-map', '1:v', 
+        '-map', '1:v',
         '-map', '0:a',
         '-use_wallclock_as_timestamps', '1',
         '-err_detect', 'ignore_err',
@@ -419,37 +427,46 @@ async function start_ffmpeg(data) {
       ];
     } else {
       ffmpegCommand = [
-      '-stream_loop', '-1',
-      '-re',
-      '-i', video,
-      '-f', 'lavfi',
-      '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
-      '-vf', `scale=${resolution}`, 
-      '-c:v', 'libx264',
-      '-preset', preset,
-      '-tune', 'zerolatency',
-      '-pix_fmt', 'yuv420p',
-      '-b:v', videoBitrate,
-      '-maxrate', maxrate,
-      '-bufsize', bufsize,
-      '-g', gop,
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      '-ar', '44100',
-      '-strict', 'experimental',
-      '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`]
-      // ffmpegCommand.splice(ffmpegCommand.indexOf('-strict'), 0, '-c:a', 'aac', '-b:a', '128k', '-ar', '44100');
+        '-loglevel', 'verbose',  // Increase logging level
+        '-stream_loop', '-1',
+        '-re',
+        '-i', video,
+        '-f', 'lavfi',
+        '-i', 'anullsrc=channel_layout=stereo:sample_rate=44100',
+        '-vf', `scale=${resolution}`,
+        '-c:v', 'libx264',
+        '-preset', preset,
+        '-tune', 'zerolatency',
+        '-pix_fmt', 'yuv420p',
+        '-b:v', videoBitrate,
+        '-maxrate', maxrate,
+        '-bufsize', bufsize,
+        '-g', gop,
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-ar', '44100',
+        '-strict', 'experimental',
+        '-f', 'flv',
+        `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
+      ];
     }
-    const startFFmpegProcess = () => {
+
+    const startFFmpegProcess = async () => {
       if (!streamKey) {
         throw new Error('Required parameters missing');
       }
+      stopFlags[videoID] = false; // Reset stop flag before starting
       const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
       activeStreams[videoID] = child;
       child.on('close', (code) => {
         console.log(`FFmpeg process exited with code ${code}`);
-        stopffmpegstream(videoID);
+        const err = `FFmpeg process exited with code ${code}`;
+        logger(err);
+        if (code !== 0 && !stopFlags[videoID]) {
+          setTimeout(startFFmpegProcess, 5000); // Retry after 5 seconds
+        } else {
+          stopffmpegstream(videoID);
+        }
       });
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
@@ -459,23 +476,23 @@ async function start_ffmpeg(data) {
         }
       });
       child.on('error', (err) => {
-        console.error(`Child process error: ${err}`);
-        logger(err);
+        const lerr = `Child process error: ${err}`;
+        console.error(lerr);
+        logger(lerr);
         stopffmpegstream(videoID);
       });
     };
     startFFmpegProcess();
   } catch (err) {
-    console.log("ffmpeg stopping error =>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",err);
+    console.log("ffmpeg stopping error =>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", err);
   }
-};
+} 
 
 const start_stream = catchAsync(async (req, res, next) => {
   try {
     const { title, description, audio, thumbnail, type } = req.body;
     const userId = req.user._id;
     const { token } = await getStoredToken(userId);
-    console.log("token",token);
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
     oAuth2Client.setCredentials(token);
@@ -511,7 +528,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
-      streamKey: streamKey,
+      streamkey: streamKey,
       user: req.user._id,
       status: '1',
       radio : req.body.radio,
@@ -559,59 +576,94 @@ const start_stream = catchAsync(async (req, res, next) => {
 
 const edit_stream = catchAsync(async (req, res, next) => {
   try {
-    const { streamId, description, thumbnail, resolution, stream_url } = req.body;
-    console.log("req.body",req.body)
+    const { video, audio,
+      streamId, description, thumbnail, resolution, stream_url, title,
+      videos, audios, radio, ordered, type, playlistId,
+      enableMonitorStream, enableDvr, enableContentEncryption, enableEmbed,
+      enableAutoStart, enableAutoStop, broadcastStreamDelayMs
+    } = req.body;
+
+    if (!streamId) {
+      throw new Error('Stream ID is required.');
+    }
+
     const userId = req.user._id;
     const stream = await Stream.findOne({ streamId, user: userId });
-    console.log("stream",stream)
-    // const stream = await Stream.findOne({ streamId, user: userId, status: 1 });
-    // if (!stream){
-    //   return res.status(200).json({ status: false, message: 'Stream has been ended or not found.' });
-    // }
+    if (!stream) {
+      return res.status(404).json({ status: false, message: 'Stream not found.' });
+    }
 
     const { token } = await getStoredToken(userId);
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
     oAuth2Client.setCredentials(token);
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
+
+    const updateResource = {
+      id: streamId,
+      snippet: {
+        title: title || stream.title,
+        description: description || stream.description,
+        scheduledStartTime: new Date(Date.now() + 1000).toISOString(),
+      },
+      contentDetails: {
+        resolution: resolution || stream.resolution,
+        monitorStream: {
+          enableMonitorStream: enableMonitorStream !== undefined ? enableMonitorStream : false,
+          broadcastStreamDelayMs: broadcastStreamDelayMs || 1000,
+        },
+        enableDvr: enableDvr !== undefined ? enableDvr : true,
+        enableContentEncryption: enableContentEncryption !== undefined ? enableContentEncryption : false,
+        enableEmbed: false,
+        // enableAutoStart: stream.status === 'active' ? undefined : (enableAutoStart !== undefined ? enableAutoStart : false),
+        // enableAutoStop: enableAutoStop !== undefined ? enableAutoStop : false,
+        closedCaptionsType: 'closedCaptionsDisabled',
+        enableLowLatency: false,
+        latencyPreference: 'normal',
+        projection: 'rectangular'
+      },
+      status: {
+        streamStatus: 'active',
+      },
+    };
+
+    console.log("Updating YouTube stream with resource:", updateResource);
     await youtube.liveBroadcasts.update({
       part: 'snippet,contentDetails,status',
-      resource: {
-        id: streamId,
-        snippet: {
-          title: title || stream.title,
-          description: description || stream.description,
-        },
-        contentDetails: {
-          resolution: resolution || stream.resolution,
-        },
-        status: {
-          streamStatus: 'active',
-        },
-      },
+      resource: updateResource,
     });
-    if (thumbnail) {
-      await handleThumbnail(thumbnail, title, youtube, streamId);
-    }
+
+    // if (thumbnail) {
+    //   await handleThumbnail(thumbnail, title, youtube, streamId);
+    // }
+
     // Update local database
-    stream.title = req.body.title || stream.title;
+    stream.title = title || stream.title;
     stream.description = description || stream.description;
     stream.thumbnail = thumbnail || stream.thumbnail;
     stream.resolution = resolution || stream.resolution;
     stream.stream_url = stream_url || stream.stream_url;
     stream.updatedAt = Date.now();
-    stream.video = JSON.stringify(req.body.videos) || stream.video, 
-    stream.audio = JSON.stringify(req.body.audios) || stream.audio,
-    stream.radio = req.body.radio || stream.radio,
-    stream.ordered = req.body.ordered || stream.ordered,
-    stream.stream_type = req.body.type || stream.stream_type,
-    stream.playlistId = req.body.playlistId || stream.playlistId
+    stream.video = JSON.stringify(videos) || stream.video;
+    stream.audio = JSON.stringify(audios) || stream.audio;
+    stream.radio = radio || stream.radio;
+    stream.ordered = ordered || stream.ordered;
+    stream.stream_type = type || stream.stream_type;
+    stream.playlistId = playlistId || stream.playlistId;
     const updatedStream = await stream.save();
-    
+
+    // Restart streaming if necessary
     stopffmpegstream(streamId);
-    setTimeout(()=>{
-      start_ffmpeg(streamId);
-    },1000);
+    setTimeout(() => {
+      const payload = {
+        streamKey : stream.streamkey, 
+        audio : audio, 
+        video : video, 
+        res: req.body.resolution, 
+        videoID : streamId
+      }
+      start_ffmpeg(payload);
+    }, 1000);
 
     res.json({
       status: true,
@@ -624,6 +676,11 @@ const edit_stream = catchAsync(async (req, res, next) => {
     JSONerror(res, err, next);
   }
 });
+
+
+
+
+
  
 const stop_stream = async (req, res, next) => {
   try {
@@ -705,6 +762,7 @@ const checkStreamStatus = async () => {
           key: API_KEY,
         },
       });
+
       if (response.data.items.length === 0) {
         console.log(`No video found for video ID: ${videoId}`);
         continue;
