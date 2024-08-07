@@ -36,6 +36,7 @@ app.use("", require('./routes/streamRoutes'));
 app.use("", require('./routes/stripeRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 app.use("/admin", require('./routes/adminRoutes'));
+app.use("", require('./routes/paypalRoutes'));
 
 const multerParse = multer({
   dest: "uploads/",

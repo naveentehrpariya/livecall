@@ -594,3 +594,7 @@
 
 2024-07-07T21:30:00.255Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
 
+2024-08-07T16:30:00.623Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-08-07T16:30:00.639Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
