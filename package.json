@@ -48,6 +48,7 @@
     "nodemailer": "^6.9.1",
     "npm": "^10.5.2",
     "openai": "^3.3.0",
+    "paypal": "^1.0.1",
     "paypal-rest-sdk": "^1.8.1",
     "pusher": "^5.1.2",
     "pusher-js": "^8.0.2",

@@ -121,7 +121,6 @@ const subscribeToPlan = (req, res) => {
       payment_method: "paypal"  // PayPal will provide the option to pay by card as well
     }
   };
-
   paypal.billingAgreement.create(billingAgreementAttributes, function (error, billingAgreement) {
     if (error) {
       console.log(error);
@@ -138,23 +137,21 @@ const subscribeToPlan = (req, res) => {
 
 
 
-const plansLists = (req, res) => {
-  var list_billing_plan = {
-    'status': 'ACTIVE',
-    'page_size': 5,
-    'page': 1,
-    'total_required': 'yes'
-  };
-
-  paypal.billingPlan.list(list_billing_plan, function (error, billingPlan) {
-      if (error) {
-          throw error;
-      } else {
-          console.log("List Billing Plans Response");
-          console.log(JSON.stringify(billingPlan));
-      }
-  });
+const plansLists = async (req, res) => {
+  try {
+    const list_billing_plan = {
+      // 'status': 'ACTIVE',
+      'page_size': 5,
+      'page': 1,
+      'total_required': 'yes'
+    };
+    const billingPlan = await paypal.billingPlan.list(list_billing_plan);
+    console.log("List Billing Plans Response", billingPlan);
+    res.status(200).json(billingPlan);
+  } catch (error) {
+    console.error("Error listing billing plans:", error);
+    res.status(500).json({ message: "Failed to list billing plans", error: error.toString() });
+  }
 };
-
 
 module.exports = { createPaypalProduct, subscribeToPlan, plansLists };
