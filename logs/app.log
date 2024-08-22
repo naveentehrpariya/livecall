@@ -672,3 +672,11 @@
 
 2024-08-22T08:30:01.568Z [INFO]:"Subscription 66c6f2fba1b6f8616c2b7559 payment failed."
 
+2024-08-22T09:30:00.464Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-08-22T09:30:00.664Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-08-22T09:30:00.882Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-08-22T09:30:00.945Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
