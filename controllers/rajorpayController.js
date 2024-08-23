@@ -31,10 +31,10 @@ exports.createPlan = async (req,res) => {
 
 const getCustomerByEmailOrContact = async (email, contact) => {
    try {
-       const customers = await razorpay.customers.all();
-       return customers.items.find(customer => 
-           customer.email === email || customer.contact === contact
-       );
+      const customers = await razorpay.customers.all();
+      return customers.items.find(customer => 
+         customer.email === email || customer.contact === contact
+      );
    } catch (error) {
        console.error("Error fetching customers:", error);
        throw error;
@@ -77,7 +77,6 @@ exports.createSubscription = async (req, res) => {
       res.status(500).json({ error: error });
    }
 };
-
 
 // Webhook for Payment Success
 // app.post('/webhook', (req, res) => {
