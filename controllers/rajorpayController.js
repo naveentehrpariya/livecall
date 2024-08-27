@@ -1,97 +1,60 @@
 const catchAsync = require("../utils/catchAsync");
-
 const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+
+const SECRET = 'iAXYM7PgI2N39SGftJvS8w61';
 const razorpay = new Razorpay({
-   key_id: 'rzp_test_ElU7Y74SgUTN2r',
-   key_secret: '3WPNoyY8vtSWEOaYR80XNTXA'
+   key_id: 'rzp_test_VinUdGDTgOGzJE',
+   key_secret: SECRET
 });
 
-exports.createPlan = async (req,res) => {
+const domain = process.env.DOMAIN_URL
+exports.createOrder = catchAsync (async (req,res) => {
+   const { amount, currency = 'INR', description } = req.body;
+   const options = {
+      amount: amount * 100, // Amount in smallest currency unit (e.g., paise for INR)
+      currency: currency,
+      description: description,
+      customer: {
+         email: req.user.email,
+      },
+      notify: {
+         email: true, // Send email notification to customer
+         sms: true,   // Send SMS notification to customer (if phone is provided)
+      },
+      notes: {
+         userId: req.user._id,      // Add user ID or any other identifier
+         userEmail: req.user.email // Add user email
+      },
+      callback_url: `${domain}/payment/status`, // Redirect URL after payment
+      callback_method: 'get', 
+   };
    try {
-      console.log("razorpay",razorpay)
-      const plan = await razorpay.plans.create({
-         period: "monthly",
-         interval: "1",
-         item: { 
-            name: "Test plan - Weekly",
-            amount: "69900",
-            currency: "INR",
-            description: "Description for the test plan"
-         },
-         notes: {
-            notes_key_1: "Tea, Earl Grey, Hot",
-            notes_key_2: "Tea, Earl Grey… decaf."
-         }
+      const paymentLink = await razorpay.paymentLink.create(options);
+      res.json({
+         id: paymentLink.id,
+         short_url: paymentLink.short_url,
+         amount: paymentLink.amount, 
       });
-      console.log('Plan Created:', plan);
-   } catch (error) {
-      console.error('Error creating plan:', error);
-   }
-};
-
-const getCustomerByEmailOrContact = async (email, contact) => {
-   try {
-      const customers = await razorpay.customers.all();
-      return customers.items.find(customer => 
-         customer.email === email || customer.contact === contact
-      );
-   } catch (error) {
-       console.error("Error fetching customers:", error);
-       throw error;
-   }
-};
-
-const getOrCreateCustomer = async (name, email, contact) => {
-   try {
-       const existingCustomer = await getCustomerByEmailOrContact(email, contact);
-       if (existingCustomer) {
-           console.log("Existing customer found:", existingCustomer);
-           return existingCustomer.id;
-       }
-       const newCustomer = await razorpay.customers.create({
-           name,
-           email,
-           contact
-       });
-       return newCustomer.id;
-   } catch (error) {
-       console.error("Error getting or creating customer:", error);
-       return null
-   }
-};
-
-
-
-exports.createSubscription = async (req, res) => {
-   try {
-      const customerID = getOrCreateCustomer("Naveen", 'naveen@internetbusinesssolutionsindia.com', '9813089043');
-      const options = { 
-         plan_id: req.body.plan_id,
-         customer_id: customerID,
-         total_count: 1200,
-         start_at: Math.floor(Date.now() / 1000) + 300,
-      };
-      const subscription = await razorpay.subscriptions.create(options);
-      res.json(subscription);
    } catch (error) {
       res.status(500).json({ error: error });
    }
-};
+});
 
-// Webhook for Payment Success
-// app.post('/webhook', (req, res) => {
-//    const webhookSecret = 'YOUR_WEBHOOK_SECRET'; // Replace with your webhook secret
-//    const crypto = require('crypto');
-
-//    const generatedSignature = crypto.createHmac('sha256', webhookSecret)
-//        .update(JSON.stringify(req.body))
-//        .digest('hex');
-
-//    if (generatedSignature === req.headers['x-razorpay-signature']) {
-//        // Handle the event
-//        console.log('Webhook verified:', req.body);
-//        res.status(200).send('Webhook received');
-//    } else {
-//        res.status(403).send('Signature mismatch');
-//    }
-// });
+exports.paymentWebhook = catchAsync (async (req,res) => {
+   const shasum = crypto.createHmac('sha256', SECRET);
+   shasum.update(JSON.stringify(req.body));
+   const digest = shasum.digest('hex');
+   if (digest === req.headers['x-razorpay-signature']) {
+     const event = req.body.event;
+     if (event === 'payment.captured') {
+       // Extract user information from the notes field
+         const payment = req.body.payload.payment.entity;
+         console.log("webhook payment",payment)
+     }
+     res.json({ status: 'ok' });
+   } else {
+     res.status(400).send('Invalid signature');
+   }
+});

@@ -23,6 +23,9 @@ const schema = new mongoose.Schema({
             return threeDaysFromNow;
         }
     },
+    plan_subscribed: {
+        type: Date,
+    },
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
     avatar: {
         type: String,
@@ -74,6 +77,15 @@ const schema = new mongoose.Schema({
 schema.virtual('trialStatus').get(function () {
     const currentDate = new Date();
     if (this.free_trial < currentDate) {
+        return 'ended';
+    } else {
+        return 'active';
+    }
+});
+
+schema.virtual('planStatus').get(function () {
+    const currentDate = new Date();
+    if (this.plan_subscribed < currentDate) {
         return 'ended';
     } else {
         return 'active';

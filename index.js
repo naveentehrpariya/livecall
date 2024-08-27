@@ -21,14 +21,15 @@ const corsOptions = {
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(errorHandler);
 app.use(globalErrorHandler);
 
-app.post('/subscriptionWebhook', bodyParser.raw({ type: 'application/json' }), subscriptionWebhook);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({limit:'2000mb'}));
+
 // ROUTES
 app.use("/user", require('./routes/authRoutes'));
 app.use("/product", require('./routes/productsRoutes'));
@@ -40,176 +41,10 @@ app.use("/admin", require('./routes/adminRoutes'));
 app.use("", require('./routes/rajorpayRoutes'));
 
 
-// Payment getway 
-const braintree = require('braintree');
-const gateway = new braintree.BraintreeGateway({
-  environment: braintree.Environment.Sandbox, // Use Production for live environment
-  merchantId: '5rfrzw45brkt6vmn',
-  publicKey: 's64tbz7xsx8ffvzs',
-  privateKey: '2030892136186a683b3b6cd731b945e8',
-});
-
-
-app.get('/client-token', async (req, res) => {
-  try { 
-    const token = await gateway.clientToken.generate({});
-    res.status(200).json({ success: true, token: token   });
-  } catch(error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-
-app.post('/api/subscribe-plan', async (req, res) => {
-  const { paymentMethodNonce, planId } = req.body;
-
-  try {
-    // Vault the payment method
-    const customerResult = await gateway.customer.create({
-      paymentMethodNonce: paymentMethodNonce,
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com"
-    });
-
-    if (!customerResult.success) {
-      return res.status(400).json({ success: false, error: customerResult.message });
-    }
-
-    // Get the vaulted payment method token
-    const paymentMethodToken = customerResult.customer.paymentMethods[0].token;
-
-    // Create a subscription with the vaulted payment method
-    const subscriptionResult = await gateway.subscription.create({
-      paymentMethodToken: paymentMethodToken,
-      planId: planId,
-      options: {
-        startImmediately: true,
-      },
-    });
-
-    if (subscriptionResult.success) {
-      res.status(200).json({ success: true, subscription: subscriptionResult.subscription });
-    } else {
-      res.status(400).json({ success: false, error: subscriptionResult.message });
-    }
-
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// Webhook Endpoint
-app.post('/webhook', async (req, res) => {
-  const signature = req.body.bt_signature;
-  const payload = req.body.bt_payload;
-
-  try {
-    const webhookNotification = await gateway.webhookNotification.parse(
-      signature,
-      payload
-    );
-
-    // Handle different types of webhook notifications
-    switch (webhookNotification.kind) {
-      case braintree.WebhookNotification.Kind.SubscriptionChargedSuccessfully:
-        // Handle successful subscription renewal
-        const subscriptionId = webhookNotification.subscription.id;
-        console.log(`Subscription ${subscriptionId} charged successfully.`);
-        break;
-
-      case braintree.WebhookNotification.Kind.SubscriptionChargedUnsuccessfully:
-        // Handle unsuccessful subscription renewal
-        const failedSubscriptionId = webhookNotification.subscription.id;
-        console.log(`Subscription ${failedSubscriptionId} failed to charge.`);
-        break;
-
-      // Add more cases to handle other webhook events as needed
-      default:
-        console.log(`Unhandled webhook notification: ${webhookNotification.kind}`);
-    }
-
-    res.status(200).send('Webhook received');
-  } catch (error) {
-    console.error('Error processing webhook:', error);
-    res.status(500).send('Error processing webhook');
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const multerParse = multer({
   dest: "uploads/",
   limits: {
-    fileSize: 1024 * 1024 * 2000 // 50MB
+    fileSize: 1024 * 1024 * 2000 
   }
 });
 
@@ -257,7 +92,7 @@ app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.single("
     });
   }
 });
-
+ 
 app.get('/', (req, res) => {
   res.send({
     message: "ACTIVE last2",

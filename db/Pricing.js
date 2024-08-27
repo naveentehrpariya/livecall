@@ -15,12 +15,6 @@ const schema = new mongoose.Schema({
    price: {
       type:Number,
    },
-   priceId: {
-      type:String,
-   },
-   productId: {
-      type:String,
-   },
    allowed_streams: {
       type:Number,
    },
@@ -33,16 +27,20 @@ const schema = new mongoose.Schema({
    },
    currency:{
       type:String,
-      default:'usd', 
+      default:'inr', 
    },
    status : {
       type:String,
       default:'active',
    },
-   recurring : {
+   duration : {
       type:String,
-      default:'month', 
-   }
+      default:1,
+   },
+   duration_title : {
+      type:String,
+      default:'monthly',
+   },
 });
 
 
