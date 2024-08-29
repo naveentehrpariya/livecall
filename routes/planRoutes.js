@@ -7,8 +7,7 @@ router.route('/create-pricing-plan').post(validateToken, create_pricing_plan);
 router.route('/update-pricing-plan/:id').post(validateToken, update_pricing_plan);
 router.route('/disable_pricing_plan/:id').get(validateToken, disable_pricing_plan);
 
-router.route('/pricing-plans').get( pricing_plan_lists)
-;
+router.route('/pricing-plans').get( pricing_plan_lists);
 router.route('/plan-detail/:id').get(planDetail);
 
 router.route('/my-subscriptions').get(validateToken, my_subscriptions);
