@@ -14,13 +14,6 @@ exports.create_pricing_plan = catchAsync ( async (req, res)=>{
         error:'Pricing plan already exist.'
       });
     }
-    if(!price){
-      res.status(400).json({
-        status:false,
-        plan : null,
-        error:price
-      });
-    }
     const plan = new Pricing({
       name: req.body.name,
       description: req.body.description,

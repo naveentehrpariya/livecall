@@ -9,11 +9,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const multer = require('multer');
 const handleFileUpload = require('./utils/file-upload-util');
 const { validateToken } = require('./controllers/authController');
-const { subscriptionWebhook } = require('./controllers/stripeController');
 const Files = require('./db/Files');
-const AppError = require('./utils/AppError');
-const logger = require('./utils/logger');
-const { default: axios } = require('axios');
 require('./db/config');
 
 const corsOptions = {
@@ -32,10 +28,9 @@ app.use(bodyParser.json({limit:'2000mb'}));
 
 // ROUTES
 app.use("/user", require('./routes/authRoutes'));
-app.use("/product", require('./routes/productsRoutes'));
 app.use("/user", require('./routes/userRoutes'));
 app.use("", require('./routes/streamRoutes'));
-app.use("", require('./routes/stripeRoutes'));
+app.use("", require('./routes/planRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 app.use("/admin", require('./routes/adminRoutes'));
 app.use("", require('./routes/rajorpayRoutes'));

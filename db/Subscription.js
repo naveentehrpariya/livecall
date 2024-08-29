@@ -21,7 +21,7 @@ const schema = new mongoose.Schema({
     updatedAt: {
          type: Date,
     },
-    upcomingPayment : {
+    endOn : {
       type: Date,
     },
     endedAt : Date,
