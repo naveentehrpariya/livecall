@@ -5,6 +5,8 @@ const Pricing = require("../db/Pricing");
 const User = require("../db/Users");
 const Subscription = require("../db/Subscription");
 const logger = require("../utils/logger");
+const axios = require('axios');
+const domain = process.env.DOMAIN_URL;
 
 const SECRET = 'iAXYM7PgI2N39SGftJvS8w61';
 const razorpay = new Razorpay({
@@ -12,13 +14,54 @@ const razorpay = new Razorpay({
    key_secret: SECRET
 });
 
-const domain = process.env.DOMAIN_URL;
+async function getExchangeRates(baseCurrency = 'INR') {
+   const apiKey = 'be9242340a9327ee2ad0ab45'; // Replace with your API key from Exchange Rates API
+   const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`
+   try {
+       const response = await axios.get(url);
+       console.log("response",response)
+       return response.data.conversion_rates;
+   } catch (error) {
+       console.error('Error fetching exchange rates:', error);
+       throw error;
+   }
+}
+
+async function convertCurrency(amount, fromCurrency, toCurrency) {
+   try {
+       const rates = await getExchangeRates(fromCurrency);
+       console.log("rates",rates)
+       const conversionRate = rates[toCurrency];
+       if (!conversionRate) {
+           throw new Error(`Conversion rate not found for ${toCurrency}`);
+       }
+       const convertedAmount = amount * conversionRate;
+       return {
+         amount: amount, // Return as a string with 2 decimal places
+         convertedAmount: convertedAmount.toFixed(2), // Return as a string with 2 decimal places
+         rate: conversionRate
+       };
+   } catch (error) {
+       console.error('Error converting currency:', error);
+       throw error;
+   }
+}
+
+
 exports.createOrder = catchAsync (async (req,res) => {
    const { currency = 'INR' } = req.body;
+   const fromCurrency = 'INR';
    const id = req.body.id;
    const plan = await Pricing.findById(id);
+
+   let lastprice = plan.price;
+   if(currency !== fromCurrency){
+      const result = await convertCurrency(plan.price, fromCurrency, currency);
+      console.log(result);
+      lastprice = result.convertedAmount
+   } 
    const options = {
-      amount: plan.price * 100,
+      amount: parseInt(lastprice*100),
       currency: currency,
       description: plan.description,
       customer: {
