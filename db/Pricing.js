@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
    },
    currency:{
       type:String,
-      default:'inr', 
+      default:'USD', 
    },
    status : {
       type:String,
@@ -42,7 +42,6 @@ const schema = new mongoose.Schema({
       default:'monthly',
    },
 });
-
 
 const Pricing = mongoose.model('pricings', schema);
 module.exports = Pricing;

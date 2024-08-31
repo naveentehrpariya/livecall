@@ -14,7 +14,7 @@ const razorpay = new Razorpay({
    key_secret: SECRET
 });
 
-async function getExchangeRates(baseCurrency = 'INR') {
+async function getExchangeRates(baseCurrency) {
    const apiKey = 'be9242340a9327ee2ad0ab45'; // Replace with your API key from Exchange Rates API
    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`
    try {
@@ -29,8 +29,8 @@ async function getExchangeRates(baseCurrency = 'INR') {
 
 async function convertCurrency(amount, fromCurrency, toCurrency) {
    try {
+      console.log("amount",amount, fromCurrency, toCurrency)
        const rates = await getExchangeRates(fromCurrency);
-       console.log("rates",rates)
        const conversionRate = rates[toCurrency];
        if (!conversionRate) {
            throw new Error(`Conversion rate not found for ${toCurrency}`);
@@ -49,20 +49,19 @@ async function convertCurrency(amount, fromCurrency, toCurrency) {
 
 
 exports.createOrder = catchAsync (async (req,res) => {
-   const { currency = 'INR' } = req.body;
-   const fromCurrency = 'INR';
+   const { currency = 'USD' } = req.body;
    const id = req.body.id;
    const plan = await Pricing.findById(id);
 
    let lastprice = plan.price;
-   if(currency !== fromCurrency){
-      const result = await convertCurrency(plan.price, fromCurrency, currency);
+   if(currency !== plan.currency){
+      const result = await convertCurrency(plan.price, plan.currency, currency);
       console.log(result);
       lastprice = result.convertedAmount
    } 
    const options = {
-      amount: parseInt(lastprice*100),
-      currency: currency,
+      amount: parseInt(lastprice),
+      currency: currency, 
       description: plan.description,
       customer: {
          email: req.user.email,
