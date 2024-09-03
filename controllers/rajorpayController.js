@@ -14,53 +14,80 @@ const razorpay = new Razorpay({
    key_secret: SECRET
 });
 
+
 async function getExchangeRates(baseCurrency) {
    const apiKey = 'be9242340a9327ee2ad0ab45'; // Replace with your API key from Exchange Rates API
    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`
    try {
        const response = await axios.get(url);
        console.log("response",response)
-       return response.data.conversion_rates;
+       if(response.data && response.data.conversion_rates){
+         return response.data.conversion_rates
+       } else { 
+          return {
+            USD: 1,
+         }
+       }
    } catch (error) {
-       console.error('Error fetching exchange rates:', error);
-       throw error;
+       console.log('Error fetching exchange rates:', error);
    }
 }
+ 
 
 async function convertCurrency(amount, fromCurrency, toCurrency) {
    try {
-      console.log("amount",amount, fromCurrency, toCurrency)
        const rates = await getExchangeRates(fromCurrency);
        const conversionRate = rates[toCurrency];
+       console.log("conversionRate", conversionRate);
+
+       // Properly handle undefined or invalid rates
        if (!conversionRate) {
-           throw new Error(`Conversion rate not found for ${toCurrency}`);
+         console.log('Invalid or missing conversion rate, using a default.');
+         return {
+            amount: amount,
+            convertedAmount: amount * 100, // Fallback, assuming no conversion
+          }; 
        }
+
+       // Convert the amount using the correct conversion rate
        const convertedAmount = amount * conversionRate;
        return {
-         amount: amount, // Return as a string with 2 decimal places
-         convertedAmount: convertedAmount.toFixed(2), // Return as a string with 2 decimal places
+         amount: amount, 
+         convertedAmount: convertedAmount,
          rate: conversionRate
        };
    } catch (error) {
-       console.error('Error converting currency:', error);
-       throw error;
+       console.log('Error converting currency:', error);
    }
 }
 
 
-exports.createOrder = catchAsync (async (req,res) => {
-   const { currency = 'USD' } = req.body;
+
+
+exports.createOrder = catchAsync(async (req, res) => {
+   console.log("req.body", req.body);
+   let currency = req.body.currency;
    const id = req.body.id;
    const plan = await Pricing.findById(id);
-   let lastprice = plan.price*100;
-   if(currency !== plan.currency){
+   let lastprice = plan.price * 100; // Assuming `price` is in whole units like dollars
+   
+   console.log('Plan price:', plan.price);
+   
+   if (currency !== plan.currency) {
       const result = await convertCurrency(plan.price, plan.currency, currency);
-      console.log(result);
-      lastprice = result.convertedAmount
-   } 
+      console.log("CURRENCY CONVERTED", result);
+      if(result&& result.convertedAmount){
+         lastprice = result.convertedAmount * 100; // Ensure it's in the smallest currency unit
+      } else { 
+         lastprice = plan.price * 100;
+         currency = 'USD'
+      }
+      console.log('Converted price:', lastprice);
+   }
+   console.log('Final Price:', lastprice);
    const options = {
-      amount: parseInt(lastprice),
-      currency: currency, 
+      amount: Math.round(lastprice), // Ensure it's an integer
+      currency: currency || 'USD', 
       description: plan.description,
       customer: {
          email: req.user.email,
@@ -72,23 +99,28 @@ exports.createOrder = catchAsync (async (req,res) => {
       notes: {
          userId: req.user._id,
          userEmail: req.user.email,
-         planID:id
+         planID: id
       },
       callback_url: `${domain}/payment/status`,
       callback_method: 'get', 
    };
+
    try {
       const paymentLink = await razorpay.paymentLink.create(options);
       res.json({
-         status:true,
+         status: true,
          id: paymentLink.id,
          short_url: paymentLink.short_url,
          amount: paymentLink.amount, 
       });
    } catch (error) {
-      res.status(500).json({ error: error });
+      console.error('Error creating payment link:', error);
+      res.status(500).json({ error: 'Failed to create payment link.' });
    }
 });
+
+
+
 
 exports.paymentWebhook = catchAsync (async (req,res) => {
    const shasum = crypto.createHmac('sha256', SECRET);
