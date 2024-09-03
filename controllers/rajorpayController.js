@@ -52,8 +52,7 @@ exports.createOrder = catchAsync (async (req,res) => {
    const { currency = 'USD' } = req.body;
    const id = req.body.id;
    const plan = await Pricing.findById(id);
-
-   let lastprice = plan.price;
+   let lastprice = plan.price*100;
    if(currency !== plan.currency){
       const result = await convertCurrency(plan.price, plan.currency, currency);
       console.log(result);
