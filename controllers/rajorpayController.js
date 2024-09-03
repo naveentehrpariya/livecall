@@ -8,15 +8,15 @@ const logger = require("../utils/logger");
 const axios = require('axios');
 const domain = process.env.DOMAIN_URL;
 
-const SECRET = 'iAXYM7PgI2N39SGftJvS8w61';
+const SECRET = process.env.RAJORPAY_SECRET
 const razorpay = new Razorpay({
-   key_id: 'rzp_test_VinUdGDTgOGzJE',
+   key_id: process.env.RAJORPAY_ID,
    key_secret: SECRET
 });
 
 
 async function getExchangeRates(baseCurrency) {
-   const apiKey = 'be9242340a9327ee2ad0ab45'; // Replace with your API key from Exchange Rates API
+   const apiKey = process.env.EXCHANGE_RATE_KEY;
    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`
    try {
        const response = await axios.get(url);
