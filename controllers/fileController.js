@@ -114,5 +114,4 @@ const uploadMedia = catchAsync(async (req, res) => {
   }
 });
 
-
 module.exports = { uploadMedia, myMedia, deleteMedia } 

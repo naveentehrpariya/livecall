@@ -69,24 +69,20 @@ exports.createOrder = catchAsync(async (req, res) => {
    let currency = req.body.currency;
    const id = req.body.id;
    const plan = await Pricing.findById(id);
-   let lastprice = plan.price * 100; // Assuming `price` is in whole units like dollars
-   
-   console.log('Plan price:', plan.price);
+   let lastprice = plan.price * 100;
    
    if (currency !== plan.currency) {
       const result = await convertCurrency(plan.price, plan.currency, currency);
       console.log("CURRENCY CONVERTED", result);
       if(result&& result.convertedAmount){
-         lastprice = result.convertedAmount * 100; // Ensure it's in the smallest currency unit
+         lastprice = result.convertedAmount * 100;
       } else { 
          lastprice = plan.price * 100;
          currency = 'USD'
       }
-      console.log('Converted price:', lastprice);
    }
-   console.log('Final Price:', lastprice);
    const options = {
-      amount: Math.round(lastprice), // Ensure it's an integer
+      amount: Math.round(lastprice),
       currency: currency || 'USD', 
       description: plan.description,
       customer: {
@@ -115,7 +111,7 @@ exports.createOrder = catchAsync(async (req, res) => {
       });
    } catch (error) {
       console.error('Error creating payment link:', error);
-      res.status(500).json({ error: 'Failed to create payment link.' });
+      res.status(500).json({ status:false, error: 'Failed to create payment link.' });
    }
 });
 
