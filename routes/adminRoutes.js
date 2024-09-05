@@ -7,6 +7,7 @@ const { admin_stop_stream } = require('../controllers/streamController');
 router.route('/users/:status').get(validateToken, admin.isAdmin, admin.users);
 router.route('/user/enable-disable-user/:id').get(validateToken, admin.isAdmin,   admin.EnableDisableUser);
 router.route('/dashboard').get(validateToken, admin.isAdmin, admin.dashboard);
+router.route('/earnings').get(validateToken, admin.isAdmin, admin.earnings);
 router.route('/streams/:type').get(validateToken, admin.isAdmin, admin.streams);
 // type - pending, paid, expired, inactive
 router.route('/subscriptions/:type').get(validateToken, admin.isAdmin, admin.subscriptions);

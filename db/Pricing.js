@@ -11,9 +11,11 @@ const schema = new mongoose.Schema({
    },
    description: {
       type:String,
+      required:[true, 'Please write 1 or 2 line description for this pricing plan.'],
    },
    price: {
       type:Number,
+      required:[true, 'Plan price can not be empty.'],
    },
    allowed_streams: {
       type:Number,

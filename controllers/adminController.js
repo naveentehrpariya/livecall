@@ -18,6 +18,76 @@ const isAdmin = catchAsync ( async (req, res, next) => {
    next();
 });
 
+const getStartOfCurrentMonth = () => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+};
+
+const earnings = catchAsync(async (req, res) => {
+  const validStatuses = ['active', 'completed']; // Adjust based on your logic
+  const startOfMonth = getStartOfCurrentMonth();
+  const currentMonthAggregation = await Subscription.aggregate([
+      {
+          $match: {
+              status: { $in: validStatuses },
+              createdAt: { $gte: startOfMonth },
+          },
+      },
+      {
+          $lookup: {
+              from: 'pricings', // The collection name in MongoDB (usually the plural, lowercase form)
+              localField: 'plan',
+              foreignField: '_id',
+              as: 'planDetails',
+          },
+      },
+      { $unwind: '$planDetails' },
+      {
+          $group: {
+              _id: null,
+              totalEarnings: { $sum: '$planDetails.price' },
+          },
+      },
+  ]);
+  const totalEarningsAggregation = await Subscription.aggregate([
+      {
+          $match: {
+              status: { $in: validStatuses },
+          },
+      },
+      {
+          $lookup: {
+              from: 'pricings',
+              localField: 'plan',
+              foreignField: '_id',
+              as: 'planDetails',
+          },
+      },
+      { $unwind: '$planDetails' },
+      {
+          $group: {
+              _id: null,
+              totalEarnings: { $sum: '$planDetails.price' },
+          },
+      },
+  ]);
+  const currentMonthEarnings = currentMonthAggregation[0]
+      ? currentMonthAggregation[0].totalEarnings
+      : 0;
+
+  const totalEarnings = totalEarningsAggregation[0]
+      ? totalEarningsAggregation[0].totalEarnings
+      : 0;
+   res.json({
+     status: true,
+     message: 'Earnings data retrieved successfully.',
+     result: {
+     currentMonthEarnings,
+      totalEarnings
+     },
+   });
+});
+
 const dashboard = catchAsync(async (req, res) => {
   const totalUsers = await User.countDocuments();
    const activeUsers = await User.countDocuments({ status: 'active' });
@@ -29,12 +99,11 @@ const dashboard = catchAsync(async (req, res) => {
    const inactiveSubscriptions = await Subscription.countDocuments({ status: 'inactive' });
    const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'paid' });
   //  const totalExpiredSubscriptions = await Subscription.countDocuments({ status: 'expired' });
- 
+
    res.json({
      status: true,
      message: 'Dashboard data retrieved successfully.',
      result: [
-
       { route:"/admin/users", title : 'Total Users', data: totalUsers },
       { route:"/admin/users/active", title : 'Active Users', data: activeUsers },
       { route:"/admin/users/inactive", title : 'Inactive Users', data: inactiveUsers },
@@ -238,4 +307,4 @@ const clearlog = catchAsync(async (req, res) => {
 });
 
 
-module.exports = { allinquries, clearlog, readLogs, isAdmin, dashboard, medias, users, streams, subscriptions, EnableDisableUser } 
+module.exports = { earnings, allinquries, clearlog, readLogs, isAdmin, dashboard, medias, users, streams, subscriptions, EnableDisableUser } 

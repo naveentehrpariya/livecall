@@ -95,7 +95,6 @@ exports.disable_pricing_plan = catchAsync(async (req, res) => {
       plan.status = "active";
     }
     const result = await plan.save();
-
     if (result) {
       return res.status(200).json({
         status: true,
@@ -121,6 +120,28 @@ exports.disable_pricing_plan = catchAsync(async (req, res) => {
 exports.pricing_plan_lists = catchAsync ( async (req, res)=>{
   try {
     const items = await Pricing.find({ status : "active"});
+    if(items){
+      res.status(200).json({ 
+        status:true, 
+        items:items 
+      })
+    } else {
+      res.status(400).json({ 
+        status:false, 
+        items:null 
+      })
+    }
+  } catch(err){
+    res.status(400).json({ 
+      status:false, 
+      error:err 
+    });
+  }
+}); 
+
+exports.admin_pricing_plan_lists = catchAsync ( async (req, res)=>{
+  try {
+    const items = await Pricing.find({});
     if(items){
       res.status(200).json({ 
         status:true, 
