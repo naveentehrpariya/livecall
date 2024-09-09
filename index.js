@@ -14,7 +14,6 @@ const { validateToken } = require('./controllers/authController');
 const Files = require('./db/Files');
 require('./db/config');
 
-
 const corsOptions = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -56,7 +55,6 @@ app.use("", require('./routes/rajorpayRoutes'));
 // //         size: uploadResponse.size,
 // //       });
 // //       const fileUploaded = await file.save();
-
 // //       if (!fileUploaded) {
 // //         return res.status(500).json({
 // //           message: "File upload failed",
@@ -67,7 +65,6 @@ app.use("", require('./routes/rajorpayRoutes'));
 // //         message: "File uploaded to storage.",
 // //         file_data: fileUploaded,
 // //       });
-    
 // //     } else {
 // //       res.setHeader('Access-Control-Allow-Origin', '*');
 // //       res.status(500).json({
@@ -83,17 +80,20 @@ app.use("", require('./routes/rajorpayRoutes'));
 // //   }
 // // });
 
-app.use(express.json()); // To parse incoming JSON requests
+
+app.use(express.json());
 const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
 
-// blackblaze cloud
+
+// Blackblaze cloud
 const b2 = new B2({
   applicationKeyId: APP_ID,
   applicationKey: APP_KEY
 });
+
 const upload = multer({ dest: 'uploads/' });
 async function authorizeB2() {
   try {
@@ -104,6 +104,7 @@ async function authorizeB2() {
   }
 }
 authorizeB2();
+
 
 app.options("/cloud/upload", cors(corsOptions));
 app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), async (req, res) => {
@@ -158,10 +159,7 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
     });
   }
 });
-
-
  
-
  
 app.get('/', (req, res) => {
   res.send({
@@ -170,12 +168,14 @@ app.get('/', (req, res) => {
   });
 });
 
+
 app.all('*', (req, res, next) => {
   res.status(404).json({
       status: 404,
       message: `NOT FOUND`
   });
 });
+
 
 const port = process.env.PORT;
 app.listen(port, () => { console.log(`On PORT ${port} SERVER RUNNINGGGGG.....`) });
