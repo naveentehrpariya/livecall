@@ -774,3 +774,7 @@
 
 2024-09-05T17:30:00.730Z [INFO]:"Running checkPendingSubscriptions cron job"
 
+2024-09-09T10:30:00.144Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-09T10:30:00.148Z [INFO]:"Running checkPendingSubscriptions cron job"
+
