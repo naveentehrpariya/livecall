@@ -9,7 +9,6 @@ require('dotenv').config()
 const globalErrorHandler = require("./middlewares/gobalErrorHandler");
 const errorHandler = require("./middlewares/errorHandler");
 const multer = require('multer');
-const handleFileUpload = require('./utils/file-upload-util');
 const { validateToken } = require('./controllers/authController');
 const Files = require('./db/Files');
 require('./db/config');
@@ -36,50 +35,8 @@ app.use("", require('./routes/streamRoutes'));
 app.use("", require('./routes/planRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 app.use("", require('./routes/rajorpayRoutes'));
-
-// app.options("/cloud/upload", cors(corsOptions));
-// // app.post("/cloud/upload", cors(corsOptions), validateToken, multerParse.single("attachment"), async (req, res) => {
-// //   const attachment = req.file;
-// //   if (!attachment) {
-// //     return res.status(400).json({ message: "No file uploaded" });
-// //   }
-// //   try {
-// //     const uploadResponse = await handleFileUpload(attachment);
-// //     if (uploadResponse) {
-// //       const file = new Files({
-// //         name: uploadResponse.file.originalname,
-// //         mime: uploadResponse.mime,
-// //         filename: uploadResponse.filename,
-// //         url: uploadResponse.url,
-// //         user: req.user?._id,
-// //         size: uploadResponse.size,
-// //       });
-// //       const fileUploaded = await file.save();
-// //       if (!fileUploaded) {
-// //         return res.status(500).json({
-// //           message: "File upload failed",
-// //           error: uploadResponse
-// //         });
-// //       }
-// //       return res.status(201).json({
-// //         message: "File uploaded to storage.",
-// //         file_data: fileUploaded,
-// //       });
-// //     } else {
-// //       res.setHeader('Access-Control-Allow-Origin', '*');
-// //       res.status(500).json({
-// //         message: "File upload failed",
-// //         error: uploadResponse
-// //       });
-// //     }
-// //   } catch (error) {
-// //     console.error(error);
-// //     res.status(500).json({
-// //       message: "An error occurred during file upload",
-// //     });
-// //   }
-// // });
-
+app.use("", require('./routes/webRoutes'));
+ 
 
 app.use(express.json());
 const bucket_name = process.env.BUCKET_NAME;
@@ -103,9 +60,8 @@ async function authorizeB2() {
     console.error('Error authorizing B2:', error);
   }
 }
-authorizeB2();
 
-
+// authorizeB2();
 app.options("/cloud/upload", cors(corsOptions));
 app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), async (req, res) => {
   try {
@@ -167,7 +123,6 @@ app.get('/', (req, res) => {
     status: 200
   });
 });
-
 
 app.all('*', (req, res, next) => {
   res.status(404).json({

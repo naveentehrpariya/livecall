@@ -18,4 +18,5 @@ router.route('/readlogs').get(admin.readLogs);
 router.route('/clearlog').get(admin.clearlog);
 router.route('/allinquries').get(validateToken, admin.isAdmin, admin.allinquries);
 
+
 module.exports = router; 

@@ -100,11 +100,12 @@ const dashboard = catchAsync(async (req, res) => {
    const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'paid' });
   //  const totalExpiredSubscriptions = await Subscription.countDocuments({ status: 'expired' });
 
+  
    res.json({
      status: true,
      message: 'Dashboard data retrieved successfully.',
      result: [
-      { route:"/admin/users", title : 'Total Users', data: totalUsers },
+      { route:"/admin/users/active", title : 'Total Users', data: totalUsers },
       { route:"/admin/users/active", title : 'Active Users', data: activeUsers },
       { route:"/admin/users/inactive", title : 'Inactive Users', data: inactiveUsers },
 
