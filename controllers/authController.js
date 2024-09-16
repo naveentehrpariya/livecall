@@ -486,7 +486,7 @@ const contact_us = async (req, res, next) => {
       const result = await request.save();
       if(result){
         res.json({
-          status : false,
+          status : true,
           message : "Your request has been sent successfully."
         });
       } else {
@@ -501,5 +501,25 @@ const contact_us = async (req, res, next) => {
     }
 };
 
+const inquiries = async (req, res, next) => {
+  try{ 
+    const lists =  await Inquiry.find({});
+      if(lists){
+        res.json({
+          status : true,
+          result : lists || []
+        });
+      } else {
+        res.json({
+          error : lists,
+          status : true,
+          result : []
+        });
+      }
+    } catch (err){
+      JSONerror(res, err, next);
+    }
+};
 
-module.exports = { verifymail, sendVerifyEmail, contact_us, signup, login, validateToken, profile, forgotPassword, resetpassword };
+
+module.exports = { inquiries, verifymail, sendVerifyEmail, contact_us, signup, login, validateToken, profile, forgotPassword, resetpassword };
