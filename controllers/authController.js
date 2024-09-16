@@ -297,24 +297,28 @@ const profile = catchAsync ( async (req, res) => {
   }
 });
 
+
 const forgotPassword = catchAsync ( async (req, res, next) => {
   // 1. Check is email valid or not
   const user = await User.findOne({email:req.body.email});
   if(!user){
-     return next(new AppError("No user found associated with this email.", 404));
+    res.json({
+      status:false,
+      message:"No user found associated with this email.",
+    }); 
   } 
   // 2. Generate randow token string
   const resetToken = await user.createPasswordResetToken();
   await user.save({validateBeforeSave:false});
   // 3. send token to email using nodemailer
-  const resetTokenUrl = `${req.protocol}://${req.get('host')}/user/resetpassword/${resetToken}`;
+  const resetTokenUrl = `${process.env.DOMAIN_URL}/user/resetpassword/${resetToken}`;
  
   const message = `<!doctype html>
       <html>
       <head>
-        <meta name="viewport" content="width=device-width">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Verify Your Email Address</title>
+        <meta name="viewport" content="width=device-width" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Forgot password</title>
         <style>
           @media only screen and (max-width: 620px) {
             table[class="body"] h1{font-size:28px !important;margin-bottom:10px !important;}
@@ -340,18 +344,18 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background-color: #f5f5f4; width: 100%;" width="100%" bgcolor="#f5f5f4">
           <tr>
             <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
-            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px; width: 580px; Margin: 0 auto;" width="580" valign="top">
+            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px 0; width: 580px; Margin: 0 auto;" width="580" valign="top">
               
               <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
                 <!-- START CENTERED WHITE CONTAINER -->
-                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">This is preheader text. Some clients will show this text as a preview.</span>
+                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Reset your password by clicking the button below.</span>
                 <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background: #ffffff; border-radius: 3px; width: 100%;" width="100%">
                   <tr>
                     <td style="list-style:10px;height:10px;" ></td>
                   </tr>
                   <tr>
                      <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
-                       <a href="https://runstream.co" style="color: #0d9dda; text-decoration: underline;"><img src="https://runstream.co/logo-white.png" height="80" alt="Salesforce Marketing Cloud" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
+                       <a href="https://runstream.co" style="color: #0d9dda; text-decoration: underline;"><img src="https://runstream.co/logo-white.png" height="80" alt="Runstream 24/7 Streaming Service" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
                      </td>
                    </tr>
                   <tr>
@@ -359,11 +363,11 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
                         <tr>
                           <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
-                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px;">Welcome to runstream</p>
-                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px;">
-                              You've entered ${user.email} as the email address of your email account.
+                            <p style="text-align: center; font-family: sans-serif; font-size: 17px; font-weight: bold; margin: 0; margin-bottom: 10px;">Forgot your password? </p>
+                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom:20px;">
+                              We received a request to reset the password for the account associated with ${user.email}. If this was you, please click the button below to reset your password.
                             </p>
-                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;"><strong>Please verify this email address by clicking button below.</strong></p>
+                            
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; box-sizing: border-box; width: 100%;" width="100%">
                               <tbody>
                                 <tr>
@@ -374,7 +378,7 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
                                           <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; 
                                           text-align: center; background-color: #ffffff;" valign="top" 
                                           align="center" bgcolor="#ffffff"> 
-                                          <a href=${mailTokenUrl} target="_blank"  style="border: solid 1px #df3939;border-radius: 13px;box-sizing: border-box;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 10px 33px;text-decoration: none;text-transform: capitalize;background-color: #df3939;border-color: #df3939;color: #ffffff;" >Verify email</a>
+                                          <a href=${resetTokenUrl} target="_blank"  style="border: solid 1px #df3939;border-radius:8px;box-sizing: border-box;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 10px 33px;text-decoration: none;text-transform: capitalize;background-color: #df3939;border-color: #df3939;color: #ffffff;" >Reset Password</a>
                                        </td>
                                         </tr>
                                       </tbody>
@@ -434,8 +438,15 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
   }
 });
 
+
 const resetpassword = catchAsync ( async (req, res, next) => {
   // 1. get user token
+  if(req.body.password !== req.body.confirmPassword){ 
+    res.json({
+      status:false,
+      message:"Confirm password is incorrect. Please try again later.",
+    }); 
+  }
   const hashToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
   // 2. Find token user and set new password 
   const user = await User.findOne({
@@ -443,7 +454,10 @@ const resetpassword = catchAsync ( async (req, res, next) => {
     resetTokenExpire : { $gt: Date.now()}
   });
   if(!user){ 
-      next(new AppError("Link expired or invalid token", 500))
+    res.json({
+      status:false,
+      message:"Link expired or invalid token.",
+    }); 
   }
   user.password = req.body.password;
   user.confirmPassword = req.body.confirmPassword;

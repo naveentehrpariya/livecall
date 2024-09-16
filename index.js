@@ -61,7 +61,9 @@ async function authorizeB2() {
   }
 }
 
-// authorizeB2();
+authorizeB2();
+
+
 app.options("/cloud/upload", cors(corsOptions));
 app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), async (req, res) => {
   try {
