@@ -38,11 +38,7 @@ const schema = new mongoose.Schema({
    duration : {
       type:String,
       default:1,
-   },
-   duration_title : {
-      type:String,
-      default:'monthly',
-   },
+   } 
 });
 
 const Pricing = mongoose.model('pricings', schema);

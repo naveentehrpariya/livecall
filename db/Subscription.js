@@ -10,6 +10,10 @@ const schema = new mongoose.Schema({
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
+    duration: {
+        type: Number,
+        default: 1
+    },
     createdAt: {
         type: Date,
         default: Date.now()     

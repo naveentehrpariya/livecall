@@ -19,6 +19,7 @@ const downloadAndMergeVideos = require("../utils/downloadAndMergeVideos");
 const downloadAndMergeAudios = require("../utils/downloadAndMergeAudios");
 const deleteFilesStartingWithName = require("../utils/deleteFilesStartingWithName");
 const convertImageToVideo = require("../utils/convertImageToVideo");
+const User = require("../db/Users");
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
 
@@ -574,6 +575,68 @@ const start_stream = catchAsync(async (req, res, next) => {
   }
 });
 
+
+const start_rmtp_stream = catchAsync(async (req, res, next) => {
+  try {
+    const { title, description, audio, thumbnail, type, streamKey } = req.body;
+    const userId = req.user._id;
+
+    const videoID = null;
+    const stream = new Stream({
+      title: req.body.title,
+      video: JSON.stringify(req.body.videos), 
+      audio: JSON.stringify(req.body.audios),
+      description: req.body.description,
+      thumbnail: null,
+      resolution: req.body.resolution,
+      stream_url: req.body.stream_url,
+      streamkey: streamKey,
+      user: req.user._id,
+      status: '1',
+      radio : req.body.radio,
+      streamId: videoID,
+      playlistId: req.body.playlistId,
+      stream_type:type,
+      ordered:req.body.ordered,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+    
+    const savedStream = await stream.save();
+    if (savedStream) {
+      const video = req.body.video;
+      if (activeStreams[videoID]) {
+        return res.status(400).send('Stream already active.');
+      } 
+      const payload = {
+        streamKey : streamKey, 
+        audio : audio, 
+        video : video, 
+        res: req.body.resolution, 
+        videoID : videoID
+      }
+      await start_ffmpeg(payload);
+      res.json({
+        status: true,
+        message: 'Stream started.',
+        stream: savedStream,
+        streamUrl: `https://www.youtube.com/watch?v=${videoID}`,
+      });
+    } else {
+      res.json({
+        status: false,
+        message: 'Failed to create stream.',
+      });
+    }
+  } catch (err) {
+    JSONerror(res, err, next);
+    console.error(`Stream creation error: ${err}`);
+    logger(err);
+    await deleteFilesStartingWithName(req.body.playlistId);
+  }
+});
+
+
 const edit_stream = catchAsync(async (req, res, next) => {
   try {
     const { video, audio,
@@ -677,11 +740,6 @@ const edit_stream = catchAsync(async (req, res, next) => {
   }
 });
 
-
-
-
-
- 
 const stop_stream = async (req, res, next) => {
   try {
     const streamId  = req.params.streamId;
@@ -788,11 +846,11 @@ const checkStreamStatusAndSubscription = async () => {
     logger('check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>');
     if (activeStreams && activeStreams.length < 1) {
       console.log(`Currently there are not any live streams active.`);
-      return;
+      return; 
     }
     for (const stream of activeStreams) {
       const user = stream.user;
-      const userSubscription = await Subscription.findOne({ user: user, status: 'paid' }).populate("plan");
+      const userSubscription = await Subscription.findOne({ user: user, status: 'active' }).populate("plan");
       if (!userSubscription) {
         console.log(`User ${user} does not have an active subscription.`);
         logger(`User ${user} does not have an active subscription.`);
@@ -817,6 +875,7 @@ const checkStreamStatusAndSubscription = async () => {
   }
 };
 
+
 const force_start_stream = async (req, res, next) => {
   try {
     const { streamKey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
@@ -838,11 +897,118 @@ const force_start_stream = async (req, res, next) => {
   }
 };
 
-cron.schedule('0 */3 * * *', async () => {
-  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  checkStreamStatus();
-});
+
+
+
+const SendExpiredPlanEmail = async ({user}) => { 
+  const message = `<!doctype html>
+      <html>
+      <head>
+        <meta name="viewport" content="width=device-width" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Plan Expired</title>
+        <style>
+          @media only screen and (max-width: 620px) {
+            table[class="body"] h1{font-size:28px !important;margin-bottom:10px !important;}
+            table[class="body"] p,table[class="body"] ul,table[class="body"] ol,table[class="body"] td,table[class="body"] span,table[class="body"] a{font-size:16px !important;}
+            table[class="body"] .wrapper,table[class="body"] .article{padding:10px !important;}
+            table[class="body"] .content{padding:0 !important;}
+            table[class="body"] .container{padding:0 !important;width:100% !important;}
+            table[class="body"] .main{border-left-width:0 !important;border-radius:0 !important;border-right-width:0 !important;}
+            table[class="body"] .btn table{width:100% !important;}
+            table[class="body"] .btn a{width:100% !important;}
+            table[class="body"] .img-responsive{height:auto !important;max-width:100% !important;width:auto !important;}
+          }
+          @media all {
+            .ExternalClass{width:100%;}
+            .ExternalClass,.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td,.ExternalClass div{line-height:100%;}
+            .apple-link a{color:inherit !important;font-family:inherit !important;font-size:inherit !important;font-weight:inherit !important;line-height:inherit !important;text-decoration:none !important;}
+            .btn-primary table td:hover{background-color:#014486 !important;}
+            .btn-primary a:hover{background-color:#014486 !important;border-color:#014486 !important;}
+          }
+        </style>
+      </head>
+      <body class="" style="background-color: #f5f5f4; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background-color: #f5f5f4; width: 100%;" width="100%" bgcolor="#f5f5f4">
+          <tr>
+            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px 0; width: 580px; Margin: 0 auto;" width="580" valign="top">
+              
+              <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
+                <!-- START CENTERED WHITE CONTAINER -->
+                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Renew your subscription.</span>
+                <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background: #ffffff; border-radius: 3px; width: 100%;" width="100%">
+                  <tr>
+                    <td style="list-style:10px;height:10px;" ></td>
+                  </tr>
+                  <tr>
+                     <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
+                       <a href="https://runstream.co" style="color: #0d9dda; text-decoration: underline;"><img src="https://runstream.co/logo-white.png" height="80" alt="Runstream 24/7 Streaming Service" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
+                     </td>
+                   </tr>
+                  <tr>
+                    <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top">
+                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
+                        <tr>
+                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
+                            <p style="text-align: center; font-family: sans-serif; font-size: 17px; font-weight: bold; margin: 0; margin-bottom: 10px;">Subscription Expired.</p>
+                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom:20px;">
+                              This is a reminder that your subscription to ${user.plan.name} has expired today. 
+                              To maintain uninterrupted access to all features and benefits, we recommend renewing your subscription as soon as possible. 
+                              Feel free to contact our support team if you need assistance with the renewal process.
+                            </p>
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; box-sizing: border-box; width: 100%;" width="100%">
+                              <tbody>
+                                <tr>
+                                  <td align="center" style="font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;" valign="top">
+                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: auto; width: auto;">
+                                      <tbody>
+                                        <tr>
+                                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; 
+                                          text-align: center; background-color: #ffffff;" valign="top" 
+                                          align="center" bgcolor="#ffffff"> 
+                                          <a  href='https://runstream.co/' target="_blank"  style="border: solid 1px #df3939;border-radius:8px;box-sizing: border-box;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 10px 33px;text-decoration: none;text-transform: capitalize;background-color: #df3939;border-color: #df3939;color: #ffffff;" >Renew Now</a>
+                                       </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="list-style:30px;height:30px;" ></td>
+                  </tr>
+                </table>
+                <!-- START FOOTER -->
+                <div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
+                    <tr>
+                      <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #747474; font-size: 11px; text-align: center;" valign="top" align="center">
+                        <a href="https://runstream.co" style="color: #747474; font-size: 14px; font-weight: 300; text-align: center; letter-spacing: -.75px; text-decoration: none;">Powered by runstream.co</a>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+          </tr>
+        </table>
+      </body>
+      </html>`;
+      const send = await SendEmail({
+        email:user.email,
+        subject:"Plan has been expired.",
+        message
+      });
+      console.log('send', send);
+}
 
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
@@ -850,5 +1016,47 @@ cron.schedule('0 * * * *', async () => {
   // checkStreamStatusAndSubscription();
 });
 
-module.exports = { edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
+
+// Cron job to status any stream has been ended from youtube but on our system has status of running.
+// Job will stop the ffmpeg process and make stream status ended
+cron.schedule('0 */3 * * *', async () => {
+  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  checkStreamStatus();
+});
+
+
+// Cron job to remove plan id of all expired plans of users
+cron.schedule('0 * * * *', async () => {
+  console.log('Running every hours job to remove expired plans');
+  const currentDate = new Date();
+  try {
+      const users = await User.find({
+          plan_end_on: { $lt: currentDate },
+          plan: { $ne: null }
+      }).populate('plan');
+      const updates = users.map(async (user) => {
+          const userActiveStreams = await Stream.find({ user: user._id, status: 1 });
+            if (userActiveStreams.length ) {
+              logger(`User ${user} plan has been expired so stream ended.`);
+              for (const excessStream of userActiveStreams) {
+                logger(`Stopping excess stream: ${excessStream.streamId}`);
+                await stopDbStream(excessStream.streamId);
+                await stopffmpegstream(excessStream.streamId);
+              }
+          }
+          SendExpiredPlanEmail(user);
+          user.plan = null; // Remove plan ID
+          user.plan_end_on = null; 
+          await user.save();
+      });
+      await Promise.all(updates);
+      console.log(`Processed ${users.length} users with expired plans.`);
+      logger(`Processed ${users.length} users with expired plans.`);
+  } catch (err) {
+      console.error('Error running the cron job:', err);
+  }
+});
+
+module.exports = { start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
 

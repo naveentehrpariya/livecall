@@ -83,7 +83,7 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
       fileName: sanitizedFileName,
       data: fileData
     });
-
+ 
     fs.unlinkSync(file.path);
     const fileUrl = `https://f003.backblazeb2.com/file/${bucket_name}/${sanitizedFileName}`;
   

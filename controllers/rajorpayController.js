@@ -14,7 +14,6 @@ const razorpay = new Razorpay({
    key_secret: SECRET
 });
 
-
 async function getExchangeRates(baseCurrency) {
    const apiKey = process.env.EXCHANGE_RATE_KEY;
    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`
@@ -32,7 +31,6 @@ async function getExchangeRates(baseCurrency) {
        console.log('Error fetching exchange rates:', error);
    }
 }
- 
 
 async function convertCurrency(amount, fromCurrency, toCurrency) {
    try {
@@ -62,14 +60,13 @@ async function convertCurrency(amount, fromCurrency, toCurrency) {
 }
 
 
-
-
 exports.createOrder = catchAsync(async (req, res) => {
    console.log("req.body", req.body);
-   let currency = req.body.currency;
+   let duration = req.body.duration || 1;
+   let currency =  req.body.currency;
    const id = req.body.id;
    const plan = await Pricing.findById(id);
-   let lastprice = plan.price * 100;
+   let lastprice = (plan.price * 100)* parseInt(duration);
    
    if (currency !== plan.currency) {
       const result = await convertCurrency(plan.price, plan.currency, currency);
@@ -93,6 +90,7 @@ exports.createOrder = catchAsync(async (req, res) => {
          sms: true,
       },
       notes: {
+         duration: duration,
          userId: req.user._id,
          userEmail: req.user.email,
          planID: id
@@ -116,8 +114,6 @@ exports.createOrder = catchAsync(async (req, res) => {
 });
 
 
-
-
 exports.paymentWebhook = catchAsync (async (req,res) => {
    const shasum = crypto.createHmac('sha256', SECRET);
    shasum.update(JSON.stringify(req.body));
@@ -130,12 +126,11 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
          logger(JSON.stringify(payment));
          const user = await User.findById(payment.notes.userId);
          const plan = await Pricing.findById(payment.notes.planID);
-
          const endOnDate = new Date();
-         const duration = parseInt(plan.duration);
+         const duration = parseInt(payment.notes.planID);
 
          const ishaveAlreadySubscription = await Subscription.findOne({user: user._id, status: 'active'});
-         console.log("ishaveAlreadySubscription",ishaveAlreadySubscription)
+         console.log("ishaveAlreadySubscription",ishaveAlreadySubscription);
          if(ishaveAlreadySubscription){
             ishaveAlreadySubscription.status = 'inactive';
             await ishaveAlreadySubscription.save();
@@ -145,10 +140,11 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
          const subcription = new Subscription({
             plan: plan._id,
             status: 'active',
+            duration: duration,
             user: user._id,
             updatedAt: Date.now(),
             endOn: endDate,
-         });
+         }); 
 
          user.plan_end_on = endDate;
          user.plan = plan._id;
