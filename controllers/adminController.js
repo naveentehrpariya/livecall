@@ -100,7 +100,16 @@ const dashboard = catchAsync(async (req, res) => {
    const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'paid' });
   //  const totalExpiredSubscriptions = await Subscription.countDocuments({ status: 'expired' });
 
-  
+    const userFiles = await Files.find({});
+    const totalSize = userFiles.reduce((acc, file) => acc + parseInt(file.size), 0);
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+    }
+
    res.json({
      status: true,
      message: 'Dashboard data retrieved successfully.',
@@ -108,11 +117,10 @@ const dashboard = catchAsync(async (req, res) => {
       { route:"/admin/users/active", title : 'Total Users', data: totalUsers },
       { route:"/admin/users/active", title : 'Active Users', data: activeUsers },
       { route:"/admin/users/inactive", title : 'Inactive Users', data: inactiveUsers },
-
+      { route:"/admin/media/image", title : 'Uploaded Content', data: formatBytes(totalSize) },
       { route:"/admin/streams/all", title : 'Total Streams', data: totalStreams },
       { route:"/admin/streams/1", title : 'Live Streams', data: totalliveStreams },
       { route:"/admin/streams/0", title : 'Ended Streams', data: totalInactiveStreams },
-
       { route:"/admin/subscriptions/all", title : 'Total Subscriptions', data: totalSubscriptions },
       { route:"/admin/subscriptions/paid", title : 'Active Subscriptions', data: totalActiveSubscriptions },
       { route:"/admin/subscriptions/inactive", title : 'Inactive Subscriptions', data: inactiveSubscriptions },
@@ -130,7 +138,7 @@ const medias = catchAsync(async (req, res) => {
    const { type } = req.params;
    let mimeFilter = { $regex: `^${mimeTypes[type]}` };
    const Query = new APIFeatures(
-      Files.find({mime: mimeFilter}),
+      Files.find({mime: mimeFilter, deletedAt : null || ''}).populate("user"),
       req.query
    ).sort();
    const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();

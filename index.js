@@ -10,6 +10,7 @@ const globalErrorHandler = require("./middlewares/gobalErrorHandler");
 const errorHandler = require("./middlewares/errorHandler");
 const multer = require('multer');
 const { validateToken } = require('./controllers/authController');
+const { checkUploadLimit } = require('./controllers/fileController');
 const Files = require('./db/Files');
 require('./db/config');
 
@@ -62,10 +63,8 @@ async function authorizeB2() {
 }
 
 authorizeB2();
-
-
 app.options("/cloud/upload", cors(corsOptions));
-app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), async (req, res) => {
+app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), checkUploadLimit, async (req, res) => {
   try {
     const { file } = req;
     if (!file) {
@@ -86,23 +85,26 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
  
     fs.unlinkSync(file.path);
     const fileUrl = `https://f003.backblazeb2.com/file/${bucket_name}/${sanitizedFileName}`;
-  
+   
+    console.log("uploadResponse",uploadResponse)
     if(uploadResponse){
       const uploadedfile = new Files({
         name: file.originalname,
         mime: uploadResponse.data.contentType,
         filename: uploadResponse.data.fileName,
+        fileId: uploadResponse.data.fileId,
         url: fileUrl,
         user: req.user?._id,
         size: uploadResponse.data.contentLength,
-      });
+      }); 
+
       const fileUploaded = await uploadedfile.save();
       res.status(201).json({
         message: "File uploaded to storage.",
         file_data: fileUploaded,
         fileUrl: fileUrl,
       });
-    } else {
+    } else { 
       res.status(500).json({
         message: "File failed to upload on cloud.",
         error: uploadResponse.data
@@ -117,6 +119,7 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
     });
   }
 });
+
  
  
 app.get('/', (req, res) => {

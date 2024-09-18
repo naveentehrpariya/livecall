@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
    },
    size: { type:String },
    filename: { type:String },
+   fileId: { type:String },
    url: { type:String },
    user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
    createdAt: {
