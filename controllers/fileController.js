@@ -4,7 +4,7 @@ const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 const handleFileUpload = require('../utils/file-upload-util');
 const B2 = require('backblaze-b2');
-
+const fs = require('fs');
 const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
@@ -163,39 +163,43 @@ const totalFileUploaded = catchAsync(async (req, res) => {
       }
 });
 
+function formatBytes(bytes, decimals = 2) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+}
+
 const checkUploadLimit = catchAsync ( async (req, res, next) => {
   try {
     const userId = req.user._id;
     const user = await User.findById(userId).populate("plan");
-    const fileSize = req.file.size;  // Assuming you're using multer for file uploads
-    // Get the user's upload limit in bytes
-    // const uploadLimit = parseInt(user.plan.storage) * 1024 * 1024 * 1024;
-    const uploadLimit = 6000;
-    console.log("uploadLimit",uploadLimit)
-
-    const uploadedFiles = await Files.find({ user:userId });
-    const totalUploadedSize = uploadedFiles.reduce((total, file) => total + file.size, 0);
-
-    console.log("totalUploadedSize",totalUploadedSize)
-
+    const fileSize = req.file.size;
+    const uploadLimit = user.plan && user.plan.storage ? parseInt(user.plan.storage) * 1024 * 1024 * 1024 : 1* 1024 * 1024 * 1024;
+    const uploadedFiles = await Files.find({ user:userId, deletedAt:null || ''});
+    const totalUploadedSize = uploadedFiles.reduce((total, file) => total + parseInt(file.size), 0);
     const remainingLimit = uploadLimit - totalUploadedSize;
-    
-    console.log("remainingLimit",remainingLimit)
-
     if (fileSize > remainingLimit) {
-      return res.status(200).json({ 
-        status: false,
-        message: 'Upload limit exceeded. You cannot upload more files.'
-       });
+      fs.unlinkSync(req.file.path);
+      if(user.plan){
+        return res.json({ 
+          status: false,
+          message: 'Upload limit exceeded. You cannot upload more files.'
+         });
+      } else { 
+        return res.json({ 
+          status: false,
+          message: 'Upload limit exceeded. You can upload files upto 1 GB.'
+        });
+      }
     }
     next();
   } catch (error) {
-    return res.status(500).json({ message: 'Error checking upload limit', error });
+    return res.status(500).json({ 
+      message: 'Error checking upload limit', error 
+    });
   }
- 
-
-
-
 });
 
 

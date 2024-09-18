@@ -127,7 +127,7 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
          const user = await User.findById(payment.notes.userId);
          const plan = await Pricing.findById(payment.notes.planID);
          const endOnDate = new Date();
-         const duration = parseInt(payment.notes.planID);
+         const duration = parseInt(payment.notes.duration);
 
          const ishaveAlreadySubscription = await Subscription.findOne({user: user._id, status: 'active'});
          console.log("ishaveAlreadySubscription",ishaveAlreadySubscription);
@@ -147,6 +147,7 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
          }); 
 
          user.plan_end_on = endDate;
+         user.plan_months = duration;
          user.plan = plan._id;
          await user.save();
          await subcription.save();

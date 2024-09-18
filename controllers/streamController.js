@@ -1048,6 +1048,7 @@ cron.schedule('0 * * * *', async () => {
           SendExpiredPlanEmail(user);
           user.plan = null; // Remove plan ID
           user.plan_end_on = null; 
+          user.plan_months = null;
           await user.save();
       });
       await Promise.all(updates);

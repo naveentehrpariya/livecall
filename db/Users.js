@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const Files = require('./Files');
 
 const schema = new mongoose.Schema({
     name: {
@@ -27,8 +28,14 @@ const schema = new mongoose.Schema({
         type: Date,
     },
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
+    plan_month: {
+        type: String,
+    },
     avatar: {
         type: String,
+    },
+    uploaded_content: { 
+        type : String
     },
     password: {
         type: String,
@@ -76,19 +83,19 @@ const schema = new mongoose.Schema({
 
 schema.virtual('trialStatus').get(function () {
     const currentDate = new Date();
-    if (this.free_trial < currentDate) {
-        return 'ended';
-    } else {
+    if (this.free_trial > currentDate) {
         return 'active';
+    } else {
+        return 'ended';
     }
 }); 
  
 schema.virtual('planStatus').get(function () {
     const currentDate = new Date();
-    if (this.plan_end_on < currentDate) {
-        return 'ended';
-    } else {
+    if (this.plan && (this.plan_end_on > currentDate)) {
         return 'active';
+    } else {
+        return 'ended';
     }
 });
 
@@ -120,6 +127,29 @@ schema.methods.createMailVerificationToken = async function () {
     this.mailTokenExpire = Date.now() + 10 * 60 * 1000;
     return token;
 }
+
+schema.methods.getUploadedContentSize = async function () {
+    try {
+        const id = this._id;
+        const files = await Files.find({ user: id, deletedAt: { $in: [null, ''] } });
+
+        // If no files found, set totalSize to 0
+        const totalSize = files.reduce((acc, file) => acc + parseInt(file.size || 0), 0);
+
+        // Convert total size from bytes to MB
+        const totalSizeInMB = totalSize
+
+        // Add total size to the user instance
+        this.uploaded_content = totalSizeInMB;
+
+        return totalSizeInMB; // Optional: You can return the value if needed
+    } catch (error) {
+        console.error('Error calculating uploaded content size:', error);
+        this.uploaded_content = 0; // In case of error, set uploaded content size to 0
+        return 0;
+    }
+}
+
 
 const User = mongoose.model('users', schema);
 module.exports = User;

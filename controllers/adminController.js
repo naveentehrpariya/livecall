@@ -155,23 +155,44 @@ const medias = catchAsync(async (req, res) => {
 });
 
 const users = catchAsync(async (req, res) => {
-  const {status} = req.params;
+  const { status } = req.params;
+  
+  // Query the users with the requested status
   let Query = new APIFeatures(
-    User.find({status : status}).populate("plan"),
+    User.find({ status: status }).populate("plan"),
     req.query
   ).sort();
+
+  // Paginate the result
   const { query, totalDocuments, page, limit, totalPages } = await Query.paginate();
   const users = await query;
+
+  // Using Promise.all to calculate uploaded content size for each user
+  const usersWithContentSize = await Promise.all(
+    users.map(async (user) => {
+      try {
+        await user.getUploadedContentSize();
+        console.log("user",user)
+        return user;
+      } catch (error) {
+        console.error(`Error calculating uploaded content for user ${user._id}:`, error);
+        return user; // Still return the user even if an error occurs
+      }
+    })
+  );
+
+  // Send the response with all users and their uploaded content size
   res.json({
     status: true,
     total: totalDocuments,
     current_page: page,
     total_pages: totalPages,
-    limit:limit,
-    result: users || [],
+    limit: limit,
+    result: usersWithContentSize || [],
     message: users.length ? "Users retrieved successfully !!." : "No files found"
   });
 });
+
 
 const EnableDisableUser = catchAsync(async (req, res) => {
    const { id } = req.params;

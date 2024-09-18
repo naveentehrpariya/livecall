@@ -64,7 +64,7 @@ async function authorizeB2() {
 
 authorizeB2();
 app.options("/cloud/upload", cors(corsOptions));
-app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), checkUploadLimit, async (req, res) => {
+app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file'), checkUploadLimit,  async (req, res) => {
   try {
     const { file } = req;
     if (!file) {
@@ -84,7 +84,7 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
     });
  
     fs.unlinkSync(file.path);
-    const fileUrl = `https://f003.backblazeb2.com/file/${bucket_name}/${sanitizedFileName}`;
+    const fileUrl = `https://files.runstream.cloud/file/${bucket_name}/${sanitizedFileName}`;
    
     console.log("uploadResponse",uploadResponse)
     if(uploadResponse){
@@ -100,12 +100,14 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
 
       const fileUploaded = await uploadedfile.save();
       res.status(201).json({
+        status: true,
         message: "File uploaded to storage.",
         file_data: fileUploaded,
         fileUrl: fileUrl,
       });
     } else { 
       res.status(500).json({
+        status:false,
         message: "File failed to upload on cloud.",
         error: uploadResponse.data
       });

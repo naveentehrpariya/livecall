@@ -936,3 +936,19 @@
 
 2024-09-18T12:30:02.303Z [INFO]:"Processed 0 users with expired plans."
 
+2024-09-18T18:30:00.747Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-18T18:30:00.752Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-18T18:30:00.772Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-18T18:30:00.805Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-09-18T18:30:00.808Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-18T19:30:00.939Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-18T19:30:00.948Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-18T19:30:00.991Z [INFO]:"Processed 0 users with expired plans."
+
