@@ -952,3 +952,99 @@
 
 2024-09-18T19:30:00.991Z [INFO]:"Processed 0 users with expired plans."
 
+2024-09-19T06:30:00.415Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T06:30:00.431Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-19T06:30:00.464Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T06:30:00.795Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-09-19T06:30:00.821Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-19T06:59:13.288Z [INFO]:"{\"id\":\"pay_Oyw0DVauq4VRXx\",\"entity\":\"payment\",\"amount\":251194,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyvzzSggGJ97Qi\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyvzyIEMKFrmtk\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d74f0565890f8db9e1df4b\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"2\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":5928,\"tax\":904,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"5992743\"},\"created_at\":1726729149,\"reward\":null,\"base_amount\":251194}"
+
+2024-09-19T07:19:19.110Z [INFO]:"{\"id\":\"pay_OywLR0cbvSBCd0\",\"entity\":\"payment\",\"amount\":376791,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OywLD838SYMLS0\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OywLC5jKsTZ1Bb\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d74f0565890f8db9e1df4b\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"3\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":8892,\"tax\":1356,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"2644005\"},\"created_at\":1726730355,\"reward\":null,\"base_amount\":376791}"
+
+2024-09-19T07:30:00.733Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T07:30:00.817Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T07:30:01.072Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-19T08:30:00.307Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T08:30:00.701Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T08:30:00.852Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-19T09:19:47.794Z [INFO]:"{\"id\":\"pay_OyyOi3MnYHx5dG\",\"entity\":\"payment\",\"amount\":502388,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyOB4Lwodxliy\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyO99SIZbvVQy\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d8338e65890f8db9e1dfb3\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"4\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":11856,\"tax\":1808,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"3354634\"},\"created_at\":1726737584,\"reward\":null,\"base_amount\":502388}"
+
+2024-09-19T09:21:30.290Z [INFO]:"{\"id\":\"pay_OyyQWBSwNJrkGE\",\"entity\":\"payment\",\"amount\":1507170,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyQP7nD1f1Vxq\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyQNbiFU1zBaG\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d8340f65890f8db9e1dfc1\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"6\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":35570,\"tax\":5426,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"9714332\"},\"created_at\":1726737686,\"reward\":null,\"base_amount\":1507170}"
+
+2024-09-19T09:24:19.636Z [INFO]:"{\"id\":\"pay_OyyTVFDxj3kUqd\",\"entity\":\"payment\",\"amount\":251194,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyTP214XiF9Wf\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyTNqYnjpOKQc\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"2\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":5928,\"tax\":904,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"7080418\"},\"created_at\":1726737856,\"reward\":null,\"base_amount\":251194}"
+
+2024-09-19T09:25:04.039Z [INFO]:"{\"id\":\"pay_OyyUHnOM4BCo7X\",\"entity\":\"payment\",\"amount\":753582,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyU8VMz2BhS4y\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyU6MMF1V8xhh\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"6\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":17784,\"tax\":2712,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"3313823\"},\"created_at\":1726737901,\"reward\":null,\"base_amount\":753582}"
+
+2024-09-19T09:26:29.860Z [INFO]:"{\"id\":\"pay_OyyVnK3iykmO77\",\"entity\":\"payment\",\"amount\":251194,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyVdjJDSMMkRc\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyVcSDHvIOeHs\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"2\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":5928,\"tax\":904,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"2873622\"},\"created_at\":1726737986,\"reward\":null,\"base_amount\":251194}"
+
+2024-09-19T09:30:00.307Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T09:30:00.308Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-19T09:30:00.319Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T09:30:00.640Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-19T09:30:00.658Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-09-19T09:57:50.169Z [INFO]:"{\"id\":\"pay_OyyOi3MnYHx5dG\",\"entity\":\"payment\",\"amount\":502388,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyOB4Lwodxliy\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyO99SIZbvVQy\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d8338e65890f8db9e1dfb3\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"4\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":11856,\"tax\":1808,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"3354634\"},\"created_at\":1726737584,\"reward\":null,\"base_amount\":502388}"
+
+2024-09-19T09:58:44.968Z [INFO]:"{\"id\":\"pay_OyyQWBSwNJrkGE\",\"entity\":\"payment\",\"amount\":1507170,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyQP7nD1f1Vxq\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyQNbiFU1zBaG\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d8340f65890f8db9e1dfc1\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"6\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":35570,\"tax\":5426,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"9714332\"},\"created_at\":1726737686,\"reward\":null,\"base_amount\":1507170}"
+
+2024-09-19T10:01:41.475Z [INFO]:"{\"id\":\"pay_Oyz6yklUnFZafU\",\"entity\":\"payment\",\"amount\":251194,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_Oyz6oaQvGiPdSO\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#Oyz6mwJ59VPiAM\",\"card_id\":null,\"bank\":\"BARB_R\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d74f0565890f8db9e1df4b\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"2\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":5928,\"tax\":904,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"9995910\"},\"created_at\":1726740098,\"reward\":null,\"base_amount\":251194}"
+
+2024-09-19T10:01:47.988Z [INFO]:"{\"id\":\"pay_OyyTVFDxj3kUqd\",\"entity\":\"payment\",\"amount\":251194,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyTP214XiF9Wf\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyTNqYnjpOKQc\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"2\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":5928,\"tax\":904,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"7080418\"},\"created_at\":1726737856,\"reward\":null,\"base_amount\":251194}"
+
+2024-09-19T10:03:14.593Z [INFO]:"{\"id\":\"pay_OyyUHnOM4BCo7X\",\"entity\":\"payment\",\"amount\":753582,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyU8VMz2BhS4y\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyU6MMF1V8xhh\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"6\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":17784,\"tax\":2712,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"3313823\"},\"created_at\":1726737901,\"reward\":null,\"base_amount\":753582}"
+
+2024-09-19T10:30:00.384Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T10:30:00.393Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T10:30:05.132Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-19T10:43:49.105Z [INFO]:"{\"id\":\"pay_OyyUHnOM4BCo7X\",\"entity\":\"payment\",\"amount\":753582,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_OyyU8VMz2BhS4y\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#OyyU6MMF1V8xhh\",\"card_id\":null,\"bank\":\"IOBA\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"667e4bd4e4878501688a1d88\",\"duration\":\"6\",\"userEmail\":\"naveen@internetbusinesssolutionsindia.com\"},\"fee\":17784,\"tax\":2712,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"3313823\"},\"created_at\":1726737901,\"reward\":null,\"base_amount\":753582}"
+
+2024-09-19T10:45:57.959Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-19T10:48:38.066Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-19T11:09:09.272Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-19T11:30:00.613Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T11:30:00.988Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T11:30:01.258Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-19T11:31:00.665Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:31:00.722Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:31:03.412Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:31:03.450Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:31:08.427Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:31:08.465Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:31:09.853Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:31:09.891Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:35:37.568Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T11:35:37.651Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+

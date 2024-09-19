@@ -28,7 +28,7 @@ const schema = new mongoose.Schema({
         type: Date,
     },
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
-    plan_month: {
+    plan_months: {
         type: String,
     },
     avatar: {
@@ -51,6 +51,15 @@ const schema = new mongoose.Schema({
             validator: function (val) { return val === this.password },
             message: "Passwords did't matched."
         }
+    },
+    country : { 
+        type : String
+    },
+    country_code : { 
+        type : String
+    },
+    currency : {
+        type : String
     },
     status: {
         type: String,

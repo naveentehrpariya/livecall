@@ -16,6 +16,7 @@ const schema = new mongoose.Schema({
         type:Number,
         default:1,
     },
+    platformtype: String,
     stream_url: String,
     streamkey: String,
     streamId: String,

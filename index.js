@@ -45,7 +45,6 @@ const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
 
-
 // Blackblaze cloud
 const b2 = new B2({
   applicationKeyId: APP_ID,
@@ -121,8 +120,6 @@ app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file
     });
   }
 });
-
- 
  
 app.get('/', (req, res) => {
   res.send({

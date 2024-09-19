@@ -67,110 +67,180 @@ const sendVerifyEmail = catchAsync ( async (req, res, next) => {
   const mailToken = await user.createMailVerificationToken();
   await user.save({validateBeforeSave:false});
   const mailTokenUrl = `${process.env.DOMAIN_URL}/verify-email/${mailToken}`;
-  const message = `<!doctype html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Verify Your Email Address</title>
-        <style>
-          @media only screen and (max-width: 620px) {
-            table[class="body"] h1{font-size:28px !important;margin-bottom:10px !important;}
-            table[class="body"] p,table[class="body"] ul,table[class="body"] ol,table[class="body"] td,table[class="body"] span,table[class="body"] a{font-size:16px !important;}
-            table[class="body"] .wrapper,table[class="body"] .article{padding:10px !important;}
-            table[class="body"] .content{padding:0 !important;}
-            table[class="body"] .container{padding:0 !important;width:100% !important;}
-            table[class="body"] .main{border-left-width:0 !important;border-radius:0 !important;border-right-width:0 !important;}
-            table[class="body"] .btn table{width:100% !important;}
-            table[class="body"] .btn a{width:100% !important;}
-            table[class="body"] .img-responsive{height:auto !important;max-width:100% !important;width:auto !important;}
-          }
-          @media all {
-            .ExternalClass{width:100%;}
-            .ExternalClass,.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td,.ExternalClass div{line-height:100%;}
-            .apple-link a{color:inherit !important;font-family:inherit !important;font-size:inherit !important;font-weight:inherit !important;line-height:inherit !important;text-decoration:none !important;}
-            .btn-primary table td:hover{background-color:#014486 !important;}
-            .btn-primary a:hover{background-color:#014486 !important;border-color:#014486 !important;}
-          }
-        </style>
-      </head>
-      <body class="" style="background-color: #f5f5f4; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background-color: #f5f5f4; width: 100%;" width="100%" bgcolor="#f5f5f4">
+  const message = `<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+  <meta name="format-detection" content="telephone=no" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-width: 100%;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    body,
+    table,
+    td,
+    div,
+    p,
+    a {
+      -webkit-font-smoothing: antialiased;
+      text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      line-height: 100%;
+    }
+
+    table,
+    td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+      border-collapse: collapse !important;
+      border-spacing: 0;
+    }
+
+    img {
+      border: 0;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    #outlook a {
+      padding: 0;
+    }
+
+    .ReadMsgBody {
+      width: 100%;
+    }
+
+    .ExternalClass {
+      width: 100%;
+    }
+
+    .ExternalClass,
+    .ExternalClass p,
+    .ExternalClass span,
+    .ExternalClass font,
+    .ExternalClass td,
+    .ExternalClass div {
+      line-height: 100%;
+    }
+
+    @media all and (min-width: 560px) {
+      body {
+        margin-top: 30px;
+      }
+    }
+    
+    /* Rounded corners */
+    @media all and (min-width: 560px) {
+      .container {
+        border-radius: 8px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        -khtml-border-radius: 8px;
+      }
+    }
+    /* Links */
+    a,
+    a:hover {
+      color: #127DB3;
+    }
+
+    .footer a,
+    .footer a:hover {
+      color: #999999;
+    }
+  </style>
+  <title>🔑 Verify Your Email Address</title>
+</head>
+
+<!-- BODY -->
+<body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" marginwidth="0" marginheight="0" width="100%" style="border-collapse: collapse; border-spacing: 0;  padding: 0; width: 100%; height: 100%; -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%;
+	background-color: #ffffff;
+	color: #000000;" bgcolor="#ffffff" text="#000000">
+  <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; width: 100%;" class="background">
+    <tr>
+      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;" bgcolor="#ffffff">
+        <table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+	max-width: 560px;" class="container">
           <tr>
-            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
-            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px; width: 580px; Margin: 0 auto;" width="580" valign="top">
-              
-              <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
-                <!-- START CENTERED WHITE CONTAINER -->
-                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">This is preheader text. Some clients will show this text as a preview.</span>
-                <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background: #ffffff; border-radius: 3px; width: 100%;" width="100%">
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 24px; font-weight: bold; line-height: 130%;padding-top: 25px;color: #000000;font-family: sans-serif;" class="header">
+              <img border="0" vspace="0" hspace="0" src="https://runstream.co/logo-white.png" style="max-width: 250px;" alt="The Idea" title="Runstream" />
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+			padding-top: 25px;" class="line">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+			padding-top: 25px; 
+			color: #000000;
+			font-family: sans-serif;" class="paragraph">
+              Hi ${user.name || ""},<br> You've entered ${user.email} as the email address of your runstream account.
+              <br>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; padding-top: 25px;padding-bottom: 5px;" class="button">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" style="max-width: 240px; min-width: 120px; border-collapse: collapse; border-spacing: 0; padding: 0;">
                   <tr>
-                    <td style="list-style:10px;height:10px;" ></td>
-                  </tr>
-                  <tr>
-                     <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
-                       <a href="https://runstream.co" style="color: #0d9dda; text-decoration: underline;"><img src="https://runstream.co/logo-white.png" height="80" alt="Salesforce Marketing Cloud" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
-                     </td>
-                   </tr>
-                  <tr>
-                    <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top">
-                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
-                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px;">Welcome to runstream</p>
-                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px;">
-                              You've entered ${user.email} as the email address of your email account.
-                            </p>
-                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;"><strong>Please verify this email address by clicking button below.</strong></p>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; box-sizing: border-box; width: 100%;" width="100%">
-                              <tbody>
-                                <tr>
-                                  <td align="center" style="font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;" valign="top">
-                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: auto; width: auto;">
-                                      <tbody>
-                                        <tr>
-                                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; 
-                                          text-align: center; background-color: #ffffff;" valign="top" 
-                                          align="center" bgcolor="#ffffff"> 
-                                          <a href=${mailTokenUrl} target="_blank"  style="border: solid 1px #df3939;border-radius: 13px;box-sizing: border-box;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 10px 33px;text-decoration: none;text-transform: capitalize;background-color: #df3939;border-color: #df3939;color: #ffffff;" >Verify email</a>
-                                       </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-                      </table>
+                    <td align="center" valign="middle" >
+                      <a target="_blank" style="background-color: #df3939; padding: 12px 24px; margin: 0; text-decoration: none; border-collapse: collapse; border-spacing: 0; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; -khtml-border-radius: 10px; text-decoration: none;
+                        color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;" href=${mailTokenUrl}>
+                          Verify email
+                      </a>
                     </td>
                   </tr>
-                  <tr>
-                    <td style="list-style:30px;height:30px;" ></td>
-                  </tr>
                 </table>
-                <!-- START FOOTER -->
-                <div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
-                    <tr>
-                      <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #747474; font-size: 11px; text-align: center;" valign="top" align="center">
-                        <a href="https://runstream.co" style="color: #747474; font-size: 14px; font-weight: 300; text-align: center; letter-spacing: -.75px; text-decoration: none;">Powered by runstream.co</a>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
             </td>
-            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+			padding-top: 25px;" class="line">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+			padding-top: 20px;
+			padding-bottom: 25px;
+			color: #000000;
+			font-family: sans-serif;" class="paragraph">
+              If you have any questions or need assistance, feel free to reach out to our support team at <a href="mailto:Support@runstream.co" target="_blank" style=" color: #4b57ff; ">support@runstream.co</a>. We’re here to help!.
+              If you did not sign up for this account you can ignore this email and the account will be deleted.
+            </td>
           </tr>
         </table>
-      </body>
-      </html>`;
+        <table border="0" cellpadding="0" cellspacing="0" align="center" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+	max-width: 560px;" class="wrapper">
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 13px; font-weight: 400; line-height: 150%;
+			padding-top: 20px;
+			padding-bottom: 20px;
+			color: #999999;
+			font-family: sans-serif;" class="footer">
+              For more information <a href="https://runstream.co/contact" target="_blank" style=" color: #999999; ">contact us</a>. Our support
+              team is available to help you 24 hours a day, seven days a week.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
   try {
     const send = await SendEmail({
       email:user.email,
-      subject:"Verify your email address.",
+      subject:"🔑 Verify Your Email Address",
       message
     });
     console.log('send', send);
@@ -232,7 +302,10 @@ const signup = catchAsync(async (req, res, next) => {
     email: email,
     avatar: avatar,
     password: password,
-    confirmPassword: confirmPassword
+    confirmPassword: confirmPassword,
+    country: req.body.country,
+    country_code: req.body.country_code,
+    currency: req.body.currency
   }).then(result => {
     res.send({
       status: true,
@@ -313,110 +386,115 @@ const forgotPassword = catchAsync ( async (req, res, next) => {
   // 3. send token to email using nodemailer
   const resetTokenUrl = `${process.env.DOMAIN_URL}/user/resetpassword/${resetToken}`;
  
-  const message = `<!doctype html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Forgot password</title>
-        <style>
-          @media only screen and (max-width: 620px) {
-            table[class="body"] h1{font-size:28px !important;margin-bottom:10px !important;}
-            table[class="body"] p,table[class="body"] ul,table[class="body"] ol,table[class="body"] td,table[class="body"] span,table[class="body"] a{font-size:16px !important;}
-            table[class="body"] .wrapper,table[class="body"] .article{padding:10px !important;}
-            table[class="body"] .content{padding:0 !important;}
-            table[class="body"] .container{padding:0 !important;width:100% !important;}
-            table[class="body"] .main{border-left-width:0 !important;border-radius:0 !important;border-right-width:0 !important;}
-            table[class="body"] .btn table{width:100% !important;}
-            table[class="body"] .btn a{width:100% !important;}
-            table[class="body"] .img-responsive{height:auto !important;max-width:100% !important;width:auto !important;}
-          }
-          @media all {
-            .ExternalClass{width:100%;}
-            .ExternalClass,.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td,.ExternalClass div{line-height:100%;}
-            .apple-link a{color:inherit !important;font-family:inherit !important;font-size:inherit !important;font-weight:inherit !important;line-height:inherit !important;text-decoration:none !important;}
-            .btn-primary table td:hover{background-color:#014486 !important;}
-            .btn-primary a:hover{background-color:#014486 !important;border-color:#014486 !important;}
-          }
-        </style>
-      </head>
-      <body class="" style="background-color: #f5f5f4; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background-color: #f5f5f4; width: 100%;" width="100%" bgcolor="#f5f5f4">
+  const message = `<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+  <meta name="format-detection" content="telephone=no" />
+
+  <style>
+    body{margin:0;padding:0;min-width:100%;width:100% !important;height:100% !important;}
+body,table,td,div,p,a{-webkit-font-smoothing:antialiased;text-size-adjust:100%;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;line-height:100%;}
+table,td{mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse !important;border-spacing:0;}
+img{border:0;line-height:100%;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;}
+#outlook a{padding:0;}
+.ReadMsgBody{width:100%;}
+.ExternalClass{width:100%;}
+.ExternalClass,.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td,.ExternalClass div{line-height:100%;}
+@media all and (min-width:560px){body{margin-top:30px;}
+}
+/* Rounded corners */
+ @media all and (min-width:560px){.container{border-radius:8px;-webkit-border-radius:8px;-moz-border-radius:8px;-khtml-border-radius:8px;}
+}
+/* Links */
+ a,a:hover{color:#127DB3;}
+.footer a,.footer a:hover{color:#999999;}
+
+  </style>
+  <title>🔒 Reset Your Password</title>
+</head>
+
+<!-- BODY -->
+<body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" marginwidth="0" marginheight="0" width="100%" style="border-collapse: collapse; border-spacing: 0;  padding: 0; width: 100%; height: 100%; -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%;
+	background-color: #ffffff;
+	color: #000000;" bgcolor="#ffffff" text="#000000">
+  <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; width: 100%;" class="background">
+    <tr>
+      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;" bgcolor="#ffffff">
+        <table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+	max-width: 560px;" class="container">
           <tr>
-            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
-            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px 0; width: 580px; Margin: 0 auto;" width="580" valign="top">
-              
-              <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
-                <!-- START CENTERED WHITE CONTAINER -->
-                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Reset your password by clicking the button below.</span>
-                <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background: #ffffff; border-radius: 3px; width: 100%;" width="100%">
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 24px; font-weight: bold; line-height: 130%;padding-top: 25px;color: #000000;font-family: sans-serif;" class="header">
+              <img border="0" vspace="0" hspace="0" src="https://runstream.co/logo-white.png" style="max-width: 250px;" alt="The Idea" title="Runstream" />
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+			padding-top: 25px;" class="line">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+			padding-top: 25px; 
+			color: #000000;
+			font-family: sans-serif;" class="paragraph">
+              Hi ${user.name || ""},<br> We received a request to reset your password for your runstream account. No worries, it happens to the best of us!
+              <br>
+              To reset your password, please click the button below:
+              <br>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; padding-top: 25px;padding-bottom: 5px;" class="button">
+                <table border="0" cellpadding="0" cellspacing="0" align="center" style=" min-width: 120px; border-collapse: collapse; border-spacing: 0; padding: 0;">
                   <tr>
-                    <td style="list-style:10px;height:10px;" ></td>
-                  </tr>
-                  <tr>
-                     <td class="align-center" width="100%" style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;" valign="top" align="center">
-                       <a href="https://runstream.co" style="color: #0d9dda; text-decoration: underline;"><img src="https://runstream.co/logo-white.png" height="80" alt="Runstream 24/7 Streaming Service" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"></a>
-                     </td>
-                   </tr>
-                  <tr>
-                    <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top">
-                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
-                            <p style="text-align: center; font-family: sans-serif; font-size: 17px; font-weight: bold; margin: 0; margin-bottom: 10px;">Forgot your password? </p>
-                            <p style="text-align: center; font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom:20px;">
-                              We received a request to reset the password for the account associated with ${user.email}. If this was you, please click the button below to reset your password.
-                            </p>
-                            
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; box-sizing: border-box; width: 100%;" width="100%">
-                              <tbody>
-                                <tr>
-                                  <td align="center" style="font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;" valign="top">
-                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: auto; width: auto;">
-                                      <tbody>
-                                        <tr>
-                                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; 
-                                          text-align: center; background-color: #ffffff;" valign="top" 
-                                          align="center" bgcolor="#ffffff"> 
-                                          <a href=${resetTokenUrl} target="_blank"  style="border: solid 1px #df3939;border-radius:8px;box-sizing: border-box;cursor: pointer;display: inline-block;font-size: 14px;font-weight: bold;margin: 0;padding: 10px 33px;text-decoration: none;text-transform: capitalize;background-color: #df3939;border-color: #df3939;color: #ffffff;" >Reset Password</a>
-                                       </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-                      </table>
+                    <td align="center" valign="middle" style="border-collapse: collapse;"  >
+                      <a target="_blank" style="padding: 12px 24px; margin: 0; border-collapse: collapse; text-decoration: none; border-spacing: 0; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; -khtml-border-radius: 10px; background: #df3939; text-decoration: none; max-width: 240px;
+                        color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;"  href=${resetTokenUrl}>
+                          Reset Password
+                      </a>
                     </td>
                   </tr>
-                  <tr>
-                    <td style="list-style:30px;height:30px;" ></td>
-                  </tr>
                 </table>
-                <!-- START FOOTER -->
-                <div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;" width="100%">
-                    <tr>
-                      <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #747474; font-size: 11px; text-align: center;" valign="top" align="center">
-                        <a href="https://runstream.co" style="color: #747474; font-size: 14px; font-weight: 300; text-align: center; letter-spacing: -.75px; text-decoration: none;">Powered by runstream.co</a>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
             </td>
-            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+			padding-top: 25px;" class="line">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+			padding-top: 20px;
+			padding-bottom: 25px;
+			color: #000000;
+			font-family: sans-serif;" class="paragraph">
+              If you have any questions or need assistance, feel free to reach out to our support team at <a href="mailto:Support@runstream.co" target="_blank" style=" color: #4b57ff; ">support@runstream.co</a>. We’re here to help!. 
+            </td>
           </tr>
         </table>
-      </body>
-      </html>`;
+        <table border="0" cellpadding="0" cellspacing="0" align="center" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+	max-width: 560px;" class="wrapper">
+          <tr>
+            <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 13px; font-weight: 400; line-height: 150%;
+			padding-top: 20px;
+			padding-bottom: 20px;
+			color: #999999;
+			font-family: sans-serif;" class="footer">
+              For more information <a href="https://runstream.co/contact" target="_blank" style=" color: #999999; ">contact us</a>. Our support
+              team is available to help you 24 hours a day, seven days a week.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
   try {
     const send = await SendEmail({
       email:user.email,
-      subject:"Reset your password.",
+      subject:"🔒 Reset Your Password",
       message
     });
     console.log('send', send);
