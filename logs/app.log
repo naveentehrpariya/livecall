@@ -1048,3 +1048,191 @@
 
 2024-09-19T11:35:37.651Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
 
+2024-09-19T18:30:00.438Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T18:30:00.474Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-19T18:30:00.604Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T18:30:00.933Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-19T18:37:20.353Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-19T18:49:41.815Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:49:41.883Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:49:47.356Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:49:47.397Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:51:13.204Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:51:13.245Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:51:22.119Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:51:22.157Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:53:07.295Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:53:07.344Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:55:33.634Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:55:33.677Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:57:04.635Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T18:57:04.710Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:00:49.868Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:00:49.921Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:02:09.505Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:02:09.547Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:02:11.183Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:02:11.222Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:14.212Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:14.257Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:16.146Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:16.182Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:17.742Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:17.781Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:18.687Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:18.725Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:03:59.232Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:04:22.523Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:04:22.566Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:06:59.547Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:06:59.600Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:07:31.540Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:07:31.576Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:07:36.135Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:07:36.171Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:08:34.211Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:08:34.248Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:08:38.468Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:08:38.508Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:07.832Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:07.883Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:27.704Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:27.744Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:29.617Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:29.675Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:42.006Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:42.237Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:43.801Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:09:43.840Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:10:32.903Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:10:32.947Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:11:01.709Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:11:01.754Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:12:19.367Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:12:19.411Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:12:21.874Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:12:21.912Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:12:42.889Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:12:42.931Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:14:13.985Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:14:25.125Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:14:25.167Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:14:48.473Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:14:48.515Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:15:03.438Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:15:03.481Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:16:52.465Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:16:52.506Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:16:54.033Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:16:54.070Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:17:40.046Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:17:40.089Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:18:24.020Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:18:24.062Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:19:14.060Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:19:14.104Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:19:55.670Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:19:55.715Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:20:31.693Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:20:31.738Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:21:35.675Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:21:35.725Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:22:00.550Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:22:00.591Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-19T19:30:00.155Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-19T19:30:00.199Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-19T19:30:00.489Z [INFO]:"Processed 0 users with expired plans."
+

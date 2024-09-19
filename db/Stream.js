@@ -12,10 +12,7 @@ const schema = new mongoose.Schema({
     audio:String,
     video: String,
     radio: String,
-    status: {
-        type:Number,
-        default:1,
-    },
+    status: { type: String},
     platformtype: String,
     stream_url: String,
     streamkey: String,

@@ -277,17 +277,39 @@ const stopffmpegstream = async (videoid) => {
 }
   
 const stopDbStream = async (videoId) => {
-  const stream = await Stream.findOne({ streamId: videoId });
-  if (!stream){
-    return false
+  try {
+    const stream = await Stream.findOne({ streamId: videoId });
+    if (!stream) {
+      console.log("Stream not found");
+      return false;
+    }
+
+    console.log("Found stream: " + stream);
+    logger(`Database Stopping stream ${videoId}`);
+
+    // Manually update and save
+    stream.status = '0'; // String as per schema
+    stream.endedAt = Date.now();
+    
+    const savedStream = await stream.save(); // Use save() method directly
+    
+    if (!savedStream) {
+      console.log("Stream not saved.");
+      return false;
+    }
+
+    console.log("Updated stream: ", savedStream);
+    deleteFilesStartingWithName(stream.playlistId);
+    
+    return savedStream;
+
+  } catch (error) {
+    console.error("Error saving stream:", error);
+    return false;
   }
-  logger(`Database Stopping stream ${videoId}`);
-  stream.status = 0;
-  stream.endedAt = Date.now();
-  deleteFilesStartingWithName(stream.playlistId);
-  const savedstream = await stream.save();
-  return savedstream;
-}
+};
+
+
 
 const createPlaylist = catchAsync (async (req, res, next) => {
   const playlistId = Date.now().toString();
@@ -594,7 +616,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
       streamkey: req.body.streamKey,
       user: req.user._id,
       status: '1',
-      platformtype : 'rmtp',
+      platformtype : 'rtmp',
       radio : req.body.radio,
       streamId: req.body.streamKey,
       playlistId: req.body.playlistId,
@@ -616,7 +638,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
         res: req.body.resolution, 
         videoID : videoID,
         stream_url : req.body.stream_url,
-        platformtype : 'rmtp'
+        platformtype : 'rtmp'
       }
       await start_ffmpeg(payload);
       res.json({
