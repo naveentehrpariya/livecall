@@ -1236,3 +1236,79 @@
 
 2024-09-19T19:30:00.489Z [INFO]:"Processed 0 users with expired plans."
 
+2024-09-20T05:00:38.018Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:00:38.074Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:03:40.030Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:03:40.115Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:03:42.499Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:03:42.541Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:03:44.040Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:03:44.081Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:04:03.088Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:04:03.135Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:05:27.501Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:05:27.559Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:06:14.844Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:06:14.895Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:07:57.921Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:07:57.975Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:17:50.115Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:17:50.201Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:17:54.375Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:17:54.423Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T05:22:49.735Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ff2"
+
+2024-09-20T05:22:49.785Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ff2"
+
+2024-09-20T05:22:54.937Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ff5"
+
+2024-09-20T05:22:54.975Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ff5"
+
+2024-09-20T05:30:00.713Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-20T05:30:00.727Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-20T07:10:02.878Z [INFO]:"Processed 1 users with expired plans."
+
+2024-09-20T07:10:04.037Z [INFO]:"Processed 1 users with expired plans."
+
+2024-09-20T07:11:00.251Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-20T07:30:00.641Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-20T07:30:00.880Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-20T07:30:01.328Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-20T08:30:00.553Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-20T08:30:00.596Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-20T08:30:00.847Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-20T11:30:00.256Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-20T11:30:00.383Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-20T11:30:00.485Z [INFO]:"Processed 0 users with expired plans."
+

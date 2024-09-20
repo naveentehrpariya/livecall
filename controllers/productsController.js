@@ -67,12 +67,12 @@ const tour_stats = catchAsync ( async (req, res)=>{
     const stats = await Products.aggregate([
         {$match: {price : { $gte:2000}}},
         {$group: {
-                    _id: null,
-                    averagePrice: { $avg: '$price'},
-                    minRating: { $min: '$rating'},
-                    maxRating: { $max: '$rating'},
-                    avarageRating: { $avg: '$rating'},
-            }
+            _id: null,
+            averagePrice: { $avg: '$price'},
+            minRating: { $min: '$rating'},
+            maxRating: { $max: '$rating'},
+            avarageRating: { $avg: '$rating'},
+        }
         }
     ]);
     if(stats){

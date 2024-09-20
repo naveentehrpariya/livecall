@@ -21,6 +21,7 @@ const deleteFilesStartingWithName = require("../utils/deleteFilesStartingWithNam
 const convertImageToVideo = require("../utils/convertImageToVideo");
 const User = require("../db/Users");
 const { youtube } = require("googleapis/build/src/apis/youtube");
+const sendEmail = require("../utils/Email");
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
 
@@ -279,30 +280,23 @@ const stopffmpegstream = async (videoid) => {
 const stopDbStream = async (videoId) => {
   try {
     const stream = await Stream.findOne({ streamId: videoId });
-    if (!stream) {
+    const streamlast = await Stream.findById(stream._id);
+    if (!streamlast) {
       console.log("Stream not found");
       return false;
     }
-
-    console.log("Found stream: " + stream);
+    console.log("Found stream: " + streamlast);
     logger(`Database Stopping stream ${videoId}`);
-
-    // Manually update and save
-    stream.status = '0'; // String as per schema
-    stream.endedAt = Date.now();
-    
-    const savedStream = await stream.save(); // Use save() method directly
-    
+    streamlast.status = '0';
+    streamlast.endedAt = Date.now();
+    const savedStream = await streamlast.save();
     if (!savedStream) {
       console.log("Stream not saved.");
       return false;
     }
-
     console.log("Updated stream: ", savedStream);
-    deleteFilesStartingWithName(stream.playlistId);
-    
+    deleteFilesStartingWithName(streamlast.playlistId);
     return savedStream;
-
   } catch (error) {
     console.error("Error saving stream:", error);
     return false;
@@ -605,6 +599,13 @@ const start_stream = catchAsync(async (req, res, next) => {
 const start_rmtp_stream = catchAsync(async (req, res, next) => {
   try {
     const videoID = req.body.streamKey;
+    const isAlready = await Stream.find({ streamKey: videoID });
+    if(isAlready && isAlready.length > 0){
+      return res.status(400).json({
+        status: false,
+        message: 'Stream already created with this stream key. Please reset your stream key.',
+      });
+    }
     const stream = new Stream({
       title: req.body.title,
       video: JSON.stringify(req.body.videos), 
@@ -764,6 +765,67 @@ const edit_stream = catchAsync(async (req, res, next) => {
   }
 });
 
+const edit_rtmp_stream = catchAsync(async (req, res, next) => {
+  try {
+    const { video, audio,
+      streamId, description, thumbnail, resolution, stream_url, streamKey, title,
+      videos, audios, radio, ordered, type, playlistId,
+      enableMonitorStream, enableDvr, enableContentEncryption, enableEmbed,
+      enableAutoStart, enableAutoStop, broadcastStreamDelayMs
+    } = req.body;
+
+    if (!streamId) {
+      return res.status(404).json({ status: false, message: 'Streamkey is required.' });
+    }
+
+    const userId = req.user._id;
+    const stream = await Stream.findOne({ streamId, user: userId });
+    if (!stream){
+      return res.status(404).json({ status: false, message: 'Stream not found.' });
+    }
+
+    stream.title = title || stream.title;
+    stream.description = description || stream.description;
+    stream.thumbnail = thumbnail || stream.thumbnail;
+    stream.resolution = resolution || stream.resolution;
+    stream.stream_url = stream_url || stream.stream_url;
+    stream.updatedAt = Date.now();
+    stream.video = JSON.stringify(videos) || stream.video;
+    stream.audio = JSON.stringify(audios) || stream.audio;
+    stream.radio = radio || stream.radio;
+    stream.ordered = ordered || stream.ordered;
+    stream.stream_type = type || stream.stream_type;
+    stream.playlistId = playlistId || stream.playlistId;
+    stream.streamkey = streamKey || stream.streamkey;
+    const updatedStream = await stream.save();
+
+    // Restart streaming if necessary
+    stopffmpegstream(streamId);
+    setTimeout(() => {
+      const payload = {
+        videoID : streamId,
+        streamKey : streamKey || req.body.streamKey , 
+        audio : req.body.audio || stream.audio, 
+        video : req.body.video || stream.video, 
+        res: req.body.resolution || stream.resolution, 
+        stream_url : req.body.stream_url || stream.stream_url,
+        platformtype : 'rtmp'
+      }
+      start_ffmpeg(payload);
+    }, 1000);
+
+    res.json({
+      status: true,
+      message: 'Stream updated successfully.',
+      stream: updatedStream,
+    });
+  } catch (err) {
+    console.error(`Stream update error: ${err}`);
+    logger(err);
+    JSONerror(res, err, next);
+  }
+});
+
 const stop_stream = async (req, res, next) => {
   try {
     const streamId  = req.params.streamId;
@@ -899,7 +961,6 @@ const checkStreamStatusAndSubscription = async () => {
   }
 };
 
-
 const force_start_stream = async (req, res, next) => {
   try {
     const { streamKey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
@@ -927,13 +988,14 @@ cron.schedule('0 * * * *', async () => {
   // checkStreamStatusAndSubscription();
 });
 
-
 // Cron job to status any stream has been ended from youtube but on our system has status of running.
 // Job will stop the ffmpeg process and make stream status ended
 cron.schedule('0 */3 * * *', async () => {
   console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
   logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  // checkStreamStatus();
+  if(process.env.CHECK_STREAM_STATUS === 'production') {
+    checkStreamStatus();
+  }
 });
 
 
@@ -943,8 +1005,8 @@ cron.schedule('0 * * * *', async () => {
   const currentDate = new Date();
   try {
       const users = await User.find({
-          plan_end_on: { $lt: currentDate },
-          plan: { $ne: null }
+        plan_end_on: { $lt: currentDate },
+        plan: { $ne: null }
       }).populate('plan');
       const updates = users.map(async (user) => {
           const userActiveStreams = await Stream.find({ user: user._id, status: 1 });
@@ -1125,15 +1187,15 @@ cron.schedule('0 * * * *', async () => {
             </table>
           </body>
           </html>`;
-          await SendEmail({
+          await sendEmail({
             email:user.email,
             subject:"🚨 Your Plan Has Expired",
             message
           });
-
-          user.plan = null; // Remove plan ID
-          user.plan_end_on = null; 
-          user.plan_months = null;
+          logger(`Processed ${user.email} with expired plans. and mail sent`);
+          user.plan = '';
+          user.plan_end_on = ''; 
+          user.plan_months = '';
           await user.save();
       });
       await Promise.all(updates);
@@ -1144,5 +1206,5 @@ cron.schedule('0 * * * *', async () => {
   }
 });
 
-module.exports = { start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
+module.exports = { edit_rtmp_stream, start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
 

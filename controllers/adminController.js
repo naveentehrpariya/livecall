@@ -90,8 +90,8 @@ const earnings = catchAsync(async (req, res) => {
 
 const dashboard = catchAsync(async (req, res) => {
   const totalUsers = await User.countDocuments();
-   const activeUsers = await User.countDocuments({ status: 'active' });
-   const inactiveUsers = await User.countDocuments({ status: 'inactive' });
+   const activeUsers = await User.countDocuments({ status: 'active', role:{ $ne: '1' }});
+   const inactiveUsers = await User.countDocuments({ status: 'inactive', role:{ $ne: '1' }});
    const totalStreams = await Stream.countDocuments();
    const totalliveStreams = await Stream.countDocuments({ status: 1 });
    const totalInactiveStreams = await Stream.countDocuments({ status: 0 });
@@ -159,7 +159,7 @@ const users = catchAsync(async (req, res) => {
   
   // Query the users with the requested status
   let Query = new APIFeatures(
-    User.find({ status: status }).populate("plan"),
+    User.find({ status: status, role:{ $ne: '1' }}).populate("plan"),
     req.query
   ).sort();
 
@@ -291,8 +291,6 @@ const allinquries = catchAsync(async (req, res) => {
     message: users.length ? "All Inquiries retrieved." : "No Inquiries found !!"
   });
 });
-
-
 
 const readLogs = catchAsync(async (req, res) => {
   const logFile = path.join(__dirname, '..', 'logs', 'app.log');

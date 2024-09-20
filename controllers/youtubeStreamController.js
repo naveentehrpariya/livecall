@@ -7,7 +7,7 @@ const checkUserStreamLimit = catchAsync ( async (req, res, next) => {
   const user = req.user._id;
   const userStreams = await Stream.find({ user: user, status: 1 }).populate('user');
   console.log("userStreams",userStreams)
-  const userSubscription = await Subscription.findOne({ user: user, status: 'paid' }).populate('plan');
+  const userSubscription = await Subscription.findOne({ user: user, status: 'active' }).populate('plan');
   if (userSubscription && userSubscription._id) {
       if ((userStreams.length+1) > userSubscription.plan.allowed_streams) {
         return res.json({

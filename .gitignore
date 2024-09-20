@@ -4,3 +4,4 @@ config.env
 .env
 uploads
 client_secret.json
+client_secret - Copy.json
