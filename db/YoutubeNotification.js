@@ -12,7 +12,7 @@ const channelSchema = new mongoose.Schema({
   videoId: {
     type: String,
   },
-  streamKey: {
+  streamkey: {
     type: String,
     required: true,
   },

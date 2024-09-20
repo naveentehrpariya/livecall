@@ -1312,3 +1312,311 @@
 
 2024-09-20T11:30:00.485Z [INFO]:"Processed 0 users with expired plans."
 
+2024-09-20T16:25:39.616Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-20T16:28:10.074Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T16:28:11.079Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-20T16:29:58.103Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T16:29:58.152Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T16:30:00.908Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-20T16:30:00.915Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-20T16:30:00.944Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-20T16:33:03.438Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-20T16:34:29.975Z [INFO]:"Ffmpeg stream stopped p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T16:34:30.248Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-09-20T16:34:30.249Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T16:34:30.986Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-20T16:34:32.329Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:34:38.433Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:34:44.452Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:34:50.460Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:34:56.416Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:03.623Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:09.603Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:15.490Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:21.590Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:27.483Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:33.454Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:39.482Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:45.397Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:51.419Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:35:57.354Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:03.370Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:09.305Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:15.254Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:21.277Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:27.171Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:33.076Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:38.987Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:44.944Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:50.840Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:36:51.445Z [INFO]:"Database Stopping stream p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T16:36:51.494Z [INFO]:"Ffmpeg stream stopped p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-20T16:36:56.792Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:02.815Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:08.771Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:14.695Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:20.601Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:26.555Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:32.565Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:38.472Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:44.489Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:50.434Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:37:56.313Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:02.252Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:08.244Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:14.219Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:20.137Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:26.116Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:32.095Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:38.047Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:44.041Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:49.979Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:38:55.889Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:01.911Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:07.891Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:13.782Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:19.662Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:25.635Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:31.509Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:37.406Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:43.367Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:49.365Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:39:55.347Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:01.453Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:07.356Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:13.259Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:19.232Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:25.116Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:31.031Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:36.892Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:42.899Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:48.840Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:40:55.089Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:01.113Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:07.028Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:13.121Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:19.022Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:24.958Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:30.884Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:36.790Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:42.646Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:48.537Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:41:54.435Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:00.334Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:06.502Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:12.417Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:18.407Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:24.337Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:30.581Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:37.022Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:42.934Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:48.861Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:42:54.861Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:00.783Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:06.889Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:12.935Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:18.862Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:24.848Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:30.780Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:36.725Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:42.673Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:48.577Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:43:54.544Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:00.471Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:06.379Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:12.529Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:18.590Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:24.496Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:30.458Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:36.399Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:42.308Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:48.308Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:44:54.193Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:00.173Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:06.090Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:12.034Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:18.016Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:23.965Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:29.820Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:35.705Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:41.670Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:47.596Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:53.706Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:45:59.570Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:05.615Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:11.523Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:17.465Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:23.380Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:29.298Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:35.214Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:41.138Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:47.142Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:53.245Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:46:59.422Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:47:05.462Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:47:11.449Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-09-20T16:48:10.997Z [INFO]:{"config":{"retry":true,"retryConfig":{"httpMethodsToRetry":["GET","PUT","POST","HEAD","OPTIONS","DELETE"],"currentRetryAttempt":0,"retry":3,"noResponseRetries":2,"statusCodesToRetry":[[100,199],[408,408],[429,429],[500,599]]},"method":"POST","url":"https://oauth2.googleapis.com/token","data":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":"google-api-nodejs-client/9.10.0","x-goog-api-client":"gl-node/18.16.1"},"body":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","responseType":"unknown"},"response":{"config":{"retry":true,"retryConfig":{"httpMethodsToRetry":["GET","PUT","POST","HEAD","OPTIONS","DELETE"]},"method":"POST","url":"https://oauth2.googleapis.com/token","data":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":"google-api-nodejs-client/9.10.0","x-goog-api-client":"gl-node/18.16.1"},"body":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","responseType":"unknown"},"data":{"error":"unauthorized_client","error_description":"Unauthorized"},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"no-cache, no-store, max-age=0, must-revalidate","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=utf-8","date":"Fri, 20 Sep 2024 16:48:10 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":401,"statusText":"Unauthorized","request":{"responseURL":"https://oauth2.googleapis.com/token"}},"status":401}
+
+2024-09-20T16:50:49.481Z [INFO]:{"config":{"retry":true,"retryConfig":{"httpMethodsToRetry":["GET","PUT","POST","HEAD","OPTIONS","DELETE"],"currentRetryAttempt":0,"retry":3,"noResponseRetries":2,"statusCodesToRetry":[[100,199],[408,408],[429,429],[500,599]]},"method":"POST","url":"https://oauth2.googleapis.com/token","data":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":"google-api-nodejs-client/9.10.0","x-goog-api-client":"gl-node/18.16.1"},"body":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","responseType":"unknown"},"response":{"config":{"retry":true,"retryConfig":{"httpMethodsToRetry":["GET","PUT","POST","HEAD","OPTIONS","DELETE"]},"method":"POST","url":"https://oauth2.googleapis.com/token","data":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","headers":{"Content-Type":"application/x-www-form-urlencoded","User-Agent":"google-api-nodejs-client/9.10.0","x-goog-api-client":"gl-node/18.16.1"},"body":"<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.","responseType":"unknown"},"data":{"error":"unauthorized_client","error_description":"Unauthorized"},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"no-cache, no-store, max-age=0, must-revalidate","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=utf-8","date":"Fri, 20 Sep 2024 16:50:49 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":401,"statusText":"Unauthorized","request":{"responseURL":"https://oauth2.googleapis.com/token"}},"status":401}
+
+2024-09-20T16:51:50.880Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"TEST STREAM YOUTUBE","description":"TEST STREMm","scheduledStartTime":"2024-09-20T16:52:03.819Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zcZgVu9QmemhicLJxB6_hUhLud0uKAHOT2iH_pzTzlU8RDJBbto0nDfg0NSljZP_ET-ffLreNpWGLRojHwOd84Lprz2Anb0Hvu_sb2K-DrDUF7PlrT02ANh80QUJm4hZQFA9rjAx8nactl5dTaiPwVE8C3z7WCQkioaCgYKAR4SARESFQHGX2MibeWToTzvvVDrw4nxX_vfIA0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"TEST STREAM YOUTUBE\",\"description\":\"TEST STREMm\",\"scheduledStartTime\":\"2024-09-20T16:52:03.819Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"9fT1u5uO0RgcsgZIRhjgAlaasr0","id":"upzyvvP1nBg","snippet":{"publishedAt":"2024-09-20T16:51:50Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"TEST STREAM YOUTUBE","description":"TEST STREMm","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/upzyvvP1nBg/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/upzyvvP1nBg/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/upzyvvP1nBg/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-09-20T16:52:03Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILdXB6eXZ2UDFuQmc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/upzyvvP1nBg?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Fri, 20 Sep 2024 16:51:50 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-09-20T16:51:55.181Z [INFO]:"stream created "
+
+2024-09-20T16:51:59.295Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"9fT1u5uO0RgcsgZIRhjgAlaasr0","id":"upzyvvP1nBg","snippet":{"publishedAt":"2024-09-20T16:51:50Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"TEST STREAM YOUTUBE","description":"TEST STREMm","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/upzyvvP1nBg/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/upzyvvP1nBg/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/upzyvvP1nBg/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-09-20T16:52:03Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILdXB6eXZ2UDFuQmc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/upzyvvP1nBg?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"5-pkW9sl8iOMaGNKrWgeERm3jhE","id":"dGq1qjb5R27ENhSCBj20gw1726851114533208","snippet":{"publishedAt":"2024-09-20T16:51:54Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"TEST STREAM YOUTUBE","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"7ds2-x85t-dfzd-54ru-5yyx","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"5RY1nZ4EVP9QjdrVT5w-hQQvPzM","id":"upzyvvP1nBg","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1726851114533208","boundStreamLastUpdateTimeMs":"2024-09-20T16:51:54Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/upzyvvP1nBg?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"upzyvvP1nBg"}
+
+2024-09-20T16:52:00.127Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-09-20T16:52:05.029Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-20T16:53:23.919Z [INFO]:"Database Stopping stream upzyvvP1nBg"
+
+2024-09-20T16:53:23.970Z [INFO]:"Ffmpeg stream stopped upzyvvP1nBg"
+
+2024-09-20T16:53:24.064Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-09-20T16:53:24.064Z [INFO]:"there is no any ffmpeg proccess running - upzyvvP1nBg"
+

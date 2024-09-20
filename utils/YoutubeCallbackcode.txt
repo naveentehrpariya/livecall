@@ -1,5 +1,5 @@
 // Subscribe to notifications
-const susbcribe = await SubscribeYouTubeNotifications(userId, channel.id, streamKey );
+const susbcribe = await SubscribeYouTubeNotifications(userId, channel.id, streamkey );
 console.log("notifications subscribed ",susbcribe);
 
 const parseXML = (xml) => {
@@ -21,13 +21,13 @@ const parseXML = (xml) => {
    }
  
    console.log("Callback called", req.params);
-   const streamKey = req.params.streamKey;
-   const subscription = await YoutubeNotification.findOne({ streamKey });
+   const streamkey = req.params.streamkey;
+   const subscription = await YoutubeNotification.findOne({ streamkey });
  
    if (!subscription) {
      return res.status(404).json({
        status: false,
-       message: `No YouTube subscription found for this stream key ${streamKey}`
+       message: `No YouTube subscription found for this stream key ${streamkey}`
      });
    }
  
@@ -63,8 +63,8 @@ const parseXML = (xml) => {
          console.log(`Live Broadcast Event Type: ${eventType}`);
          if (eventType === 'complete') {
              console.log('Live stream has ended');
-             stopffmpegstream(streamKey ,videoId);
-             stopDbStream(streamKey ,videoId);
+             stopffmpegstream(streamkey ,videoId);
+             stopDbStream(streamkey ,videoId);
          } else if (eventType === 'live') {
            console.log('Live stream has started');
          }
@@ -72,8 +72,8 @@ const parseXML = (xml) => {
        
      } else if (parsedBody.feed['at:deleted-entry']) {
        console.log("Video deleted:", parsedBody.feed['at:deleted-entry']);
-       stopffmpegstream(streamKey);
-       stopDbStream(streamKey);
+       stopffmpegstream(streamkey);
+       stopDbStream(streamkey);
      } else {
        console.log("Unknown notification type received:", parsedBody);
      }
@@ -96,9 +96,9 @@ const generateSecret = () => {
    return crypto.randomBytes(32).toString('hex');
 };
 
-const SubscribeYouTubeNotifications = async (userId, channelId, streamKey) => {
+const SubscribeYouTubeNotifications = async (userId, channelId, streamkey) => {
    try {
-      const isAlready = await YoutubeNotification.findOne({ streamKey });
+      const isAlready = await YoutubeNotification.findOne({ streamkey });
       if(isAlready){
          return {
             success: false,
@@ -108,9 +108,9 @@ const SubscribeYouTubeNotifications = async (userId, channelId, streamKey) => {
      else {
          const hubUrl = 'https://pubsubhubbub.appspot.com/subscribe';
          const topicUrl = `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`;
-         // const callbackUrl = `https://serverrai.runstream.co/notification/youtube/callback/${streamKey}`;
-         // const callbackUrl = `https://10be-2402-a00-1b1-1ae4-448f-6de0-bb9e-f09b.ngrok-free.app/notification/youtube/callback/${streamKey}`;
-         const callbackUrl = `https://932d-122-180-247-198.ngrok-free.app/notification/youtube/callback/${streamKey}`;
+         // const callbackUrl = `https://serverrai.runstream.co/notification/youtube/callback/${streamkey}`;
+         // const callbackUrl = `https://10be-2402-a00-1b1-1ae4-448f-6de0-bb9e-f09b.ngrok-free.app/notification/youtube/callback/${streamkey}`;
+         const callbackUrl = `https://932d-122-180-247-198.ngrok-free.app/notification/youtube/callback/${streamkey}`;
          const secret = generateSecret();
    
          const response = await axios.post(hubUrl, null, {
@@ -129,7 +129,7 @@ const SubscribeYouTubeNotifications = async (userId, channelId, streamKey) => {
             channelId,
             callbackUrl,
             secret,
-            streamKey
+            streamkey
          });
          const saved = await subscription.save();
          if(!saved){

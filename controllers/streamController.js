@@ -382,8 +382,8 @@ const createPlaylist = catchAsync (async (req, res, next) => {
 });
 
 async function start_ffmpeg(data) {
-  const { streamKey, audio, video, res, videoID, platformtype, stream_url } = data;
-  const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamKey}` : `${stream_url}/${streamKey}`;
+  const { streamkey, audio, video, res, videoID, platformtype, stream_url } = data;
+  const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamkey}` : `${stream_url}/${streamkey}`;
   
   console.log("ffmpeg data", data);
   logger(`Starting ffmpeg stream ${data}`);
@@ -410,7 +410,7 @@ async function start_ffmpeg(data) {
       '-avoid_negative_ts', 'make_zero',
       '-strict', '-2',
       '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
+      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
     ];
 
     if (audio && audio !== null && audio !== '') {
@@ -471,7 +471,7 @@ async function start_ffmpeg(data) {
     }
 
     const startFFmpegProcess = async () => {
-      if (!streamKey) {
+      if (!streamkey) {
         throw new Error('Required parameters missing');
       }
       stopFlags[videoID] = false; // Reset stop flag before starting
@@ -518,7 +518,7 @@ const start_stream = catchAsync(async (req, res, next) => {
     
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description);
-    const streamKey = streamData.stream.cdn.ingestionInfo.streamName;
+    const streamkey = streamData.stream.cdn.ingestionInfo.streamName;
     if (thumbnail) {
       const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
       const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
@@ -548,7 +548,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
       platformtype : req.body.platformtype || 'youtube',
-      streamkey: streamKey,
+      streamkey: streamkey,
       user: req.user._id,
       status: '1',
       radio : req.body.radio,
@@ -567,7 +567,7 @@ const start_stream = catchAsync(async (req, res, next) => {
         return res.status(400).send('Stream already active.');
       } 
       const payload = {
-        streamKey : streamKey, 
+        streamkey : streamkey, 
         audio : audio, 
         video : video, 
         res: req.body.resolution, 
@@ -598,10 +598,10 @@ const start_stream = catchAsync(async (req, res, next) => {
 
 const start_rmtp_stream = catchAsync(async (req, res, next) => {
   try {
-    const videoID = req.body.streamKey;
-    const isAlready = await Stream.find({ streamKey: videoID });
+    const videoID = req.body.streamkey;
+    const isAlready = await Stream.find({ streamkey: videoID });
     if(isAlready && isAlready.length > 0){
-      return res.status(400).json({
+      return res.status(200).json({
         status: false,
         message: 'Stream already created with this stream key. Please reset your stream key.',
       });
@@ -614,12 +614,12 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
-      streamkey: req.body.streamKey,
+      streamkey: req.body.streamkey,
       user: req.user._id,
       status: '1',
       platformtype : 'rtmp',
       radio : req.body.radio,
-      streamId: req.body.streamKey,
+      streamId: req.body.streamkey,
       playlistId: req.body.playlistId,
       stream_type:req.body.type,
       ordered:req.body.ordered,
@@ -633,7 +633,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
         return res.status(400).send('Stream already active.');
       } 
       const payload = {
-        streamKey : req.body.streamKey, 
+        streamkey : req.body.streamkey, 
         audio : req.body.audio, 
         video : req.body.video, 
         res: req.body.resolution, 
@@ -646,7 +646,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
         status: true,
         message: 'Stream started.',
         stream: savedStream,
-        streamUrl: `${req.body.stream_url}/${req.body.streamKey}`,
+        streamUrl: `${req.body.stream_url}/${req.body.streamkey}`,
       });
     } else {
       res.json({
@@ -744,7 +744,7 @@ const edit_stream = catchAsync(async (req, res, next) => {
     stopffmpegstream(streamId);
     setTimeout(() => {
       const payload = {
-        streamKey : stream.streamkey, 
+        streamkey : stream.streamkey, 
         audio : audio, 
         video : video, 
         res: req.body.resolution, 
@@ -768,14 +768,14 @@ const edit_stream = catchAsync(async (req, res, next) => {
 const edit_rtmp_stream = catchAsync(async (req, res, next) => {
   try {
     const { video, audio,
-      streamId, description, thumbnail, resolution, stream_url, streamKey, title,
+      streamId, description, thumbnail, resolution, stream_url, streamkey, title,
       videos, audios, radio, ordered, type, playlistId,
       enableMonitorStream, enableDvr, enableContentEncryption, enableEmbed,
       enableAutoStart, enableAutoStop, broadcastStreamDelayMs
     } = req.body;
 
     if (!streamId) {
-      return res.status(404).json({ status: false, message: 'Streamkey is required.' });
+      return res.status(404).json({ status: false, message: 'streamkey is required.' });
     }
 
     const userId = req.user._id;
@@ -796,7 +796,7 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
     stream.ordered = ordered || stream.ordered;
     stream.stream_type = type || stream.stream_type;
     stream.playlistId = playlistId || stream.playlistId;
-    stream.streamkey = streamKey || stream.streamkey;
+    stream.streamkey = streamkey || stream.streamkey;
     const updatedStream = await stream.save();
 
     // Restart streaming if necessary
@@ -804,7 +804,7 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
     setTimeout(() => {
       const payload = {
         videoID : streamId,
-        streamKey : streamKey || req.body.streamKey , 
+        streamkey : streamkey || req.body.streamkey , 
         audio : req.body.audio || stream.audio, 
         video : req.body.video || stream.video, 
         res: req.body.resolution || stream.resolution, 
@@ -963,13 +963,13 @@ const checkStreamStatusAndSubscription = async () => {
 
 const force_start_stream = async (req, res, next) => {
   try {
-    const { streamKey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
+    const { streamkey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
     const downloadsDir = path.join(__dirname, '..', 'downloads');
     const mergedAudioPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-merged.mp3`);
     const imageToVideoPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-image-to-video.mp4`);
     
     const payload = {
-      streamKey : 'kxfb-udcp-wjrb-pp0g-e7j6', 
+      streamkey : 'kxfb-udcp-wjrb-pp0g-e7j6', 
       audio : "/Users/naveentehrpariya/Work/upstream/livecall/downloads/1719331616657-merged.mp3", 
       video : 'https://runstream.b-cdn.net/1719331574146-6727e20eeb3bc0cf5f44fce044a733a4-doctor-video.mp4', 
       res: resolution || "1080p", 
