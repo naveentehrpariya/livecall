@@ -1,3 +1,5 @@
+const deleteFilesStartingWithName = require("../utils/deleteFilesStartingWithName");
+const logger = require("../utils/logger");
 const Files = require("../db/Files");
 const User = require("../db/Users");
 const APIFeatures  = require("../utils/APIFeatures");
@@ -5,6 +7,9 @@ const catchAsync  = require("../utils/catchAsync");
 const handleFileUpload = require('../utils/file-upload-util');
 const B2 = require('backblaze-b2');
 const fs = require('fs');
+const cron = require('node-cron');
+
+const Stream = require("../db/Stream");
 const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
@@ -84,15 +89,14 @@ const deleteMedia = async (req, res) => {
     }).catch(error => {
       console.error('Error deleting file:', error);
     });
- 
     file.deletedAt = Date.now();
     await file.save();
       res.json({
         status: true,
-        info:info,
         message: "File deleted successfully"
       }); 
   } catch(err){ 
+    console.log("err", err)
     res.json({
       status: false,
       message: "Unable to remove file at this moment.",
@@ -203,4 +207,47 @@ const checkUploadLimit = catchAsync ( async (req, res, next) => {
 });
 
 
-module.exports = { checkUploadLimit, totalFileUploaded, uploadMedia, myMedia, deleteMedia } 
+// Function to get streams ended and updated in the last 48 hours
+const getRecentEndedStreams = async () => {
+    try {
+        const now = new Date();
+        const fortyEightHoursAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000); // 48 hours ago
+        const streams = await Stream.find({
+            endedAt: { $exists: true },
+            updatedAt: { $gte: fortyEightHoursAgo }
+        });
+        streams.forEach(stream => {
+            logger(`Stream ${stream.streamId} has ended and and all files with this playlist id has been removed ${stream.playlistId}.`);
+            deleteFilesStartingWithName(stream.playlistId);
+        });
+    } catch (error) {
+        console.error('Error fetching streams:', error);
+    }
+};
+
+ 
+const restStreamLimit = catchAsync(async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('plan');
+    const totallivestreams = await Stream.find({user : req.user._id, status: '1'}).count();
+    res.status(200).json({
+      status : true,
+      limit : `${user?.plan?.allowed_streams}/${totallivestreams} Streams available` ,
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status : false,
+      error : error,
+      message : error.message || "Something went wrong",
+     });
+  }
+});
+
+
+// REMOVE ALL UNWANTED FILES FROM SYSTEM
+cron.schedule('0 * * * *', async () => {
+  await getRecentEndedStreams();
+});
+
+
+module.exports = { restStreamLimit, checkUploadLimit, totalFileUploaded, uploadMedia, myMedia, deleteMedia } 

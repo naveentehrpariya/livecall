@@ -11,7 +11,7 @@ router.route('/force-create-stream').post(validateToken, force_start_stream);
 
 router.route('/create-stream').post(validateToken, start_stream);
 
-router.route('/create-rmtp-stream').post(validateToken, start_rmtp_stream);
+router.route('/create-rtmp-stream').post(validateToken, start_rmtp_stream);
 
 router.route('/kill-stream/:streamId').get(validateToken, stop_stream); 
 

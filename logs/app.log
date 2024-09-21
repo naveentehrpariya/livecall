@@ -1620,3 +1620,111 @@
 
 2024-09-20T16:53:24.064Z [INFO]:"there is no any ffmpeg proccess running - upzyvvP1nBg"
 
+2024-09-21T06:30:00.259Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-21T06:30:00.264Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-21T06:30:00.275Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-21T07:30:00.559Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-21T07:30:01.280Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-21T07:53:45.300Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T07:58:59.176Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T08:30:00.228Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-21T08:30:00.326Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-21T08:30:00.583Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-21T08:51:41.278Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:01:36.386Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:03:32.732Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:03:58.985Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:05:14.129Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:07:17.712Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:08:19.243Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:17:25.411Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T09:30:00.063Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-21T09:30:00.068Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-21T09:30:00.087Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-21T09:30:00.363Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-21T10:30:00.306Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-21T10:30:00.359Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-21T10:30:00.385Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-21T10:37:18.119Z [INFO]:{}
+
+2024-09-21T10:38:31.917Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T10:38:44.098Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T10:41:09.496Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T10:43:31.023Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T10:43:38.212Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T10:45:41.533Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T10:50:52.227Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T11:05:42.154Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T11:06:39.948Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T11:11:25.481Z [INFO]:"there is no any ffmpeg proccess running - p7m0-bxyj-msrj-8h2f-5ffb"
+
+2024-09-21T11:30:00.805Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-21T11:30:00.914Z [INFO]:"Running checkPendingSubscriptions cron job"
+
+2024-09-21T11:30:01.158Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-21T12:25:00.235Z [INFO]:"Stream p7m0-bxyj-msrj-8h2f-5ffb has ended and and all files with this playlist id has been removed 1726916965318."
+
+2024-09-21T12:25:00.238Z [INFO]:"Stream upzyvvP1nBg has ended and and all files with this playlist id has been removed 1726851101117."
+
+2024-09-21T12:25:00.238Z [INFO]:"Stream jp14-bdjt-ypqy-vxht-bt1h has ended and and all files with this playlist id has been removed 1726853516474."
+
+2024-09-21T12:25:00.239Z [INFO]:"Stream 4bj3-fbpj-yr7c-y2bw-ab3a has ended and and all files with this playlist id has been removed 1726917346176."
+
+2024-09-21T12:26:00.774Z [INFO]:"Stream p7m0-bxyj-msrj-8h2f-5ffb has ended and and all files with this playlist id has been removed 1726916965318."
+
+2024-09-21T12:26:00.775Z [INFO]:"Stream upzyvvP1nBg has ended and and all files with this playlist id has been removed 1726851101117."
+
+2024-09-21T12:26:00.776Z [INFO]:"Stream jp14-bdjt-ypqy-vxht-bt1h has ended and and all files with this playlist id has been removed 1726853516474."
+
+2024-09-21T12:26:00.777Z [INFO]:"Stream 4bj3-fbpj-yr7c-y2bw-ab3a has ended and and all files with this playlist id has been removed 1726917346176."
+
+2024-09-21T12:30:00.376Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-21T12:30:00.535Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-21T12:30:00.749Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-21T12:30:00.814Z [INFO]:"Stream p7m0-bxyj-msrj-8h2f-5ffb has ended and and all files with this playlist id has been removed 1726916965318."
+
+2024-09-21T12:30:00.815Z [INFO]:"Stream upzyvvP1nBg has ended and and all files with this playlist id has been removed 1726851101117."
+
+2024-09-21T12:30:00.816Z [INFO]:"Stream jp14-bdjt-ypqy-vxht-bt1h has ended and and all files with this playlist id has been removed 1726853516474."
+
+2024-09-21T12:30:00.817Z [INFO]:"Stream 4bj3-fbpj-yr7c-y2bw-ab3a has ended and and all files with this playlist id has been removed 1726917346176."
+

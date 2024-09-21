@@ -3,7 +3,6 @@ const path = require('path');
 const { exec } = require('child_process');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
-const deleteFilesStartingWithName = require('./deleteFilesStartingWithName');
 const downloadVideo = require('./downloadVideo');
 ffmpeg.setFfmpegPath(ffmpegPath);
  
@@ -50,7 +49,6 @@ function generateVideoList(videoPaths, listPath) {
 
 async function createHLSPlaylist(videoUrls, id) {
     const downloadDir = path.join(__dirname, '..', 'downloads');
-    await deleteFilesStartingWithName(downloadDir,id);
     const listPath = path.join(downloadDir, `${id}-videolist.txt`);
     const outputPath = path.join(downloadDir, `${id}-playlist.m3u8`);
     try {

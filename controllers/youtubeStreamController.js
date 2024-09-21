@@ -53,7 +53,7 @@ const active_stream_lists = catchAsync ( async (req, res)=>{
 
 const streamDetails = catchAsync ( async (req, res)=>{
   const streamId  = req.params.streamId;
-  const record = await Stream.findOne({streamId});
+  const record = await Stream.findById(streamId);
   if (record) {
     res.json({
       status : true,

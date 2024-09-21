@@ -4,6 +4,7 @@ const Pricing = require("../db/Pricing");
 const Subscription = require("../db/Subscription");
 const User = require("../db/Users");
 const logger = require("../utils/logger");
+const { Stream } = require('winston/lib/winston/transports');
 const domainURL = process.env.DOMAIN_URL;
 
 exports.create_pricing_plan = catchAsync ( async (req, res)=>{
@@ -208,7 +209,7 @@ exports.my_subscriptions = catchAsync ( async (req, res)=>{
 
 exports.cancelSubscription = catchAsync(async (req, res) => {
   try {
-    const mysub = await Subscription.findOne({status : "paid"});
+    const mysub = await Subscription.findOne({status : "active"});
     if(!mysub){
       res.json({
         status:false,
@@ -230,8 +231,7 @@ exports.cancelSubscription = catchAsync(async (req, res) => {
      });
   }
 });
- 
-cron.schedule('0 * * * *', () => {
-  logger('Running checkPendingSubscriptions cron job');
-});
+
+
+
  
