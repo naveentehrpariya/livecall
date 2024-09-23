@@ -192,74 +192,82 @@ const downloadThumbnail = async (url, dest) => {
 };
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-const createAndBindLiveBroadcast = async (youtube, title, description) => {
-  const scheduledStartTime = new Date(Date.now() + 15000).toISOString();
-  console.log(`scheduledStartTime `, scheduledStartTime);
-  const broadcastResponse = await youtube.liveBroadcasts.insert({
-    part: 'snippet,status,contentDetails',
-    requestBody: {
-      snippet: {
-        title: title,
-        description: description,
-        scheduledStartTime: scheduledStartTime,
-      },
-      status: {
-        privacyStatus: 'public',
-      },
-      contentDetails: {
-        monitorStream: {
-          enableMonitorStream: true,
+const createAndBindLiveBroadcast = async (youtube, title, description, res) => {
+  try{
+    const scheduledStartTime = new Date(Date.now() + 15000).toISOString();
+    console.log(`scheduledStartTime `, scheduledStartTime);
+    const broadcastResponse = await youtube.liveBroadcasts.insert({
+      part: 'snippet,status,contentDetails',
+      requestBody: {
+        snippet: {
+          title: title,
+          description: description,
+          scheduledStartTime: scheduledStartTime,
         },
-        enableAutoStart: true,
-        enableAutoStop: true,
+        status: {
+          privacyStatus: 'public',
+        },
+        contentDetails: {
+          monitorStream: {
+            enableMonitorStream: true,
+          },
+          enableAutoStart: true,
+          enableAutoStop: true,
+        },
       },
-    },
-  });
-
-  console.log(`broadcastResponse `, broadcastResponse);
-  logger(broadcastResponse);
-  const broadcastId = broadcastResponse.data.id;
+    });
   
-  // Step 2: Introduce delay before next API call
-  await delay(3000); 
-
-  // Step 2: Create the live stream
-  const streamResponse = await youtube.liveStreams.insert({
-    part: 'snippet,cdn',
-    requestBody: {
-      snippet: {
-        title: title,
+    console.log(`broadcastResponse `, broadcastResponse);
+    logger(broadcastResponse);
+    const broadcastId = broadcastResponse.data.id;
+    
+    // Step 2: Introduce delay before next API call
+    await delay(3000); 
+  
+    // Step 2: Create the live stream
+    const streamResponse = await youtube.liveStreams.insert({
+      part: 'snippet,cdn',
+      requestBody: {
+        snippet: {
+          title: title,
+        },
+        cdn: {
+          ingestionType: 'rtmp',
+          resolution: '1080p',
+          frameRate: '30fps',
+        },
       },
-      cdn: {
-        ingestionType: 'rtmp',
-        resolution: '1080p',
-        frameRate: '30fps',
-      },
-    },
-  });
-  const streamId = streamResponse.data.id;
-  console.log(`stream created `, streamId);
-  logger(`stream created `, streamId);
-  await delay(3000);
-  const bindResponse = await youtube.liveBroadcasts.bind({
-    part: 'id,contentDetails',
-    id: broadcastId,
-    streamId: streamId,
-  });
-  console.log(`stream broadcast or live stream created `, {
-    broadcast: broadcastResponse.data,
-    stream: streamResponse.data,
-    bind: bindResponse.data,
-    broadcastId: broadcastId
-  });
-  const result = {
-    broadcast: broadcastResponse.data,
-    stream: streamResponse.data,
-    bind: bindResponse.data,
-    broadcastId: broadcastId
+    });
+    const streamId = streamResponse.data.id;
+    console.log(`stream created `, streamId);
+    logger(`stream created `, streamId);
+    await delay(3000);
+    const bindResponse = await youtube.liveBroadcasts.bind({
+      part: 'id,contentDetails',
+      id: broadcastId,
+      streamId: streamId,
+    });
+    console.log(`stream broadcast or live stream created `, {
+      broadcast: broadcastResponse.data,
+      stream: streamResponse.data,
+      bind: bindResponse.data,
+      broadcastId: broadcastId
+    });
+    const result = {
+      broadcast: broadcastResponse.data,
+      stream: streamResponse.data,
+      bind: bindResponse.data,
+      broadcastId: broadcastId
+    }
+    logger(result);
+    return result ;
+  } catch(err){
+    res.json({
+      status:false,
+      message: "Your youtube token has been expired please relink youtube account.",
+      error: err  
+    })
   }
-  logger(result);
-  return result ;
 };
 
 let activeStreams = {};
@@ -382,8 +390,8 @@ const createPlaylist = catchAsync (async (req, res, next) => {
 });
 
 async function start_ffmpeg(data) {
-  const { streamKey, audio, video, res, videoID, platformtype, stream_url } = data;
-  const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamKey}` : `${stream_url}/${streamKey}`;
+  const { streamkey, audio, video, res, videoID, platformtype, stream_url } = data;
+  const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamkey}` : `${stream_url}/${streamkey}`;
   
   console.log("ffmpeg data", data);
   logger(`Starting ffmpeg stream ${data}`);
@@ -410,7 +418,7 @@ async function start_ffmpeg(data) {
       '-avoid_negative_ts', 'make_zero',
       '-strict', '-2',
       '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamKey}`
+      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
     ];
 
     if (audio && audio !== null && audio !== '') {
@@ -471,7 +479,7 @@ async function start_ffmpeg(data) {
     }
 
     const startFFmpegProcess = async () => {
-      if (!streamKey) {
+      if (!streamkey) {
         throw new Error('Required parameters missing');
       }
       stopFlags[videoID] = false; // Reset stop flag before starting
@@ -517,8 +525,8 @@ const start_stream = catchAsync(async (req, res, next) => {
     oAuth2Client.setCredentials(token);
     
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
-    const streamData = await createAndBindLiveBroadcast(youtube, title, description);
-    const streamKey = streamData.stream.cdn.ingestionInfo.streamName;
+    const streamData = await createAndBindLiveBroadcast(youtube, title, description, res);
+    const streamkey = streamData.stream.cdn.ingestionInfo.streamName;
     if (thumbnail) {
       const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
       const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
@@ -548,7 +556,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
       platformtype : req.body.platformtype || 'youtube',
-      streamkey: streamKey,
+      streamkey: streamkey,
       user: req.user._id,
       status: '1',
       radio : req.body.radio,
@@ -567,7 +575,7 @@ const start_stream = catchAsync(async (req, res, next) => {
         return res.status(400).send('Stream already active.');
       } 
       const payload = {
-        streamKey : streamKey, 
+        streamkey : streamkey, 
         audio : audio, 
         video : video, 
         res: req.body.resolution, 
@@ -598,11 +606,12 @@ const start_stream = catchAsync(async (req, res, next) => {
 
 const start_rmtp_stream = catchAsync(async (req, res, next) => {
   try {
-    const videoID = req.body.streamKey;
-    const isAlready = await Stream.find({ streamKey: videoID });
+    const videoID = req.body.streamkey;
+    const isAlready = await Stream.find({ streamkey: videoID });
     if(isAlready && isAlready.length > 0){
-      return res.status(400).json({
+      return res.status(200).json({
         status: false,
+        isAlready : isAlready,
         message: 'Stream already created with this stream key. Please reset your stream key.',
       });
     }
@@ -614,12 +623,12 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
       stream_url: req.body.stream_url,
-      streamkey: req.body.streamKey,
+      streamkey: req.body.streamkey,
       user: req.user._id,
       status: '1',
       platformtype : 'rtmp',
       radio : req.body.radio,
-      streamId: req.body.streamKey,
+      streamId: req.body.streamkey,
       playlistId: req.body.playlistId,
       stream_type:req.body.type,
       ordered:req.body.ordered,
@@ -633,7 +642,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
         return res.status(400).send('Stream already active.');
       } 
       const payload = {
-        streamKey : req.body.streamKey, 
+        streamkey : req.body.streamkey, 
         audio : req.body.audio, 
         video : req.body.video, 
         res: req.body.resolution, 
@@ -646,7 +655,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
         status: true,
         message: 'Stream started.',
         stream: savedStream,
-        streamUrl: `${req.body.stream_url}/${req.body.streamKey}`,
+        streamUrl: `${req.body.stream_url}/${req.body.streamkey}`,
       });
     } else {
       res.json({
@@ -744,7 +753,7 @@ const edit_stream = catchAsync(async (req, res, next) => {
     stopffmpegstream(stream.streamId);
     setTimeout(() => {
       const payload = {
-        streamKey : stream.streamkey, 
+        streamkey : stream.streamkey, 
         audio : audio, 
         video : video, 
         res: req.body.resolution, 
@@ -962,13 +971,13 @@ const checkStreamStatusAndSubscription = async () => {
 
 const force_start_stream = async (req, res, next) => {
   try {
-    const { streamKey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
+    const { streamkey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
     const downloadsDir = path.join(__dirname, '..', 'downloads');
     const mergedAudioPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-merged.mp3`);
     const imageToVideoPath = path.join(downloadsDir, `${'6654b7ae3f6a8fea0ffa35c5'}-image-to-video.mp4`);
     
     const payload = {
-      streamKey : 'kxfb-udcp-wjrb-pp0g-e7j6', 
+      streamkey : 'kxfb-udcp-wjrb-pp0g-e7j6', 
       audio : "/Users/naveentehrpariya/Work/upstream/livecall/downloads/1719331616657-merged.mp3", 
       video : 'https://runstream.b-cdn.net/1719331574146-6727e20eeb3bc0cf5f44fce044a733a4-doctor-video.mp4', 
       res: resolution || "1080p", 

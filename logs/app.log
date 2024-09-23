@@ -1734,3 +1734,23 @@
 
 2024-09-23T12:30:00.998Z [INFO]:"Processed 0 users with expired plans."
 
+2024-09-23T18:30:00.612Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-09-23T18:30:00.624Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-09-23T18:30:00.913Z [INFO]:"Processed 0 users with expired plans."
+
+2024-09-23T18:30:01.002Z [INFO]:"Stream Jh5ZPN2nfRE has ended and and all files with this playlist id has been removed 1727115852120."
+
+2024-09-23T18:55:53.534Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-09-23T18:56:46.855Z [INFO]:"Ffmpeg stream stopped f6ks-3454-mu6p-9hak-fb9v"
+
+2024-09-23T18:56:46.998Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-09-23T18:56:46.998Z [INFO]:"there is no any ffmpeg proccess running - f6ks-3454-mu6p-9hak-fb9v"
+
+2024-09-23T18:58:08.897Z [INFO]:"Database Stopping stream f6ks-3454-mu6p-9hak-fb9v"
+
+2024-09-23T18:58:08.938Z [INFO]:"there is no any ffmpeg proccess running - f6ks-3454-mu6p-9hak-fb9v"
+
