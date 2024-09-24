@@ -136,6 +136,14 @@ app.all('*', (req, res, next) => {
   });
 });
 
+app.all('*', (req, res, next) => {
+  res.status(404).json({
+      status: 404,
+      message: `NOT FOUND`
+  });
+});
+
+
 
 const port = process.env.PORT;
 app.listen(port, () => { console.log(`On PORT ${port} SERVER RUNNINGGGGG.....`) });
