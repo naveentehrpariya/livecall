@@ -312,7 +312,6 @@ const stopDbStream = async (videoId) => {
 };
 
 
-
 const createPlaylist = catchAsync (async (req, res, next) => {
   const playlistId = Date.now().toString();
   try {
@@ -526,25 +525,42 @@ const start_stream = catchAsync(async (req, res, next) => {
     
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description, res);
-    const streamkey = streamData.stream.cdn.ingestionInfo.streamName;
-    if (thumbnail) {
-      const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
-      const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
-      const removeUplodedFile = () => {
-        fs.unlinkSync(thumbnailPath);
-        fs.unlinkSync(OutputPath);
-      }
-      await downloadThumbnail(thumbnail, thumbnailPath);
-      await SizeReducer(thumbnailPath, OutputPath);
-      await youtube.thumbnails.set({
-        videoId: streamData.broadcast.id,
-        media: {
-          mimeType: 'image/jpeg',
-          body: fs.createReadStream(OutputPath),
-        },
-      });
-      removeUplodedFile();
+    if(!streamData){
+      res.json({
+        status: false, 
+        streamData: streamData,
+        message: "Stream details not found or unable to create stream."
+      })
+      return false;
     }
+    const streamkey = streamData && streamData.stream.cdn.ingestionInfo.streamName;
+    // if (thumbnail) {
+    //   const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
+    //   const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
+      
+    //   const removeUploadedFile = () => {
+    //     try {
+    //       fs.unlinkSync(thumbnailPath); // Ensure file is not in use
+    //       fs.unlinkSync(OutputPath);
+    //     } catch (error) {
+    //       console.error("Failed to delete files:", error);
+    //     }
+    //   }
+    
+    //   await downloadThumbnail(thumbnail, thumbnailPath);
+    //   await SizeReducer(thumbnailPath, OutputPath);
+    
+    //   await youtube.thumbnails.set({
+    //     videoId: streamData.broadcast.id,
+    //     media: {
+    //       mimeType: 'image/jpeg',
+    //       body: fs.createReadStream(OutputPath).on('close', () => {
+    //         removeUploadedFile();
+    //       }),
+    //     },
+    //   });
+    // }
+    
 
     const videoID = streamData.broadcast.id;
     const stream = new Stream({
@@ -608,12 +624,15 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
   try {
     const videoID = req.body.streamkey;
     const isAlready = await Stream.find({ streamkey: videoID });
+
+    let stream_id;
     if(isAlready && isAlready.length > 0){
-      return res.status(200).json({
-        status: false,
-        isAlready : isAlready,
-        message: 'Stream already created with this stream key. Please reset your stream key.',
-      });
+      stream_id = req.body.streamkey+Math.floor(1000 + Math.random() * 9000);
+      // return res.status(200).json({
+      //   status: false,
+      //   isAlready : isAlready,
+      //   message: 'Stream already created with this stream key. Please reset your stream key.',
+      // });
     }
     const stream = new Stream({
       title: req.body.title,
@@ -628,7 +647,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
       status: '1',
       platformtype : 'rtmp',
       radio : req.body.radio,
-      streamId: req.body.streamkey,
+      streamId: stream_id,
       playlistId: req.body.playlistId,
       stream_type:req.body.type,
       ordered:req.body.ordered,
@@ -638,7 +657,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
     
     const savedStream = await stream.save();
     if (savedStream) {
-      if (activeStreams[videoID]) {
+      if (activeStreams[stream_id]) {
         return res.status(400).send('Stream already active.');
       } 
       const payload = {
@@ -778,15 +797,15 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
   try { 
     console.log("req body",req.body)
     const { video, audio,
-      objectID,  streamId, description, thumbnail, resolution, stream_url, streamkey, title,
+      id,  streamId, description, thumbnail, resolution, stream_url, streamkey, title,
       videos, audios, radio, ordered, type, playlistId,
       enableMonitorStream, enableDvr, enableContentEncryption, enableEmbed,
       enableAutoStart, enableAutoStop, broadcastStreamDelayMs
     } = req.body; 
-    if (!objectID) {
+    if (!id) {
       return res.status(200).json({ status: false, message: 'Stream is not found.' });
     }
-    const stream = await Stream.findOne({objectID})
+    const stream = await Stream.findOne({id})
     console.log("stream", stream)
     if (!stream){
       return res.status(404).json({ status: false, message: 'Stream not found.' });
@@ -819,7 +838,7 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
         stream_url : req.body.stream_url || stream.stream_url,
         platformtype : 'rtmp'
       }
-      // start_ffmpeg(payload);
+      start_ffmpeg(payload);
     }, 1000);
 
     res.json({
@@ -827,7 +846,7 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
       message: 'Stream updated successfully.',
       stream: updatedStream,
     });
-  } catch (err) {
+  } catch (err) { 
     console.error(`Stream update error: ${err}`);
     logger(err);
     JSONerror(res, err, next);
