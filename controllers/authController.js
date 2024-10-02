@@ -26,12 +26,12 @@ const validateToken = catchAsync ( async (req, res, next) => {
       res.status(400).json({
         status : false,
         message:"User is not authorized or Token is missing",
-      });
+      }); 
     } else {
       try {
         const decode = await promisify(jwt.verify)(token, SECRET_ACCESS);
         if(decode){ 
-          let result = await User.findById(decode.id).populate('plan');
+          let result = await User.findById(decode.id);
           req.user = result;
           next();
         } else { 
@@ -323,7 +323,7 @@ const login = catchAsync ( async (req, res, next) => {
    if(!email || !password){
       return next(new AppError("Email and password is required !!", 401))
    }
-   const user = await User.findOne({email}).select('+password').populate('plan');
+   const user = await User.findOne({email}).select('+password');
    if(admin && user && user.role !== '1'){
     res.status(200).json({
       status : false,

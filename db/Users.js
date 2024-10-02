@@ -24,19 +24,13 @@ const schema = new mongoose.Schema({
             return threeDaysFromNow;
         }
     },
-    plan_end_on: {
-        type: Date,
-    },
-    plan: { type: mongoose.Schema.Types.ObjectId, ref: 'pricings' },
-    plan_months: {
-        type: String,
-    },
-    avatar: {
-        type: String,
-    },
-    uploaded_content: { 
-        type : String
-    },
+    plan_end_on: {type: Date},
+    streamLimit: { type: Number, default: 0},
+    allowed_resolutions: { type: [String], default: ['1080'] }, 
+
+    avatar: {type: String},
+    uploaded_content: { type : String},
+
     password: {
         type: String,
         required: [true, 'Please enter your password.'],
@@ -61,10 +55,12 @@ const schema = new mongoose.Schema({
     currency : {
         type : String
     },
+
     status: {
         type: String,
         default: "active",
     },
+
     role: {
         type: String,
         default:'0'

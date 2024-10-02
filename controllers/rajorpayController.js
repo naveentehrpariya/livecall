@@ -8,12 +8,15 @@ const logger = require("../utils/logger");
 const axios = require('axios');
 const sendEmail = require("../utils/Email");
 const domain = process.env.DOMAIN_URL;
+const cron = require('node-cron');
 
 const SECRET = process.env.RAJORPAY_SECRET
 const razorpay = new Razorpay({
    key_id: process.env.RAJORPAY_ID,
    key_secret: SECRET
 });
+
+
 
 async function getExchangeRates(baseCurrency) {
    const apiKey = process.env.EXCHANGE_RATE_KEY;
@@ -118,6 +121,33 @@ exports.createOrder = catchAsync(async (req, res) => {
 });
 
 
+
+
+
+
+// async function calculateUserBenefits(userId, user) {
+//   const subscriptions = await Subscription.find({ user: userId, status: 'active' });
+//   let allowedResolutions = user && user.allowed_resolutions || [] ||  new Set();
+//   let streamLimit = user && user.streamLimit || 0;
+//   console.log("start streamLimit", streamLimit);
+//   console.log("start allowedResolutions", allowedResolutions);
+
+//   subscriptions.forEach(async subscription => {
+//       const plan  = await Pricing.findById(subscription.plan);
+//       const rs =  JSON.parse(plan.resolutions);
+//       console.log("plan.allowed_streams", plan.allowed_streams)
+//       streamLimit = parseInt(streamLimit) + parseInt(plan.allowed_streams);
+//       allowedResolutions = new Set([...allowedResolutions, ...rs]);
+//       console.log("next streamLimit", streamLimit)
+//       console.log("next allowedResolutions", allowedResolutions)
+//   });
+//   const data = {
+//     streamLimit : streamLimit,
+//     allowedResolutions : allowedResolutions
+//   }
+//   return data
+// }
+
 exports.paymentWebhook = catchAsync (async (req,res) => {
    const shasum = crypto.createHmac('sha256', SECRET);
    shasum.update(JSON.stringify(req.body));
@@ -125,37 +155,48 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
    if (digest === req.headers['x-razorpay-signature']) {
      const event = req.body.event;
      if (req.body.payload && event === 'payment.captured'){
-         const payment = req.body.payload.payment.entity;
-         console.log("webhook payment",payment);
-         logger(JSON.stringify(payment));
-         const user = await User.findById(payment.notes.userId);
-         const plan = await Pricing.findById(payment.notes.planID);
-         const endOnDate = new Date();
-         const duration = parseInt(payment.notes.duration);
+        const payment = req.body.payload.payment.entity;
+        logger(JSON.stringify(payment));
+        const userId = payment.notes.userId; 
+        const planId = payment.notes.planID; 
+        const user = await User.findById(userId);
+        const plan = await Pricing.findById(planId);
+        const endOnDate = new Date();
+        const duration = parseInt(payment.notes.duration);
 
-         const ishaveAlreadySubscription = await Subscription.findOne({user: user._id, status: 'active'});
-         console.log("ishaveAlreadySubscription",ishaveAlreadySubscription);
-         if(ishaveAlreadySubscription){
-            ishaveAlreadySubscription.status = 'inactive';
-            await ishaveAlreadySubscription.save();
-         }
-         
-         const endDate = endOnDate.setMonth(endOnDate.getMonth() + duration)
-         const subcription = new Subscription({
-            plan: plan._id,
-            status: 'active',
-            duration: duration,
-            user: user._id,
-            updatedAt: Date.now(),
-            endOn: endDate,
-         }); 
+        const endDate = endOnDate.setMonth(endOnDate.getMonth() + duration)
+        const subcription = new Subscription({
+          plan: plan._id,
+          status: 'active',
+          duration: duration,
+          user: user._id,
+          updatedAt: Date.now(),
+          endOn: endDate,
+        }); 
+        await subcription.save();
 
-         user.plan_end_on = endDate;
-         user.plan_months = duration;
-         user.plan = plan._id;
+        const subscriptions = await Subscription.find({ user: userId, status: 'active' });
+        let allowedResolutions = user && user.allowed_resolutions || [];
+        let streamLimit = user && user.streamLimit || 0;
 
-         
-         const message = `<html xmlns="http://www.w3.org/1999/xhtml">
+        for (const sub of subscriptions) {
+            const plan = await Pricing.findById(sub.plan);
+            const rs = JSON.parse(plan.resolutions);
+            console.log("plan.allowed_streams", plan.allowed_streams);
+            
+            streamLimit += parseInt(plan.allowed_streams);
+            allowedResolutions = new Set([...allowedResolutions, ...rs]);
+
+            console.log("next streamLimit", streamLimit);
+            console.log("next allowedResolutions", allowedResolutions);
+        }
+
+        allowedResolutions = Array.from(allowedResolutions);
+        user.streamLimit = parseInt(streamLimit);
+        user.allowed_resolutions = allowedResolutions;
+        await user.save();
+
+        const message = `<html xmlns="http://www.w3.org/1999/xhtml">
         <head>
           <meta http-equiv="content-type" content="text/html; charset=utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0;">
@@ -323,18 +364,17 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
           </table>
         </body>
         </html>`;
-       await sendEmail({
-         email:user.email,
-         subject:`🎉 Your Plan Purchase Confirmation!`,
-         message
-       });
+
+        await sendEmail({
+          email:user.email,
+          subject:`🎉 Your Plan Purchase Confirmation!`,
+          message
+        });
 
 
-         await user.save();
-         await subcription.save();
      } else { 
         logger('WEBHOOK NOT WORKING');
-         logger(JSON.stringify(event));
+        logger(JSON.stringify(event));
      }
      res.json({ status: 'ok' });
    } else {
@@ -343,3 +383,5 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
 });
 
 
+
+// calculateUserBenefits('6654b7ae3f6a8fea0ffa35c5')

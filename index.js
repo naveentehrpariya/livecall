@@ -27,7 +27,7 @@ app.use(globalErrorHandler);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({limit:'2000mb'}));
-
+ 
 // ROUTES
 app.use("/admin", require('./routes/adminRoutes'));
 app.use("/user", require('./routes/authRoutes'));
@@ -136,13 +136,12 @@ app.all('*', (req, res, next) => {
   });
 });
 
-app.all('*', (req, res, next) => {
+app.all('/files', (req, res, next) => {
   res.status(404).json({
       status: 404,
       message: `NOT FOUND`
   });
 });
-
 
 
 const port = process.env.PORT;
