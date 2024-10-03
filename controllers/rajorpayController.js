@@ -23,7 +23,6 @@ async function getExchangeRates(baseCurrency) {
    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`
    try {
        const response = await axios.get(url);
-       console.log("response",response)
        if(response.data && response.data.conversion_rates){
          return response.data.conversion_rates
        } else { 
@@ -147,7 +146,7 @@ exports.createOrder = catchAsync(async (req, res) => {
 //   }
 //   return data
 // }
-
+ 
 exports.paymentWebhook = catchAsync (async (req,res) => {
    const shasum = crypto.createHmac('sha256', SECRET);
    shasum.update(JSON.stringify(req.body));
@@ -176,23 +175,24 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
         await subcription.save();
 
         const subscriptions = await Subscription.find({ user: userId, status: 'active' });
-        let allowedResolutions = user && user.allowed_resolutions || [];
-        let streamLimit = user && user.streamLimit || 0;
-
+        let allowedResolutions = [];
+        let streamLimit = 0;
+        let storage = 0;
+        console.log("streamLimit", subscriptions.length);
+        console.log("subscriptions lenght", subscriptions.length);
+        
         for (const sub of subscriptions) {
             const plan = await Pricing.findById(sub.plan);
             const rs = JSON.parse(plan.resolutions);
-            console.log("plan.allowed_streams", plan.allowed_streams);
-            
-            streamLimit += parseInt(plan.allowed_streams);
+            streamLimit = parseInt(streamLimit) + parseInt(plan.allowed_streams);
             allowedResolutions = new Set([...allowedResolutions, ...rs]);
-
+            storage = parseInt(storage) + parseInt(plan.storage);
             console.log("next streamLimit", streamLimit);
             console.log("next allowedResolutions", allowedResolutions);
         }
-
         allowedResolutions = Array.from(allowedResolutions);
-        user.streamLimit = parseInt(streamLimit);
+        user.storageLimit = storage;
+        user.streamLimit = streamLimit;
         user.allowed_resolutions = allowedResolutions;
         await user.save();
 
@@ -370,8 +370,6 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
           subject:`🎉 Your Plan Purchase Confirmation!`,
           message
         });
-
-
      } else { 
         logger('WEBHOOK NOT WORKING');
         logger(JSON.stringify(event));

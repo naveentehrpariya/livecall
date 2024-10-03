@@ -7,7 +7,6 @@ const { google } = require('googleapis');
 const Token = require("../db/Token");
 const axios = require("axios");
 const logger = require("../utils/logger");
-const SizeReducer = require("../utils/SizeReducer");
 const JSONerror = require("../utils/jsonErrorHandler");
 const channelDetails = require("../utils/channelDetails");
 const cron = require('node-cron');
@@ -22,6 +21,7 @@ const convertImageToVideo = require("../utils/convertImageToVideo");
 const User = require("../db/Users");
 const { youtube } = require("googleapis/build/src/apis/youtube");
 const sendEmail = require("../utils/Email");
+const Pricing = require("../db/Pricing");
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
 
@@ -917,6 +917,7 @@ const admin_stop_stream = async (req, res, next) => {
   }
 };
 
+
 const checkStreamStatus = async () => {
   try {
     const activeStreams = await Stream.find({ status: 1 });
@@ -953,6 +954,7 @@ const checkStreamStatus = async () => {
   }
 };
 
+
 const checkStreamStatusAndSubscription = async () => {
   try {
     const activeStreams = await Stream.find({ status: 1 }).populate("user");
@@ -988,6 +990,7 @@ const checkStreamStatusAndSubscription = async () => {
   }
 };
 
+
 const force_start_stream = async (req, res, next) => {
   try {
     const { streamkey, audios, thumbnail, playMode, radio, videos, resolution = '1080p' } = req.body;
@@ -1009,11 +1012,13 @@ const force_start_stream = async (req, res, next) => {
   }
 };
 
+
 cron.schedule('0 * * * *', async () => {
   console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   // checkStreamStatusAndSubscription();
 });
+
 
 // Cron job to status any stream has been ended from youtube but on our system has status of running.
 // Job will stop the ffmpeg process and make stream status ended
@@ -1025,28 +1030,15 @@ cron.schedule('0 */3 * * *', async () => {
   }
 });
 
-
-// Cron job to remove plan id of all expired plans of users
+ 
 cron.schedule('0 * * * *', async () => {
-  console.log('Running every hours job to remove expired plans');
+  console.log('Running hourly job to remove expired plans');
   const currentDate = new Date();
   try {
-      const users = await User.find({
-        plan_end_on: { $lt: currentDate },
-        plan: { $ne: null }
-      }).populate('plan');
-      const updates = users.map(async (user) => {
-          const userActiveStreams = await Stream.find({ user: user._id, status: 1 });
-            if (userActiveStreams.length ) {
-              logger(`User ${user} plan has been expired so stream ended.`);
-              for (const excessStream of userActiveStreams) {
-                logger(`Stopping excess stream: ${excessStream.streamId}`);
-                await stopDbStream(excessStream.streamId);
-                await stopffmpegstream(excessStream.streamId);
-              }
-          }
-          const planname = user.plan.name
-          const message = `<html xmlns="http://www.w3.org/1999/xhtml">
+    const subscriptions = await Subscription.find({endOn: { $lt: currentDate }, status: 'active'}).populate("user").populate("plan");
+    const updates = subscriptions.map(async (sub) => {
+      const planname = sub.plan.name;
+      const message = `<html xmlns="http://www.w3.org/1999/xhtml">
           <head>
             <meta http-equiv="content-type" content="text/html; charset=utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0;">
@@ -1164,7 +1156,7 @@ cron.schedule('0 * * * *', async () => {
                 padding-top: 25px; 
                 color: #000000;
                 font-family: sans-serif;" class="paragraph">
-                        Hi ${user.name || ""},<br> We wanted to let you know that your ${planname} plan expired today. We’re sorry to see you go, but we’re here to help you get back on track!
+                        Hi ${sub.user.name || ""},<br> We wanted to let you know that your ${planname} plan expired today. We’re sorry to see you go, but we’re here to help you get back on track!
                       </td>
                     </tr>
                     <tr>
@@ -1213,25 +1205,60 @@ cron.schedule('0 * * * *', async () => {
               </tr>
             </table>
           </body>
-          </html>`;
-          await sendEmail({
-            email:user.email,
-            subject:"🚨 Your Plan Has Expired",
-            message
-          });
-          logger(`Processed ${user.email} with expired plans. and mail sent`);
-          user.plan = '';
-          user.plan_end_on = ''; 
-          user.plan_months = '';
-          await user.save();
+          </html>`; 
+
+      // Send email notification
+      await sendEmail({
+        email: sub.user.email,
+        subject: "🚨 Your Plan Has Expired",
+        message
       });
-      await Promise.all(updates);
-      console.log(`Processed ${users.length} users with expired plans.`);
-      logger(`Processed ${users.length} users with expired plans.`);
+      
+      console.log(`Email sent to ${sub.user.email}`);
+      sub.status = 'inactive';
+      await sub.save();
+      console.log(`Subscription for ${sub.user.email} marked as inactive`);
+
+      // Adjust user stream limits and resolutions
+      const currentuser = await User.findById(sub.user._id);
+      let allowedResolutions = new Set();
+      let streamLimit = 0;
+      let storage = 0;
+      
+      for (const sub of subscriptions) {
+        const plan = await Pricing.findById(sub.plan);
+        const rs = JSON.parse(plan.resolutions);
+        streamLimit += plan.allowed_streams;
+        allowedResolutions = new Set([...allowedResolutions, ...rs]);
+        storage = parseInt(storage) + parseInt(plan.storage);
+      }
+ 
+      currentuser.streamLimit = streamLimit;
+      currentuser.allowed_resolutions = Array.from(allowedResolutions);
+      currentuser.storageLimit = storage;
+      await currentuser.save();
+      console.log(`Updated user ${currentuser.email} stream limit and resolutions`);
+
+      // Check and stop excess streams
+      const userActiveStreams = await Stream.find({ user: currentuser._id, status: 1 });
+      let totalstream = userActiveStreams.length;
+
+      for (const excessStream of userActiveStreams) {
+        if (totalstream > streamLimit) {
+          totalstream--; 
+          await stopDbStream(excessStream.streamId);
+          await stopffmpegstream(excessStream.streamId);
+          console.log(`Stopped excess stream: ${excessStream.streamId}`); 
+        }
+      }
+    });
+    await Promise.all(updates);
+    console.log(`Processed ${subscriptions.length} users with expired plans.`);
   } catch (err) {
-      console.error('Error running the cron job:', err);
+    console.error('Error running the cron job:', err);
   }
 });
+
 
 module.exports = { edit_rtmp_stream, start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
 

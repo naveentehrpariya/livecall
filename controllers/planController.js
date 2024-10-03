@@ -1,11 +1,8 @@
-const cron = require('node-cron');
 const catchAsync  = require("../utils/catchAsync");
 const Pricing = require("../db/Pricing");
 const Subscription = require("../db/Subscription");
 const User = require("../db/Users");
-const logger = require("../utils/logger");
-const { Stream } = require('winston/lib/winston/transports');
-const domainURL = process.env.DOMAIN_URL;
+
 
 exports.create_pricing_plan = catchAsync ( async (req, res)=>{
     const isAlreadyExist = await Pricing.findOne({name:req.body.name});
@@ -184,10 +181,10 @@ exports.planDetail = catchAsync ( async (req, res)=>{
     });
   }
 });
-
+ 
 exports.my_subscriptions = catchAsync ( async (req, res)=>{
   try {
-    const items = await Subscription.findOne({user : req.user._id}).populate('plan').sort({createdAt: -1});
+    const items = await Subscription.find({user : req.user._id, status:'active'}).populate('plan').sort({createdAt: -1});
     if(items){
       res.status(200).json({ 
         status:true, 
@@ -198,7 +195,7 @@ exports.my_subscriptions = catchAsync ( async (req, res)=>{
         status:false, 
         subscriptions:null 
       })
-    }
+    } 
   } catch(err){
     res.status(400).json({ 
       status:false, 
@@ -209,29 +206,50 @@ exports.my_subscriptions = catchAsync ( async (req, res)=>{
 
 exports.cancelSubscription = catchAsync(async (req, res) => {
   try {
-    const mysub = await Subscription.findOne({status : "active"});
+    const mysub = await Subscription.find({ _id: req.params.id, user: req.user._id, status : "active"});
     if(!mysub){
       res.json({
-        status:false,
+        status:false, 
         message: "No active subscription found on this account."
       });
+    } 
+    if( mysub.status = 'canceled'){
+      mysub.status = 'active'
+    } else {  
+      mysub.status = 'canceled'
     }
-    mysub.status = 'canceled'
     mysub.cancelledAt =  Date.now();
-    await mysub.save();
+    await mysub.save(); 
+
+    const subscriptions = await Subscription.find({ user: req.user._id, status: 'active' }).populate('plan');
+    const currentuser = await User.findById(req.user._id);
+    let allowedResolutions = new Set();
+    let streamLimit = 0;
+    let storage = 0; 
+    
+    for (const sub of subscriptions) {
+      const plan = await Pricing.findById(sub.plan);
+      const rs = JSON.parse(plan.resolutions);
+      streamLimit += plan.allowed_streams;
+      allowedResolutions = new Set([...allowedResolutions, ...rs]);
+      storage = parseInt(storage) + parseInt(plan.storage);
+    }
+
+    currentuser.streamLimit = streamLimit;
+    currentuser.allowed_resolutions = Array.from(allowedResolutions);
+    currentuser.storageLimit = storage;
+    await currentuser.save();
+
     res.status(200).json({
       status : true,
-      message :"Your subscription has been cancelled."
+      message :`Subscription has been ${mysub.status}.`
     });
   } catch (error) {
     res.status(500).json({ 
       status : false,
-      message :"Something went wrong",
+      message : error.message || "Something went wrong",
       error: error.message
      });
   }
-});
-
-
-
+}); 
  

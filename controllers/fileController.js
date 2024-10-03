@@ -178,25 +178,18 @@ function formatBytes(bytes, decimals = 2) {
 const checkUploadLimit = catchAsync ( async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const user = await User.findById(userId).populate("plan");
-    const fileSize = req.file.size;
-    const uploadLimit = user.plan && user.plan.storage ? parseInt(user.plan.storage) * 1024 * 1024 * 1024 : 1* 1024 * 1024 * 1024;
+    const user = await User.findById(userId);
+    const fileSize = req.file.size; 
+    const uploadLimit = user && user.storage ? (parseInt(user.storage) * 1024 * 1024 * 1024) : (1* 1024 * 1024 * 1024);
     const uploadedFiles = await Files.find({ user:userId, deletedAt:null || ''});
     const totalUploadedSize = uploadedFiles.reduce((total, file) => total + parseInt(file.size), 0);
     const remainingLimit = uploadLimit - totalUploadedSize;
     if (fileSize > remainingLimit) {
       fs.unlinkSync(req.file.path);
-      if(user.plan){
-        return res.json({ 
-          status: false,
-          message: 'Upload limit exceeded. You cannot upload more files.'
-         });
-      } else { 
-        return res.json({ 
-          status: false,
-          message: 'Upload limit exceeded. You can upload files upto 1 GB.'
+      return res.json({ 
+        status: false,
+        message: 'Upload limit exceeded. You cannot upload more files.'
         });
-      }
     }
     next();
   } catch (error) {
@@ -228,11 +221,11 @@ const getRecentEndedStreams = async () => {
  
 const restStreamLimit = catchAsync(async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate('plan');
+    const user = await User.findById(req.user._id);
     const totallivestreams = await Stream.find({user : req.user._id, status: '1'}).count();
     res.status(200).json({
       status : true,
-      limit : `${user?.plan?.allowed_streams}/${totallivestreams} Streams available` ,
+      limit : `${user?.streamLimit}/${totallivestreams} Streams available` ,
     });
   } catch (error) {
     res.status(500).json({ 

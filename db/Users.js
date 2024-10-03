@@ -24,6 +24,7 @@ const schema = new mongoose.Schema({
             return threeDaysFromNow;
         }
     },
+    storageLimit: { type: Number, default: 0},
     plan_end_on: {type: Date},
     streamLimit: { type: Number, default: 0},
     allowed_resolutions: { type: [String], default: ['1080'] }, 

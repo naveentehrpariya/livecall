@@ -13,8 +13,6 @@ const sendEmail = async (options) => {
            rejectUnauthorized: false,
          },
        });
-      console.log('Transporter created:', transporter);
-      // Define email options
       const mailOptions = { 
          from: process.env.EMAIL_FROM,
          to: options.email,

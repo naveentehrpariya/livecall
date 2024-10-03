@@ -156,10 +156,8 @@ const medias = catchAsync(async (req, res) => {
 
 const users = catchAsync(async (req, res) => {
   const { status } = req.params;
-  
-  // Query the users with the requested status
   let Query = new APIFeatures(
-    User.find({ status: status, role:{ $ne: '1' }}).populate("plan"),
+    User.find({ status: status, role:{ $ne: '1' }}),
     req.query
   ).sort();
 
