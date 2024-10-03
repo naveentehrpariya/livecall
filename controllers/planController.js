@@ -184,7 +184,7 @@ exports.planDetail = catchAsync ( async (req, res)=>{
  
 exports.my_subscriptions = catchAsync ( async (req, res)=>{
   try {
-    const items = await Subscription.find({user : req.user._id, status:'active'}).populate('plan').sort({createdAt: -1});
+    const items = await Subscription.find({user : req.user._id}).populate('plan').sort({createdAt: -1});
     if(items){
       res.status(200).json({ 
         status:true, 

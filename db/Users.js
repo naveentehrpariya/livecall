@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const Files = require('./Files');
+const Subscription = require('./Subscription');
 
 const schema = new mongoose.Schema({
     name: {
@@ -28,10 +29,8 @@ const schema = new mongoose.Schema({
     plan_end_on: {type: Date},
     streamLimit: { type: Number, default: 0},
     allowed_resolutions: { type: [String], default: ['1080'] }, 
-
     avatar: {type: String},
     uploaded_content: { type : String},
-
     password: {
         type: String,
         required: [true, 'Please enter your password.'],
@@ -134,27 +133,7 @@ schema.methods.createMailVerificationToken = async function () {
     return token;
 }
 
-schema.methods.getUploadedContentSize = async function () {
-    try {
-        const id = this._id;
-        const files = await Files.find({ user: id, deletedAt: { $in: [null, ''] } });
-
-        // If no files found, set totalSize to 0
-        const totalSize = files.reduce((acc, file) => acc + parseInt(file.size || 0), 0);
-
-        // Convert total size from bytes to MB
-        const totalSizeInMB = totalSize
-
-        // Add total size to the user instance
-        this.uploaded_content = totalSizeInMB;
-
-        return totalSizeInMB; // Optional: You can return the value if needed
-    } catch (error) {
-        console.error('Error calculating uploaded content size:', error);
-        this.uploaded_content = 0; // In case of error, set uploaded content size to 0
-        return 0;
-    }
-}
+ 
 
 
 const User = mongoose.model('users', schema);
