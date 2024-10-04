@@ -24,7 +24,7 @@ const getStartOfCurrentMonth = () => {
 };
 
 const earnings = catchAsync(async (req, res) => {
-  const validStatuses = ['active', 'completed']; // Adjust based on your logic
+  const validStatuses = ['active', 'inactive', 'cancelled', 'expired'];
   const startOfMonth = getStartOfCurrentMonth();
   const currentMonthAggregation = await Subscription.aggregate([
       {

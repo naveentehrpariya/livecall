@@ -327,7 +327,7 @@ const login = catchAsync ( async (req, res, next) => {
    if(admin && user && user.role !== '1'){
     res.status(200).json({
       status : false,
-      message:"Invalid credentials.",
+      message:"Invalid credentials.", 
      });
    }
    if(user && user.status === 'inactive'){
@@ -338,9 +338,9 @@ const login = catchAsync ( async (req, res, next) => {
    }
    if(!user || !(await user.checkPassword(password, user.password))){
     res.status(200).json({
-      status : false,
+      status : false, 
       message:"Email or password is invalid !!",
-     });  
+     });   
    }
    const token = await signToken(user._id);
    res.cookie('jwt', token, {

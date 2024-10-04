@@ -3,7 +3,6 @@ const Pricing = require("../db/Pricing");
 const Subscription = require("../db/Subscription");
 const User = require("../db/Users");
 
-
 exports.create_pricing_plan = catchAsync ( async (req, res)=>{
     const isAlreadyExist = await Pricing.findOne({name:req.body.name});
     if(isAlreadyExist){
@@ -185,11 +184,11 @@ exports.planDetail = catchAsync ( async (req, res)=>{
 exports.my_subscriptions = catchAsync ( async (req, res)=>{
   try {
     const items = await Subscription.find({user : req.user._id}).populate('plan').sort({createdAt: -1});
-    if(items){
+    if(items){ 
       res.status(200).json({ 
         status:true, 
         subscriptions:items 
-      })
+      })  
     } else {
       res.status(400).json({ 
         status:false, 
@@ -206,23 +205,24 @@ exports.my_subscriptions = catchAsync ( async (req, res)=>{
 
 exports.cancelSubscription = catchAsync(async (req, res) => {
   try {
-    const mysub = await Subscription.find({ _id: req.params.id, user: req.user._id, status : "active"});
+    const mysub = await Subscription.findById(req.params.id);
     if(!mysub){
       res.json({
         status:false, 
         message: "No active subscription found on this account."
       });
     } 
-    if( mysub.status = 'canceled'){
-      mysub.status = 'active'
+    console.log('mysub', mysub);
+    if( mysub.status === 'active' ){
+      mysub.status = 'cancelled'
     } else {  
-      mysub.status = 'canceled'
+      mysub.status = 'active'
     }
     mysub.cancelledAt =  Date.now();
     await mysub.save(); 
 
-    const subscriptions = await Subscription.find({ user: req.user._id, status: 'active' }).populate('plan');
-    const currentuser = await User.findById(req.user._id);
+    const subscriptions = await Subscription.find({ user: mysub.user, status: 'active' }).populate('plan');
+    const currentuser = await User.findById(mysub.user);
     let allowedResolutions = new Set();
     let streamLimit = 0;
     let storage = 0; 
@@ -242,7 +242,7 @@ exports.cancelSubscription = catchAsync(async (req, res) => {
 
     res.status(200).json({
       status : true,
-      message :`Subscription has been ${mysub.status}.`
+      message :`Subscription has been cencelled.`
     });
   } catch (error) {
     res.status(500).json({ 

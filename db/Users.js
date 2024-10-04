@@ -134,7 +134,20 @@ schema.methods.createMailVerificationToken = async function () {
 }
 
  
-
+schema.methods.getUploadedContentSize = async function () {
+    try {
+        const id = this._id;
+        const files = await Files.find({ user: id, deletedAt: { $in: [null, ''] } });
+        const totalSize = files.reduce((acc, file) => acc + parseInt(file.size || 0), 0);
+        const totalSizeInMB = totalSize
+        this.uploaded_content = totalSizeInMB;
+        return totalSizeInMB;
+    } catch (error) {
+        console.error('Error calculating uploaded content size:', error);
+        this.uploaded_content = 0;
+        return 0; 
+    }
+}
 
 const User = mongoose.model('users', schema);
 module.exports = User;

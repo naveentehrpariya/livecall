@@ -534,34 +534,32 @@ const start_stream = catchAsync(async (req, res, next) => {
       return false;
     }
     const streamkey = streamData && streamData.stream.cdn.ingestionInfo.streamName;
-    // if (thumbnail) {
-    //   const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
-    //   const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
+    if (thumbnail) {
+      const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
+      const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
       
-    //   const removeUploadedFile = () => {
-    //     try {
-    //       fs.unlinkSync(thumbnailPath); // Ensure file is not in use
-    //       fs.unlinkSync(OutputPath);
-    //     } catch (error) {
-    //       console.error("Failed to delete files:", error);
-    //     }
-    //   }
+      const removeUploadedFile = () => {
+        try {
+          fs.unlinkSync(thumbnailPath); // Ensure file is not in use
+          fs.unlinkSync(OutputPath);
+        } catch (error) {
+          console.error("Failed to delete files:", error);
+        }
+      }
     
-    //   await downloadThumbnail(thumbnail, thumbnailPath);
-    //   await SizeReducer(thumbnailPath, OutputPath);
+      await downloadThumbnail(thumbnail, thumbnailPath);
+      await SizeReducer(thumbnailPath, OutputPath);
     
-    //   await youtube.thumbnails.set({
-    //     videoId: streamData.broadcast.id,
-    //     media: {
-    //       mimeType: 'image/jpeg',
-    //       body: fs.createReadStream(OutputPath).on('close', () => {
-    //         removeUploadedFile();
-    //       }),
-    //     },
-    //   });
-    // }
-    
-
+      await youtube.thumbnails.set({
+        videoId: streamData.broadcast.id,
+        media: {
+          mimeType: 'image/jpeg',
+          body: fs.createReadStream(OutputPath).on('close', () => {
+            removeUploadedFile();
+          }),
+        },
+      });
+    }
     const videoID = streamData.broadcast.id;
     const stream = new Stream({
       title: req.body.title,
@@ -1215,8 +1213,8 @@ cron.schedule('0 * * * *', async () => {
       });
       
       console.log(`Email sent to ${sub.user.email}`);
-      sub.status = 'inactive';
-      await sub.save();
+      sub.status = 'expired';
+      await sub.save(); 
       console.log(`Subscription for ${sub.user.email} marked as inactive`);
 
       // Adjust user stream limits and resolutions

@@ -17,7 +17,6 @@ const razorpay = new Razorpay({
 });
 
 
-
 async function getExchangeRates(baseCurrency) {
    const apiKey = process.env.EXCHANGE_RATE_KEY;
    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${baseCurrency}`
@@ -118,35 +117,8 @@ exports.createOrder = catchAsync(async (req, res) => {
       res.status(500).json({ status:false, error: 'Failed to create payment link.' });
    }
 });
-
-
-
-
-
-
-// async function calculateUserBenefits(userId, user) {
-//   const subscriptions = await Subscription.find({ user: userId, status: 'active' });
-//   let allowedResolutions = user && user.allowed_resolutions || [] ||  new Set();
-//   let streamLimit = user && user.streamLimit || 0;
-//   console.log("start streamLimit", streamLimit);
-//   console.log("start allowedResolutions", allowedResolutions);
-
-//   subscriptions.forEach(async subscription => {
-//       const plan  = await Pricing.findById(subscription.plan);
-//       const rs =  JSON.parse(plan.resolutions);
-//       console.log("plan.allowed_streams", plan.allowed_streams)
-//       streamLimit = parseInt(streamLimit) + parseInt(plan.allowed_streams);
-//       allowedResolutions = new Set([...allowedResolutions, ...rs]);
-//       console.log("next streamLimit", streamLimit)
-//       console.log("next allowedResolutions", allowedResolutions)
-//   });
-//   const data = {
-//     streamLimit : streamLimit,
-//     allowedResolutions : allowedResolutions
-//   }
-//   return data
-// }
  
+
 exports.paymentWebhook = catchAsync (async (req,res) => {
    const shasum = crypto.createHmac('sha256', SECRET);
    shasum.update(JSON.stringify(req.body));
@@ -379,7 +351,3 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
      res.status(400).send('Invalid signature');
    }
 });
-
-
-
-// calculateUserBenefits('6654b7ae3f6a8fea0ffa35c5')

@@ -10,7 +10,7 @@ router.route('/pricing-plans').get( pricing_plan_lists);
 router.route('/admin-pricing-plans').get( admin_pricing_plan_lists);
 router.route('/plan-detail/:id').get(planDetail);
 router.route('/my-subscriptions').get(validateToken, my_subscriptions);
-router.route('/cancel-subscription').get(validateToken,  cancelSubscription); 
+router.route('/cancel-subscription/:id').get(validateToken,  cancelSubscription); 
 
 module.exports = router; 
 // router.route('/update-payment-status').post(validateToken,  confirmSubscription);

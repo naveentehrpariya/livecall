@@ -122,6 +122,7 @@ app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file
   }
 });
  
+
 app.get('/', (req, res) => {
   res.send({
     message: "ACTIVE last2",
