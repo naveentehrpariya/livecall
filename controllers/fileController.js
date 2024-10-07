@@ -8,10 +8,7 @@ const handleFileUpload = require('../utils/file-upload-util');
 const B2 = require('backblaze-b2');
 const fs = require('fs');
 const cron = require('node-cron');
-
 const Stream = require("../db/Stream");
-const bucket_name = process.env.BUCKET_NAME;
-const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
 const b2 = new B2({
@@ -23,11 +20,13 @@ async function authorizeB2() {
   try {
     await b2.authorize();
     console.log('conncted B2:');
+    return;
   } catch (error) {
     console.error('Error authorizing B2:', error);
+    return;
   }
 }
-authorizeB2();
+
 
 // all/ image / video / audio
 const myMedia = catchAsync(async (req, res) => {
@@ -106,6 +105,7 @@ const deleteMedia = async (req, res) => {
 };
 
 const uploadMedia = catchAsync(async (req, res) => {
+  await authorizeB2();
   const attachment = req.files?.attachment?.[0];
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (!attachment) {

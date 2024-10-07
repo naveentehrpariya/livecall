@@ -21,6 +21,7 @@ const convertImageToVideo = require("../utils/convertImageToVideo");
 const User = require("../db/Users");
 const { youtube } = require("googleapis/build/src/apis/youtube");
 const sendEmail = require("../utils/Email");
+const SizeReducer = require("../utils/SizeReducer");
 const Pricing = require("../db/Pricing");
 const CLIENT_SECRETS_FILE = 'client_secret.json';
 const SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl'];
@@ -484,15 +485,22 @@ async function start_ffmpeg(data) {
       stopFlags[videoID] = false; // Reset stop flag before starting
       const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
       activeStreams[videoID] = child;
+      let retryCount = 0; 
       child.on('close', (code) => {
-        console.log(`FFmpeg process exited with code ${code}`);
-        const err = `FFmpeg process exited with code ${code}`;
-        logger(err);
-        if (code !== 0 && !stopFlags[videoID]) {
-          setTimeout(startFFmpegProcess, 5000); // Retry after 5 seconds
-        } else {
-          stopffmpegstream(videoID);
-        }
+          console.log(`FFmpeg process exited with code ${code}`);
+          const err = `FFmpeg process exited with code ${code}`;
+          logger(`code for stopped stream ${child.pid} : ${code}`);
+          logger(err);
+          if (code !== 0 && !stopFlags[videoID]) {
+              retryCount++;
+              logger(`process retrying to start FFmpeg, count ${retryCount}`);
+              if (retryCount < 5){
+                  setTimeout(() => startFFmpegProcess(videoID), 5000);  // Retry with delay
+              } else { 
+                  stopffmpegstream(videoID);
+                  logger(`Unable to restart the stream after ${retryCount} retries, stopped ${videoID}`);
+              }
+          } 
       });
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
