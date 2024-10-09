@@ -94,10 +94,10 @@ const dashboard = catchAsync(async (req, res) => {
    const inactiveUsers = await User.countDocuments({ status: 'inactive', role:{ $ne: '1' }});
    const totalStreams = await Stream.countDocuments();
    const totalliveStreams = await Stream.countDocuments({ status: 1 });
-   const totalInactiveStreams = await Stream.countDocuments({ status: 0 });
+  //  const totalInactiveStreams = await Stream.countDocuments({ status: 0 });
    const totalSubscriptions = await Subscription.countDocuments();
-   const inactiveSubscriptions = await Subscription.countDocuments({ status: 'inactive' });
-   const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'paid' });
+   const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'active' });
+   const totalEnquires = await Inquiry.countDocuments();
   //  const totalExpiredSubscriptions = await Subscription.countDocuments({ status: 'expired' });
 
     const userFiles = await Files.find({});
@@ -120,10 +120,10 @@ const dashboard = catchAsync(async (req, res) => {
       { route:"/admin/media/image", title : 'Uploaded Content', data: formatBytes(totalSize) },
       { route:"/admin/streams/all", title : 'Total Streams', data: totalStreams },
       { route:"/admin/streams/1", title : 'Live Streams', data: totalliveStreams },
-      { route:"/admin/streams/0", title : 'Ended Streams', data: totalInactiveStreams },
+      // { route:"/admin/streams/0", title : 'Ended Streams', data: totalInactiveStreams },
       { route:"/admin/subscriptions/all", title : 'Total Subscriptions', data: totalSubscriptions },
       { route:"/admin/subscriptions/paid", title : 'Active Subscriptions', data: totalActiveSubscriptions },
-      { route:"/admin/subscriptions/inactive", title : 'Inactive Subscriptions', data: inactiveSubscriptions },
+      { route:"/admin/inquiries", title : 'Total Enquires', data: totalEnquires },
      ] 
    });
 });

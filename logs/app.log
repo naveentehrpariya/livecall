@@ -2338,3 +2338,13 @@
 
 2024-10-07T16:30:00.175Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
 
+2024-10-09T09:30:00.159Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-10-09T09:30:00.164Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-10-09T10:13:53.672Z [INFO]:"Database Stopping stream 5nzu-ov6LBo"
+
+2024-10-09T10:13:53.779Z [INFO]:"there is no any ffmpeg proccess running - 5nzu-ov6LBo"
+
+2024-10-09T10:30:00.424Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
