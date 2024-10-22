@@ -2338,3 +2338,1069 @@
 
 2024-10-07T16:30:00.175Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
 
+2024-10-17T16:09:49.354Z [INFO]:{"code":"ERR_HTTP_HEADERS_SENT"}
+
+2024-10-17T16:09:52.017Z [INFO]:{"code":"ERR_HTTP_HEADERS_SENT"}
+
+2024-10-17T16:11:45.411Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"BULLET TEST 3","description":"dfafas","scheduledStartTime":"2024-10-17T16:11:58.258Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zDK4Dmpl2G11m3hx2eJwd7F5tC66al0h8d51WcX7HltjWuZSlvgq1w12g8uF1owSDRTyc9ufArb_3wiUWGRY2PF6cVqG5fGVi7Ptj2j4Gj8KVqBCAuvYOUTIlQSiGhHghOR3UA0i_Icla5cafacXxIzEeTPbZB29dsaCgYKAYYSARESFQHGX2MiUmaixnk70EHA6Ply1rBK2Q0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"BULLET TEST 3\",\"description\":\"dfafas\",\"scheduledStartTime\":\"2024-10-17T16:11:58.258Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"v-Qld0sEOpphQ-v0F4wez3SdR1k","id":"vXCFlHsLCO4","snippet":{"publishedAt":"2024-10-17T16:11:44Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"BULLET TEST 3","description":"dfafas","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/vXCFlHsLCO4/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/vXCFlHsLCO4/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/vXCFlHsLCO4/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:11:58Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILdlhDRmxIc0xDTzQ"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/vXCFlHsLCO4?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 16:11:45 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T16:11:49.647Z [INFO]:"stream created "
+
+2024-10-17T16:11:54.325Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"v-Qld0sEOpphQ-v0F4wez3SdR1k","id":"vXCFlHsLCO4","snippet":{"publishedAt":"2024-10-17T16:11:44Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"BULLET TEST 3","description":"dfafas","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/vXCFlHsLCO4/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/vXCFlHsLCO4/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/vXCFlHsLCO4/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:11:58Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILdlhDRmxIc0xDTzQ"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/vXCFlHsLCO4?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"segkIhy6CuktysaFERkmj3oGylQ","id":"dGq1qjb5R27ENhSCBj20gw1729181509091852","snippet":{"publishedAt":"2024-10-17T16:11:49Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"BULLET TEST 3","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"3hme-0qa0-g6ac-gjjt-40su","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"mp4GyN68aJ5tu2am-ulI7cYaRMQ","id":"vXCFlHsLCO4","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729181509091852","boundStreamLastUpdateTimeMs":"2024-10-17T16:11:49Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/vXCFlHsLCO4?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"vXCFlHsLCO4"}
+
+2024-10-17T16:11:56.321Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T16:12:25.730Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-17T16:17:14.354Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"STREAM 4k ","description":"4k staream","scheduledStartTime":"2024-10-17T16:17:27.103Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zDK4Dmpl2G11m3hx2eJwd7F5tC66al0h8d51WcX7HltjWuZSlvgq1w12g8uF1owSDRTyc9ufArb_3wiUWGRY2PF6cVqG5fGVi7Ptj2j4Gj8KVqBCAuvYOUTIlQSiGhHghOR3UA0i_Icla5cafacXxIzEeTPbZB29dsaCgYKAYYSARESFQHGX2MiUmaixnk70EHA6Ply1rBK2Q0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"STREAM 4k \",\"description\":\"4k staream\",\"scheduledStartTime\":\"2024-10-17T16:17:27.103Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"xN0ZkTb_sFvaALEUPwVhbsT0YWk","id":"YYpjdDFlihk","snippet":{"publishedAt":"2024-10-17T16:17:13Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"STREAM 4k","description":"4k staream","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/YYpjdDFlihk/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/YYpjdDFlihk/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/YYpjdDFlihk/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:17:27Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILWVlwamRERmxpaGs"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/YYpjdDFlihk?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 16:17:14 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T16:17:18.688Z [INFO]:"stream created "
+
+2024-10-17T16:17:22.988Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"xN0ZkTb_sFvaALEUPwVhbsT0YWk","id":"YYpjdDFlihk","snippet":{"publishedAt":"2024-10-17T16:17:13Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"STREAM 4k","description":"4k staream","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/YYpjdDFlihk/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/YYpjdDFlihk/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/YYpjdDFlihk/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:17:27Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILWVlwamRERmxpaGs"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/YYpjdDFlihk?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"_SXZPIGe8EzI1HU9gDqwPQlnkZ0","id":"dGq1qjb5R27ENhSCBj20gw1729181838013566","snippet":{"publishedAt":"2024-10-17T16:17:18Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"STREAM 4k","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"wakt-aap4-zekq-hadj-692r","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"L7IbcGV0e6yKOlzIXaFATY7OnLE","id":"YYpjdDFlihk","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729181838013566","boundStreamLastUpdateTimeMs":"2024-10-17T16:17:18Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/YYpjdDFlihk?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"YYpjdDFlihk"}
+
+2024-10-17T16:17:23.910Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T16:17:29.066Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-17T16:24:32.790Z [INFO]:"Database Stopping stream YYpjdDFlihk"
+
+2024-10-17T16:24:32.870Z [INFO]:"Ffmpeg stream stopped YYpjdDFlihk"
+
+2024-10-17T16:24:33.667Z [INFO]:"Database Stopping stream vXCFlHsLCO4"
+
+2024-10-17T16:24:33.714Z [INFO]:"Ffmpeg stream stopped vXCFlHsLCO4"
+
+2024-10-17T16:28:03.061Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"start stream 4k ","description":"test stream","scheduledStartTime":"2024-10-17T16:28:15.805Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zDK4Dmpl2G11m3hx2eJwd7F5tC66al0h8d51WcX7HltjWuZSlvgq1w12g8uF1owSDRTyc9ufArb_3wiUWGRY2PF6cVqG5fGVi7Ptj2j4Gj8KVqBCAuvYOUTIlQSiGhHghOR3UA0i_Icla5cafacXxIzEeTPbZB29dsaCgYKAYYSARESFQHGX2MiUmaixnk70EHA6Ply1rBK2Q0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"start stream 4k \",\"description\":\"test stream\",\"scheduledStartTime\":\"2024-10-17T16:28:15.805Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"JEr2BuuAL3SO2QSNsNoiBfBpzjM","id":"JJAZqYOoI7Q","snippet":{"publishedAt":"2024-10-17T16:28:02Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"start stream 4k","description":"test stream","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/JJAZqYOoI7Q/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/JJAZqYOoI7Q/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/JJAZqYOoI7Q/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:28:15Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILSkpBWnFZT29JN1E"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/JJAZqYOoI7Q?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 16:28:03 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T16:28:07.319Z [INFO]:"stream created "
+
+2024-10-17T16:28:11.456Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"JEr2BuuAL3SO2QSNsNoiBfBpzjM","id":"JJAZqYOoI7Q","snippet":{"publishedAt":"2024-10-17T16:28:02Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"start stream 4k","description":"test stream","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/JJAZqYOoI7Q/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/JJAZqYOoI7Q/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/JJAZqYOoI7Q/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:28:15Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILSkpBWnFZT29JN1E"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/JJAZqYOoI7Q?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"RiMGcc3rxwE8gf9kev4kmcznqv8","id":"dGq1qjb5R27ENhSCBj20gw1729182486773476","snippet":{"publishedAt":"2024-10-17T16:28:07Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"start stream 4k","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"hs6j-ewx3-qdhb-hr5z-7a5g","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"TgrhKSeztiusfwdj063CYEQKB4E","id":"JJAZqYOoI7Q","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729182486773476","boundStreamLastUpdateTimeMs":"2024-10-17T16:28:07Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/JJAZqYOoI7Q?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"JJAZqYOoI7Q"}
+
+2024-10-17T16:28:12.333Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T16:28:16.177Z [INFO]:"Starting FFmpeg stream [object Object]"
+
+2024-10-17T16:30:00.168Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-10-17T16:30:00.703Z [INFO]:"Stream vXCFlHsLCO4 has ended and and all files with this playlist id has been removed 1729181503175."
+
+2024-10-17T16:30:00.704Z [INFO]:"Stream YYpjdDFlihk has ended and and all files with this playlist id has been removed 1729181832018."
+
+2024-10-17T16:41:07.129Z [INFO]:"Database Stopping stream JJAZqYOoI7Q"
+
+2024-10-17T16:41:07.183Z [INFO]:"there is no any ffmpeg proccess running - JJAZqYOoI7Q"
+
+2024-10-17T16:41:45.037Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"Nesw stream 1080p ","description":"test","scheduledStartTime":"2024-10-17T16:41:57.505Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zDK4Dmpl2G11m3hx2eJwd7F5tC66al0h8d51WcX7HltjWuZSlvgq1w12g8uF1owSDRTyc9ufArb_3wiUWGRY2PF6cVqG5fGVi7Ptj2j4Gj8KVqBCAuvYOUTIlQSiGhHghOR3UA0i_Icla5cafacXxIzEeTPbZB29dsaCgYKAYYSARESFQHGX2MiUmaixnk70EHA6Ply1rBK2Q0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"Nesw stream 1080p \",\"description\":\"test\",\"scheduledStartTime\":\"2024-10-17T16:41:57.505Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"LhyXBUhcWPHt6fbhWzXkzmnQsqE","id":"Sk74Ezpxsew","snippet":{"publishedAt":"2024-10-17T16:41:44Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Nesw stream 1080p","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/Sk74Ezpxsew/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/Sk74Ezpxsew/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/Sk74Ezpxsew/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:41:57Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILU2s3NEV6cHhzZXc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/Sk74Ezpxsew?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 16:41:45 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T16:41:49.168Z [INFO]:"stream created "
+
+2024-10-17T16:41:53.311Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"LhyXBUhcWPHt6fbhWzXkzmnQsqE","id":"Sk74Ezpxsew","snippet":{"publishedAt":"2024-10-17T16:41:44Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Nesw stream 1080p","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/Sk74Ezpxsew/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/Sk74Ezpxsew/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/Sk74Ezpxsew/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:41:57Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILU2s3NEV6cHhzZXc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/Sk74Ezpxsew?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"R5ypkiuc9u7LTEh9aQfqtN1NyDE","id":"dGq1qjb5R27ENhSCBj20gw1729183308812102","snippet":{"publishedAt":"2024-10-17T16:41:49Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Nesw stream 1080p","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"hb4q-d1hc-jpqh-7t1q-0f4k","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"gtGfI5zflS3cr9bE_Uih4Tsz_F8","id":"Sk74Ezpxsew","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729183308812102","boundStreamLastUpdateTimeMs":"2024-10-17T16:41:49Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/Sk74Ezpxsew?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"Sk74Ezpxsew"}
+
+2024-10-17T16:41:54.242Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T16:43:14.488Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"new 4k streams","description":"test","scheduledStartTime":"2024-10-17T16:43:27.212Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zDK4Dmpl2G11m3hx2eJwd7F5tC66al0h8d51WcX7HltjWuZSlvgq1w12g8uF1owSDRTyc9ufArb_3wiUWGRY2PF6cVqG5fGVi7Ptj2j4Gj8KVqBCAuvYOUTIlQSiGhHghOR3UA0i_Icla5cafacXxIzEeTPbZB29dsaCgYKAYYSARESFQHGX2MiUmaixnk70EHA6Ply1rBK2Q0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"new 4k streams\",\"description\":\"test\",\"scheduledStartTime\":\"2024-10-17T16:43:27.212Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"7ayWEn9IA8ibUasQ1qTWEZaOaN0","id":"SkKABTYqCzE","snippet":{"publishedAt":"2024-10-17T16:43:13Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"new 4k streams","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/SkKABTYqCzE/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/SkKABTYqCzE/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/SkKABTYqCzE/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:43:27Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILU2tLQUJUWXFDekU"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/SkKABTYqCzE?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 16:43:14 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T16:43:18.658Z [INFO]:"stream created "
+
+2024-10-17T16:43:22.762Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"7ayWEn9IA8ibUasQ1qTWEZaOaN0","id":"SkKABTYqCzE","snippet":{"publishedAt":"2024-10-17T16:43:13Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"new 4k streams","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/SkKABTYqCzE/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/SkKABTYqCzE/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/SkKABTYqCzE/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:43:27Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILU2tLQUJUWXFDekU"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/SkKABTYqCzE?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"SbfTcHvTEkHYm5dozHyY42wvhYI","id":"dGq1qjb5R27ENhSCBj20gw1729183398331263","snippet":{"publishedAt":"2024-10-17T16:43:18Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"new 4k streams","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"du94-sd6v-7948-k859-2f90","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"zgNWNNqO1vaPSQ3N4mVt2CF1HSE","id":"SkKABTYqCzE","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729183398331263","boundStreamLastUpdateTimeMs":"2024-10-17T16:43:18Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/SkKABTYqCzE?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"SkKABTYqCzE"}
+
+2024-10-17T16:43:23.574Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T16:49:02.321Z [INFO]:"Database Stopping stream SkKABTYqCzE"
+
+2024-10-17T16:49:02.373Z [INFO]:"there is no any ffmpeg proccess running - SkKABTYqCzE"
+
+2024-10-17T16:49:03.874Z [INFO]:"Database Stopping stream Sk74Ezpxsew"
+
+2024-10-17T16:49:03.920Z [INFO]:"there is no any ffmpeg proccess running - Sk74Ezpxsew"
+
+2024-10-17T16:49:42.497Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"new 4k stream options","description":"test","scheduledStartTime":"2024-10-17T16:49:55.236Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zDK4Dmpl2G11m3hx2eJwd7F5tC66al0h8d51WcX7HltjWuZSlvgq1w12g8uF1owSDRTyc9ufArb_3wiUWGRY2PF6cVqG5fGVi7Ptj2j4Gj8KVqBCAuvYOUTIlQSiGhHghOR3UA0i_Icla5cafacXxIzEeTPbZB29dsaCgYKAYYSARESFQHGX2MiUmaixnk70EHA6Ply1rBK2Q0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"new 4k stream options\",\"description\":\"test\",\"scheduledStartTime\":\"2024-10-17T16:49:55.236Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"ZV-poZMunQaBs8sqaWbfg720cdU","id":"o8WKF39rqzY","snippet":{"publishedAt":"2024-10-17T16:49:41Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"new 4k stream options","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/o8WKF39rqzY/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/o8WKF39rqzY/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/o8WKF39rqzY/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:49:55Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILbzhXS0YzOXJxelk"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/o8WKF39rqzY?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 16:49:42 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T16:49:46.676Z [INFO]:"stream created "
+
+2024-10-17T16:49:50.776Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"ZV-poZMunQaBs8sqaWbfg720cdU","id":"o8WKF39rqzY","snippet":{"publishedAt":"2024-10-17T16:49:41Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"new 4k stream options","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/o8WKF39rqzY/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/o8WKF39rqzY/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/o8WKF39rqzY/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:49:55Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILbzhXS0YzOXJxelk"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/o8WKF39rqzY?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"AAQGJUGW52_2uHwh5GF_zunXKf4","id":"dGq1qjb5R27ENhSCBj20gw1729183786373096","snippet":{"publishedAt":"2024-10-17T16:49:46Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"new 4k stream options","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"r288-06v1-0u66-fvua-9k6b","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"w8KYMtGhLysmbIW0fyMQQfpC_xw","id":"o8WKF39rqzY","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729183786373096","boundStreamLastUpdateTimeMs":"2024-10-17T16:49:46Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/o8WKF39rqzY?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"o8WKF39rqzY"}
+
+2024-10-17T16:49:50.983Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T16:54:25.860Z [INFO]:"Database Stopping stream o8WKF39rqzY"
+
+2024-10-17T16:54:25.941Z [INFO]:"there is no any ffmpeg proccess running - o8WKF39rqzY"
+
+2024-10-17T16:55:03.946Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"hello users stream 4k","description":"test","scheduledStartTime":"2024-10-17T16:55:16.687Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612zDK4Dmpl2G11m3hx2eJwd7F5tC66al0h8d51WcX7HltjWuZSlvgq1w12g8uF1owSDRTyc9ufArb_3wiUWGRY2PF6cVqG5fGVi7Ptj2j4Gj8KVqBCAuvYOUTIlQSiGhHghOR3UA0i_Icla5cafacXxIzEeTPbZB29dsaCgYKAYYSARESFQHGX2MiUmaixnk70EHA6Ply1rBK2Q0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"hello users stream 4k\",\"description\":\"test\",\"scheduledStartTime\":\"2024-10-17T16:55:16.687Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"JMTWKpYGEw70XdNefDgM29FiotA","id":"05YQwE71zM0","snippet":{"publishedAt":"2024-10-17T16:55:03Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"hello users stream 4k","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/05YQwE71zM0/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/05YQwE71zM0/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/05YQwE71zM0/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:55:16Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILMDVZUXdFNzF6TTA"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/05YQwE71zM0?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 16:55:04 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T16:55:08.118Z [INFO]:"stream created "
+
+2024-10-17T16:55:12.226Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"JMTWKpYGEw70XdNefDgM29FiotA","id":"05YQwE71zM0","snippet":{"publishedAt":"2024-10-17T16:55:03Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"hello users stream 4k","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/05YQwE71zM0/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/05YQwE71zM0/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/05YQwE71zM0/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T16:55:16Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILMDVZUXdFNzF6TTA"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/05YQwE71zM0?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"Dfgu7k6JVErKrFS4oL0lJAxwi-Q","id":"dGq1qjb5R27ENhSCBj20gw1729184107813840","snippet":{"publishedAt":"2024-10-17T16:55:08Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"hello users stream 4k","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"xv0y-2uwj-j4ed-saby-ca3z","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"qUfyKdsoM78AC_ndtz6y_Yy9OZU","id":"05YQwE71zM0","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729184107813840","boundStreamLastUpdateTimeMs":"2024-10-17T16:55:08Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/05YQwE71zM0?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"05YQwE71zM0"}
+
+2024-10-17T16:55:12.384Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T16:55:27.516Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-17T17:03:44.315Z [INFO]:"Database Stopping stream 05YQwE71zM0"
+
+2024-10-17T17:03:44.376Z [INFO]:"there is no any ffmpeg proccess running - 05YQwE71zM0"
+
+2024-10-17T17:07:42.912Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"sdsd","description":"asdasdsad","scheduledStartTime":"2024-10-17T17:07:54.762Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612yRnMeHrbUvoWmoYSvILLlXd2qm8c75NfppVIT_OP9cxQa9Y88bnDZ5kG3MQel6eDiwRDdhGlrI9PeJ796Kl5fQ9zlO5sIUs_YOW0dGpCzLq8czox_4V-5oEy0WpzAqvA1BZI0tHA8UfbYphWww3FOPNZltjgHONv2MaCgYKAQoSARESFQHGX2MiVyn4Lq4RtEWG8OVm0ZqXtg0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"sdsd\",\"description\":\"asdasdsad\",\"scheduledStartTime\":\"2024-10-17T17:07:54.762Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"bJig1nk6t8nbU08Kpab_WJL8jg8","id":"Z2fQthLZrAc","snippet":{"publishedAt":"2024-10-17T17:07:41Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"sdsd","description":"asdasdsad","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/Z2fQthLZrAc/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/Z2fQthLZrAc/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/Z2fQthLZrAc/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T17:07:54Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILWjJmUXRoTFpyQWM"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/Z2fQthLZrAc?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Thu, 17 Oct 2024 17:07:42 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-17T17:07:47.116Z [INFO]:"stream created "
+
+2024-10-17T17:07:51.401Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"bJig1nk6t8nbU08Kpab_WJL8jg8","id":"Z2fQthLZrAc","snippet":{"publishedAt":"2024-10-17T17:07:41Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"sdsd","description":"asdasdsad","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/Z2fQthLZrAc/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/Z2fQthLZrAc/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/Z2fQthLZrAc/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-17T17:07:54Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILWjJmUXRoTFpyQWM"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/Z2fQthLZrAc?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"jLxPYu7H9QtgxQemT3GHZgimMsM","id":"dGq1qjb5R27ENhSCBj20gw1729184866612133","snippet":{"publishedAt":"2024-10-17T17:07:46Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"sdsd","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"8xtx-1jey-r1w0-r47t-b7y8","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"yLe765NklqRrgWo-K8okdJb04ls","id":"Z2fQthLZrAc","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729184866612133","boundStreamLastUpdateTimeMs":"2024-10-17T17:07:46Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/Z2fQthLZrAc?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"Z2fQthLZrAc"}
+
+2024-10-17T17:07:52.274Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-17T17:07:56.573Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-17T17:26:13.994Z [INFO]:"code for stopped stream 14875 : 224"
+
+2024-10-17T17:26:13.997Z [INFO]:"FFmpeg process exited with code 224"
+
+2024-10-17T17:26:13.998Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-17T17:36:15.902Z [INFO]:"code for stopped stream 15367 : 224"
+
+2024-10-17T17:36:15.903Z [INFO]:"FFmpeg process exited with code 224"
+
+2024-10-17T17:36:15.903Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-21T06:30:00.191Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-10-21T06:30:00.193Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-10-22T10:30:00.372Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-10-22T15:56:05.379Z [INFO]:"Database Stopping stream k6ry80Hw2EI"
+
+2024-10-22T15:56:05.431Z [INFO]:"there is no any ffmpeg proccess running - k6ry80Hw2EI"
+
+2024-10-22T16:02:35.065Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-22T16:02:36.748Z [INFO]:"code for stopped stream 23812 : 251"
+
+2024-10-22T16:02:36.748Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:02:36.749Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:02:43.652Z [INFO]:"code for stopped stream 23828 : 251"
+
+2024-10-22T16:02:43.652Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:02:43.652Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:02:50.302Z [INFO]:"code for stopped stream 23846 : 251"
+
+2024-10-22T16:02:50.302Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:02:50.302Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:02:52.425Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:02:56.378Z [INFO]:"code for stopped stream 23875 : 251"
+
+2024-10-22T16:02:56.378Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:02:56.378Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:02.873Z [INFO]:"code for stopped stream 23921 : 251"
+
+2024-10-22T16:03:02.874Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:02.874Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:09.057Z [INFO]:"code for stopped stream 23939 : 251"
+
+2024-10-22T16:03:09.057Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:09.058Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:09.265Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:03:15.106Z [INFO]:"code for stopped stream 23954 : 251"
+
+2024-10-22T16:03:15.106Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:15.106Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:21.173Z [INFO]:"code for stopped stream 23969 : 251"
+
+2024-10-22T16:03:21.173Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:21.173Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:27.285Z [INFO]:"code for stopped stream 23989 : 251"
+
+2024-10-22T16:03:27.285Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:27.285Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:33.367Z [INFO]:"code for stopped stream 24004 : 251"
+
+2024-10-22T16:03:33.367Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:33.368Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:39.166Z [INFO]:"code for stopped stream 24022 : 251"
+
+2024-10-22T16:03:39.166Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:39.166Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:45.241Z [INFO]:"code for stopped stream 24037 : 251"
+
+2024-10-22T16:03:45.241Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:45.241Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:51.285Z [INFO]:"code for stopped stream 24052 : 251"
+
+2024-10-22T16:03:51.286Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:03:51.286Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:03:58.953Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:04:44.478Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:04:57.447Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:05:49.918Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:06:24.589Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:06:47.513Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:17:38.619Z [INFO]:"there is no any ffmpeg proccess running - 6717cc9bfc00c6278089f839"
+
+2024-10-22T16:17:44.356Z [INFO]:"there is no any ffmpeg proccess running - 6713c71f6a014a46e700387d"
+
+2024-10-22T16:28:53.224Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:29:14.777Z [INFO]:"there is no any ffmpeg proccess running - undefined"
+
+2024-10-22T16:29:42.906Z [INFO]:"Database Stopping stream 6717cc9bfc00c6278089f839"
+
+2024-10-22T16:29:42.961Z [INFO]:"there is no any ffmpeg proccess running - 6717cc9bfc00c6278089f839"
+
+2024-10-22T16:29:45.276Z [INFO]:"Database Stopping stream 6713c71f6a014a46e700387d"
+
+2024-10-22T16:29:45.323Z [INFO]:"there is no any ffmpeg proccess running - 6713c71f6a014a46e700387d"
+
+2024-10-22T16:30:00.087Z [INFO]:"Stream undefined has ended and and all files with this playlist id has been removed 1729612951344."
+
+2024-10-22T16:30:00.713Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-10-22T16:30:23.876Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-22T16:30:26.266Z [INFO]:"code for stopped stream 26452 : 251"
+
+2024-10-22T16:30:26.266Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-10-22T16:30:26.267Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:30:28.542Z [INFO]:"Database Stopping stream 6717d31f7c0ac07b50c9a259"
+
+2024-10-22T16:30:28.584Z [INFO]:"Ffmpeg stream stopped 6717d31f7c0ac07b50c9a259"
+
+2024-10-22T16:30:32.231Z [INFO]:"code for stopped stream 26482 : 254"
+
+2024-10-22T16:30:32.232Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:30:32.232Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:30:38.019Z [INFO]:"code for stopped stream 26497 : 254"
+
+2024-10-22T16:30:38.020Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:30:38.020Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:30:43.850Z [INFO]:"code for stopped stream 26520 : 254"
+
+2024-10-22T16:30:43.851Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:30:43.852Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:30:49.751Z [INFO]:"code for stopped stream 26540 : 254"
+
+2024-10-22T16:30:49.752Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:30:49.752Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:30:55.534Z [INFO]:"code for stopped stream 26559 : 254"
+
+2024-10-22T16:30:55.534Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:30:55.534Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:01.357Z [INFO]:"code for stopped stream 26577 : 254"
+
+2024-10-22T16:31:01.357Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:01.357Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:10.475Z [INFO]:"code for stopped stream 26605 : 254"
+
+2024-10-22T16:31:10.475Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:10.475Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:16.588Z [INFO]:"code for stopped stream 26633 : 254"
+
+2024-10-22T16:31:16.589Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:16.589Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:22.422Z [INFO]:"code for stopped stream 26648 : 254"
+
+2024-10-22T16:31:22.422Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:22.422Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:28.234Z [INFO]:"code for stopped stream 26663 : 254"
+
+2024-10-22T16:31:28.235Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:28.235Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:34.030Z [INFO]:"code for stopped stream 26683 : 254"
+
+2024-10-22T16:31:34.030Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:34.030Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:39.770Z [INFO]:"code for stopped stream 26704 : 254"
+
+2024-10-22T16:31:39.770Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:39.770Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:45.585Z [INFO]:"code for stopped stream 26732 : 254"
+
+2024-10-22T16:31:45.586Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:45.586Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:51.349Z [INFO]:"code for stopped stream 26751 : 254"
+
+2024-10-22T16:31:51.350Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:51.350Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:31:57.147Z [INFO]:"code for stopped stream 26768 : 254"
+
+2024-10-22T16:31:57.147Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:31:57.147Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:02.927Z [INFO]:"code for stopped stream 26783 : 254"
+
+2024-10-22T16:32:02.927Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:02.927Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:08.659Z [INFO]:"code for stopped stream 26798 : 254"
+
+2024-10-22T16:32:08.660Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:08.660Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:14.436Z [INFO]:"code for stopped stream 26816 : 254"
+
+2024-10-22T16:32:14.436Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:14.436Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:20.322Z [INFO]:"code for stopped stream 26832 : 254"
+
+2024-10-22T16:32:20.322Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:20.322Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:26.295Z [INFO]:"code for stopped stream 26847 : 254"
+
+2024-10-22T16:32:26.295Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:26.295Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:32.113Z [INFO]:"code for stopped stream 26862 : 254"
+
+2024-10-22T16:32:32.113Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:32.113Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:40.410Z [INFO]:"code for stopped stream 26877 : 254"
+
+2024-10-22T16:32:40.410Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:40.411Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:46.493Z [INFO]:"code for stopped stream 26894 : 254"
+
+2024-10-22T16:32:46.493Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:46.493Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:52.602Z [INFO]:"code for stopped stream 26911 : 254"
+
+2024-10-22T16:32:52.603Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:52.603Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:32:59.434Z [INFO]:"code for stopped stream 26929 : 254"
+
+2024-10-22T16:32:59.434Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:32:59.434Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:05.297Z [INFO]:"code for stopped stream 26964 : 254"
+
+2024-10-22T16:33:05.297Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:05.297Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:11.521Z [INFO]:"code for stopped stream 26997 : 254"
+
+2024-10-22T16:33:11.521Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:11.521Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:17.558Z [INFO]:"code for stopped stream 27012 : 254"
+
+2024-10-22T16:33:17.558Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:17.558Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:23.320Z [INFO]:"code for stopped stream 27029 : 254"
+
+2024-10-22T16:33:23.320Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:23.320Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:29.326Z [INFO]:"code for stopped stream 27046 : 254"
+
+2024-10-22T16:33:29.326Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:29.326Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:35.445Z [INFO]:"code for stopped stream 27063 : 254"
+
+2024-10-22T16:33:35.445Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:35.445Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:41.262Z [INFO]:"code for stopped stream 27078 : 254"
+
+2024-10-22T16:33:41.262Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:41.262Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:47.297Z [INFO]:"code for stopped stream 27094 : 254"
+
+2024-10-22T16:33:47.297Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:47.298Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:53.092Z [INFO]:"code for stopped stream 27110 : 254"
+
+2024-10-22T16:33:53.093Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:53.093Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:33:58.838Z [INFO]:"code for stopped stream 27126 : 254"
+
+2024-10-22T16:33:58.838Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:33:58.838Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:04.621Z [INFO]:"code for stopped stream 27144 : 254"
+
+2024-10-22T16:34:04.621Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:04.621Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:10.399Z [INFO]:"code for stopped stream 27173 : 254"
+
+2024-10-22T16:34:10.399Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:10.400Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:16.179Z [INFO]:"code for stopped stream 27191 : 254"
+
+2024-10-22T16:34:16.179Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:16.179Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:22.835Z [INFO]:"code for stopped stream 27244 : 254"
+
+2024-10-22T16:34:22.835Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:22.835Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:28.674Z [INFO]:"code for stopped stream 27280 : 254"
+
+2024-10-22T16:34:28.675Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:28.675Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:34.428Z [INFO]:"code for stopped stream 27309 : 254"
+
+2024-10-22T16:34:34.428Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:34.428Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:40.392Z [INFO]:"code for stopped stream 27331 : 254"
+
+2024-10-22T16:34:40.392Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:40.392Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:46.201Z [INFO]:"code for stopped stream 27350 : 254"
+
+2024-10-22T16:34:46.201Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:46.201Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:51.949Z [INFO]:"code for stopped stream 27367 : 254"
+
+2024-10-22T16:34:51.949Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:51.949Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:34:57.790Z [INFO]:"code for stopped stream 27382 : 254"
+
+2024-10-22T16:34:57.790Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:34:57.790Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:03.942Z [INFO]:"code for stopped stream 27398 : 254"
+
+2024-10-22T16:35:03.942Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:03.942Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:09.726Z [INFO]:"code for stopped stream 27419 : 254"
+
+2024-10-22T16:35:09.726Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:09.726Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:15.529Z [INFO]:"code for stopped stream 27434 : 254"
+
+2024-10-22T16:35:15.529Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:15.529Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:21.427Z [INFO]:"code for stopped stream 27449 : 254"
+
+2024-10-22T16:35:21.427Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:21.427Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:27.309Z [INFO]:"code for stopped stream 27466 : 254"
+
+2024-10-22T16:35:27.309Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:27.309Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:34.091Z [INFO]:"code for stopped stream 27481 : 254"
+
+2024-10-22T16:35:34.091Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:34.091Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:39.775Z [INFO]:"code for stopped stream 27498 : 254"
+
+2024-10-22T16:35:39.775Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:39.775Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:45.893Z [INFO]:"code for stopped stream 27514 : 254"
+
+2024-10-22T16:35:45.894Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:45.894Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:51.846Z [INFO]:"code for stopped stream 27529 : 254"
+
+2024-10-22T16:35:51.846Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:51.847Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:35:57.724Z [INFO]:"code for stopped stream 27545 : 254"
+
+2024-10-22T16:35:57.724Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:35:57.724Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:03.581Z [INFO]:"code for stopped stream 27561 : 254"
+
+2024-10-22T16:36:03.581Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:03.581Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:09.492Z [INFO]:"code for stopped stream 27584 : 254"
+
+2024-10-22T16:36:09.493Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:09.493Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:15.339Z [INFO]:"code for stopped stream 27637 : 254"
+
+2024-10-22T16:36:15.339Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:15.339Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:21.186Z [INFO]:"code for stopped stream 27662 : 254"
+
+2024-10-22T16:36:21.186Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:21.186Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:27.663Z [INFO]:"code for stopped stream 27681 : 254"
+
+2024-10-22T16:36:27.663Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:27.663Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:33.500Z [INFO]:"code for stopped stream 27697 : 254"
+
+2024-10-22T16:36:33.500Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:33.500Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:39.282Z [INFO]:"code for stopped stream 27714 : 254"
+
+2024-10-22T16:36:39.283Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:39.283Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:45.033Z [INFO]:"code for stopped stream 27729 : 254"
+
+2024-10-22T16:36:45.033Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:45.033Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:50.836Z [INFO]:"code for stopped stream 27744 : 254"
+
+2024-10-22T16:36:50.837Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:50.837Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:36:56.618Z [INFO]:"code for stopped stream 27760 : 254"
+
+2024-10-22T16:36:56.619Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:36:56.619Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:37:37.146Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"affssf","description":"aaffa","scheduledStartTime":"2024-10-22T16:37:50.042Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AcM612wUNN77ACMad4yCU7sKoUFa96wQ2oIhGq64vWSK538uD08F3Du37nOaQO77jhtC1hX34F3KNmAcGRodEzg171tifBkIWQ5LsNImG3pupuFkcTIwzVo0RRliZpta48R5750ZmutADgt0UUJJrfOpFEMwLG4muQKFV2uVaCgYKATYSARESFQHGX2MiJeWTg0O8UY55COSdrq8QTQ0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"affssf\",\"description\":\"aaffa\",\"scheduledStartTime\":\"2024-10-22T16:37:50.042Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"wLfZbexHTHkQfXiTFqvSJyId2pg","id":"oDf5P8EVq4w","snippet":{"publishedAt":"2024-10-22T16:37:36Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"affssf","description":"aaffa","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/oDf5P8EVq4w/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/oDf5P8EVq4w/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/oDf5P8EVq4w/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-22T16:37:50Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILb0RmNVA4RVZxNHc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/oDf5P8EVq4w?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Tue, 22 Oct 2024 16:37:37 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-10-22T16:37:41.376Z [INFO]:"stream created "
+
+2024-10-22T16:37:45.585Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"wLfZbexHTHkQfXiTFqvSJyId2pg","id":"oDf5P8EVq4w","snippet":{"publishedAt":"2024-10-22T16:37:36Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"affssf","description":"aaffa","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/oDf5P8EVq4w/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/oDf5P8EVq4w/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/oDf5P8EVq4w/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-10-22T16:37:50Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILb0RmNVA4RVZxNHc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/oDf5P8EVq4w?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"P-VLeU-T_GPUdNBRseSHJ-6HQHg","id":"dGq1qjb5R27ENhSCBj20gw1729615060691485","snippet":{"publishedAt":"2024-10-22T16:37:41Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"affssf","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"yu3x-30hb-cq48-3tsz-6gzu","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"itKWE30140J9z8wMyLAinrhuPGo","id":"oDf5P8EVq4w","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1729615060691485","boundStreamLastUpdateTimeMs":"2024-10-22T16:37:41Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/oDf5P8EVq4w?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"oDf5P8EVq4w"}
+
+2024-10-22T16:37:46.113Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-10-22T16:37:50.719Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-22T16:38:00.146Z [INFO]:"Database Stopping stream 6717d4de32da82973ecf66f5"
+
+2024-10-22T16:38:00.228Z [INFO]:"Ffmpeg stream stopped 6717d4de32da82973ecf66f5"
+
+2024-10-22T16:38:01.827Z [INFO]:"code for stopped stream 27849 : 255"
+
+2024-10-22T16:38:01.828Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-10-22T16:43:47.790Z [INFO]:"Database Stopping stream 6717d4de32da82973ecf66f5"
+
+2024-10-22T16:43:47.850Z [INFO]:"there is no any ffmpeg proccess running - 6717d4de32da82973ecf66f5"
+
+2024-10-22T16:44:28.161Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-22T16:44:29.052Z [INFO]:"code for stopped stream 28206 : 254"
+
+2024-10-22T16:44:29.052Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:44:29.053Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:44:34.918Z [INFO]:"code for stopped stream 28223 : 254"
+
+2024-10-22T16:44:34.918Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:44:34.918Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:44:36.237Z [INFO]:"Database Stopping stream 6717d66cc058d1310c7beb69"
+
+2024-10-22T16:44:36.296Z [INFO]:"Ffmpeg stream stopped 6717d66cc058d1310c7beb69"
+
+2024-10-22T16:44:40.653Z [INFO]:"code for stopped stream 28242 : 254"
+
+2024-10-22T16:44:40.653Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:44:40.653Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:44:46.946Z [INFO]:"code for stopped stream 28263 : 254"
+
+2024-10-22T16:44:46.947Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:44:46.947Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:44:52.750Z [INFO]:"code for stopped stream 28278 : 254"
+
+2024-10-22T16:44:52.751Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:44:52.751Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:44:58.453Z [INFO]:"code for stopped stream 28294 : 254"
+
+2024-10-22T16:44:58.453Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:44:58.453Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:04.208Z [INFO]:"code for stopped stream 28310 : 254"
+
+2024-10-22T16:45:04.209Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:04.209Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:09.887Z [INFO]:"code for stopped stream 28332 : 254"
+
+2024-10-22T16:45:09.888Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:09.889Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:15.640Z [INFO]:"code for stopped stream 28347 : 254"
+
+2024-10-22T16:45:15.640Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:15.640Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:21.383Z [INFO]:"code for stopped stream 28364 : 254"
+
+2024-10-22T16:45:21.383Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:21.383Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:24.971Z [INFO]:"Database Stopping stream 6717d66cc058d1310c7beb69"
+
+2024-10-22T16:45:25.030Z [INFO]:"Ffmpeg stream stopped 6717d66cc058d1310c7beb69"
+
+2024-10-22T16:45:27.136Z [INFO]:"code for stopped stream 28382 : 254"
+
+2024-10-22T16:45:27.136Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:27.136Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:33.353Z [INFO]:"code for stopped stream 28402 : 254"
+
+2024-10-22T16:45:33.353Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:33.354Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:39.226Z [INFO]:"code for stopped stream 28417 : 254"
+
+2024-10-22T16:45:39.226Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:39.226Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:44.994Z [INFO]:"code for stopped stream 28432 : 254"
+
+2024-10-22T16:45:44.995Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:44.995Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:50.777Z [INFO]:"code for stopped stream 28447 : 254"
+
+2024-10-22T16:45:50.777Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:50.777Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:45:57.002Z [INFO]:"code for stopped stream 28465 : 254"
+
+2024-10-22T16:45:57.003Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:45:57.003Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:02.725Z [INFO]:"code for stopped stream 28483 : 254"
+
+2024-10-22T16:46:02.725Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:02.725Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:08.461Z [INFO]:"code for stopped stream 28498 : 254"
+
+2024-10-22T16:46:08.461Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:08.461Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:14.200Z [INFO]:"code for stopped stream 28514 : 254"
+
+2024-10-22T16:46:14.200Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:14.200Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:19.896Z [INFO]:"code for stopped stream 28529 : 254"
+
+2024-10-22T16:46:19.896Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:19.896Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:25.673Z [INFO]:"code for stopped stream 28544 : 254"
+
+2024-10-22T16:46:25.673Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:25.673Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:31.460Z [INFO]:"code for stopped stream 28560 : 254"
+
+2024-10-22T16:46:31.460Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:31.460Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:37.156Z [INFO]:"code for stopped stream 28580 : 254"
+
+2024-10-22T16:46:37.156Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:37.156Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:42.901Z [INFO]:"code for stopped stream 28595 : 254"
+
+2024-10-22T16:46:42.902Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:42.902Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:48.655Z [INFO]:"code for stopped stream 28610 : 254"
+
+2024-10-22T16:46:48.655Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:48.655Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:46:54.562Z [INFO]:"code for stopped stream 28625 : 254"
+
+2024-10-22T16:46:54.562Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:46:54.562Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:00.389Z [INFO]:"code for stopped stream 28641 : 254"
+
+2024-10-22T16:47:00.389Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:00.389Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:06.328Z [INFO]:"code for stopped stream 28657 : 254"
+
+2024-10-22T16:47:06.328Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:06.328Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:12.166Z [INFO]:"code for stopped stream 28684 : 254"
+
+2024-10-22T16:47:12.166Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:12.166Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:18.099Z [INFO]:"code for stopped stream 28717 : 254"
+
+2024-10-22T16:47:18.099Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:18.099Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:24.270Z [INFO]:"code for stopped stream 28732 : 254"
+
+2024-10-22T16:47:24.270Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:24.270Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:30.070Z [INFO]:"code for stopped stream 28747 : 254"
+
+2024-10-22T16:47:30.070Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:30.070Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:35.834Z [INFO]:"code for stopped stream 28764 : 254"
+
+2024-10-22T16:47:35.834Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:35.834Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:41.541Z [INFO]:"code for stopped stream 28781 : 254"
+
+2024-10-22T16:47:41.541Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:41.541Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:47.305Z [INFO]:"code for stopped stream 28796 : 254"
+
+2024-10-22T16:47:47.305Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:47.305Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:53.594Z [INFO]:"code for stopped stream 28818 : 254"
+
+2024-10-22T16:47:53.594Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:53.594Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:47:59.403Z [INFO]:"code for stopped stream 28870 : 254"
+
+2024-10-22T16:47:59.404Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:47:59.404Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:05.144Z [INFO]:"code for stopped stream 28888 : 254"
+
+2024-10-22T16:48:05.144Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:05.144Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:10.946Z [INFO]:"code for stopped stream 28904 : 254"
+
+2024-10-22T16:48:10.947Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:10.947Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:16.683Z [INFO]:"code for stopped stream 28921 : 254"
+
+2024-10-22T16:48:16.684Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:16.684Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:22.503Z [INFO]:"code for stopped stream 28936 : 254"
+
+2024-10-22T16:48:22.503Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:22.503Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:28.590Z [INFO]:"code for stopped stream 28951 : 254"
+
+2024-10-22T16:48:28.591Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:28.591Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:34.345Z [INFO]:"code for stopped stream 28967 : 254"
+
+2024-10-22T16:48:34.345Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:34.345Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:40.114Z [INFO]:"code for stopped stream 28982 : 254"
+
+2024-10-22T16:48:40.115Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:40.115Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:47.068Z [INFO]:"code for stopped stream 29000 : 254"
+
+2024-10-22T16:48:47.068Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:47.068Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:52.895Z [INFO]:"code for stopped stream 29017 : 254"
+
+2024-10-22T16:48:52.895Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:52.895Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:48:58.606Z [INFO]:"code for stopped stream 29036 : 254"
+
+2024-10-22T16:48:58.606Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:48:58.606Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:04.315Z [INFO]:"code for stopped stream 29055 : 254"
+
+2024-10-22T16:49:04.316Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:04.316Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:10.074Z [INFO]:"code for stopped stream 29072 : 254"
+
+2024-10-22T16:49:10.075Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:10.075Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:15.833Z [INFO]:"code for stopped stream 29087 : 254"
+
+2024-10-22T16:49:15.833Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:15.833Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:21.544Z [INFO]:"code for stopped stream 29103 : 254"
+
+2024-10-22T16:49:21.544Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:21.544Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:27.301Z [INFO]:"code for stopped stream 29120 : 254"
+
+2024-10-22T16:49:27.301Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:27.301Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:33.071Z [INFO]:"code for stopped stream 29136 : 254"
+
+2024-10-22T16:49:33.071Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:33.071Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:38.844Z [INFO]:"code for stopped stream 29151 : 254"
+
+2024-10-22T16:49:38.844Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:38.844Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:44.761Z [INFO]:"code for stopped stream 29166 : 254"
+
+2024-10-22T16:49:44.761Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:44.761Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:50.519Z [INFO]:"code for stopped stream 29183 : 254"
+
+2024-10-22T16:49:50.519Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:50.519Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:49:56.313Z [INFO]:"code for stopped stream 29198 : 254"
+
+2024-10-22T16:49:56.313Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:49:56.314Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:50:02.012Z [INFO]:"code for stopped stream 29217 : 254"
+
+2024-10-22T16:50:02.013Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:50:02.013Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:50:07.749Z [INFO]:"code for stopped stream 29232 : 254"
+
+2024-10-22T16:50:07.750Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:50:07.750Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:50:13.531Z [INFO]:"code for stopped stream 29248 : 254"
+
+2024-10-22T16:50:13.531Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:50:13.532Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:50:19.268Z [INFO]:"code for stopped stream 29263 : 254"
+
+2024-10-22T16:50:19.268Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:50:19.268Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:50:25.053Z [INFO]:"code for stopped stream 29278 : 254"
+
+2024-10-22T16:50:25.053Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:50:25.053Z [INFO]:"process retrying to start FFmpeg, count 1"
+
+2024-10-22T16:51:22.191Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-10-22T16:51:23.129Z [INFO]:"code for stopped stream 29481 : 254"
+
+2024-10-22T16:51:23.129Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-10-22T16:51:31.134Z [INFO]:"Database Stopping stream 6717d80a1414f7e731661f77"
+
+2024-10-22T16:51:31.188Z [INFO]:"Ffmpeg stream stopped 6717d80a1414f7e731661f77"
+

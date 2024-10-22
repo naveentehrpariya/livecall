@@ -275,6 +275,7 @@ let activeStreams = {};
 const stopFlags = {}; 
 const stopffmpegstream = async (videoid) => {
   const child = activeStreams[videoid];
+  console.log(`child`, child);  
   if(child){
     stopFlags[videoid] = true; // Set stop flag to indicate intentional stop
     child.kill('SIGINT'); // Gracefully terminate the process
@@ -288,10 +289,9 @@ const stopffmpegstream = async (videoid) => {
   
 const stopDbStream = async (videoId) => {
   try {
-    const stream = await Stream.findOne({ streamId: videoId });
-    const streamlast = await Stream.findById(stream._id);
-    if (!streamlast) {
-      console.log("Stream not found");
+    const streamlast = await Stream.findById(videoId);
+    if (!streamlast){
+      console.log("Stream not found !!");
       return false;
     }
     console.log("Found stream: " + streamlast);
@@ -390,7 +390,7 @@ const createPlaylist = catchAsync (async (req, res, next) => {
 });
 
 async function start_ffmpeg(data) {
-  const { streamkey, audio, video, res, videoID, platformtype, stream_url } = data;
+  const { streamkey, audio, video, res, videoID, objectID, platformtype, stream_url } = data;
   const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamkey}` : `${stream_url}/${streamkey}`;
   
   console.log("ffmpeg data", data);
@@ -482,25 +482,25 @@ async function start_ffmpeg(data) {
       if (!streamkey) {
         throw new Error('Required parameters missing');
       }
-      stopFlags[videoID] = false; // Reset stop flag before starting
+      stopFlags[objectID] = false; // Reset stop flag before starting
       const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
-      activeStreams[videoID] = child;
+      activeStreams[objectID] = child;
       let retryCount = 0; 
       child.on('close', (code) => {
           console.log(`FFmpeg process exited with code ${code}`);
           const err = `FFmpeg process exited with code ${code}`;
           logger(`code for stopped stream ${child.pid} : ${code}`);
           logger(err);
-          if (code !== 0 && !stopFlags[videoID]) {
-              retryCount++;
-              logger(`process retrying to start FFmpeg, count ${retryCount}`);
-              if (retryCount < 5){
-                  setTimeout(() => startFFmpegProcess(videoID), 5000);  // Retry with delay
-              } else { 
-                  stopffmpegstream(videoID);
-                  logger(`Unable to restart the stream after ${retryCount} retries, stopped ${videoID}`);
-              }
-          } 
+          // if (code !== 0 && !stopFlags[objectID]) {
+          //     retryCount++;
+          //     logger(`process retrying to start FFmpeg, count ${retryCount}`);
+          //     if (retryCount < 1){
+          //         setTimeout(() => startFFmpegProcess(objectID), 5000);  // Retry with delay
+          //     } else { 
+          //         stopffmpegstream(objectID);
+          //         logger(`Unable to restart the stream after ${retryCount} retries, stopped ${videoID}`);
+          //     }
+          // } 
       });
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
@@ -513,7 +513,7 @@ async function start_ffmpeg(data) {
         const lerr = `Child process error: ${err}`;
         console.error(lerr);
         logger(lerr);
-        stopffmpegstream(videoID);
+        stopffmpegstream(objectID);
       });
     };
     startFFmpegProcess();
@@ -602,6 +602,7 @@ const start_stream = catchAsync(async (req, res, next) => {
         video : video, 
         res: req.body.resolution, 
         videoID : videoID,
+        objectID: savedStream._id,
         platformtype : 'youtube',
         stream_url : null
       }
@@ -672,6 +673,7 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
         video : req.body.video, 
         res: req.body.resolution, 
         videoID : videoID,
+        objectID: savedStream._id,
         stream_url : req.body.stream_url,
         platformtype : 'rtmp'
       }
@@ -861,8 +863,8 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
 
 const stop_stream = async (req, res, next) => {
   try {
-    const streamId  = req.params.streamId;
-    if(streamId == "" || streamId == null || streamId == undefined){
+    const objectID  = req.params.streamId;
+    if(objectID == "" || objectID == null || objectID == undefined){
       res.json({
         status : false,
         message: 'Stream ID is required.'
@@ -870,8 +872,8 @@ const stop_stream = async (req, res, next) => {
       return false;
     }
 
-    const stop = await stopDbStream(streamId);
-    await stopffmpegstream(streamId);
+    const stop = await stopDbStream(objectID);
+    await stopffmpegstream(objectID);
     console.log("stop",stop)
     if(stop){
       return res.status(200).json({
