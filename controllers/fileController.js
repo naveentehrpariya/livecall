@@ -72,6 +72,7 @@ const myMedia = catchAsync(async (req, res) => {
 
 const deleteMedia = async (req, res) => {
   try{
+    await authorizeB2();
     const { id } = req.params;
     const file = await Files.findById(id);
     if (!file) {
