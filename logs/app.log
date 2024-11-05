@@ -3432,3 +3432,171 @@
 
 2024-11-04T12:06:10.319Z [INFO]:"FFmpeg process exited with code null"
 
+2024-11-05T09:52:07.731Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"New stream ","description":"hello test","scheduledStartTime":"2024-11-05T09:52:20.244Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.17.0","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeDClZAGyYeEvDiIuKiaBLE_syIoORFnIcJA37c1JZnZ6M-NrP2xRTa7swNf0XgIRHFRfKCfGno6mf3fIZ6K5mDrv4Ptp6VwExrN53EM8iSmYGoqE-YN3sCXtnesy_Ay_2dDV-Ms1R1KpD2cYX1INPdPGSWfQCIt0bS1hNYe-waCgYKAeQSARESFQHGX2MiNOP1RgXKtKrmxYDvckLS_A0177","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"New stream \",\"description\":\"hello test\",\"scheduledStartTime\":\"2024-11-05T09:52:20.244Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"ZXkA8DiecRX7KZ4gJzNeQ8-oC2g","id":"9Ye-APgyAkc","snippet":{"publishedAt":"2024-11-05T09:52:07Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New stream","description":"hello test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/9Ye-APgyAkc/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/9Ye-APgyAkc/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/9Ye-APgyAkc/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T09:52:20Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILOVllLUFQZ3lBa2M"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/9Ye-APgyAkc?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Tue, 05 Nov 2024 09:52:08 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-11-05T09:52:11.916Z [INFO]:"stream created "
+
+2024-11-05T09:52:16.008Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"ZXkA8DiecRX7KZ4gJzNeQ8-oC2g","id":"9Ye-APgyAkc","snippet":{"publishedAt":"2024-11-05T09:52:07Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New stream","description":"hello test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/9Ye-APgyAkc/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/9Ye-APgyAkc/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/9Ye-APgyAkc/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T09:52:20Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILOVllLUFQZ3lBa2M"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/9Ye-APgyAkc?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"c1OejN6SdMbwe5bg52-hltPL0Ho","id":"dGq1qjb5R27ENhSCBj20gw1730800332090919","snippet":{"publishedAt":"2024-11-05T09:52:12Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New stream","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"9mme-m33y-5xx5-qxc2-5xwq","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"rtIxR-WNU4eFYnrCo3SdcQEG4hY","id":"9Ye-APgyAkc","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1730800332090919","boundStreamLastUpdateTimeMs":"2024-11-05T09:52:12Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/9Ye-APgyAkc?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"9Ye-APgyAkc"}
+
+2024-11-05T09:52:16.611Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-11-05T09:52:19.396Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T09:56:17.616Z [INFO]:"there is no any ffmpeg proccess running - 9Ye-APgyAkc"
+
+2024-11-05T09:56:18.838Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T09:56:21.880Z [INFO]:"code for stopped stream 8232 : 4294967294"
+
+2024-11-05T09:56:21.881Z [INFO]:"FFmpeg process exited with code 4294967294"
+
+2024-11-05T09:58:49.007Z [INFO]:"there is no any ffmpeg proccess running - 9Ye-APgyAkc"
+
+2024-11-05T09:58:50.011Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T09:58:52.095Z [INFO]:"code for stopped stream 14396 : 4294967294"
+
+2024-11-05T09:58:52.096Z [INFO]:"FFmpeg process exited with code 4294967294"
+
+2024-11-05T10:17:59.963Z [INFO]:"there is no any ffmpeg proccess running - 9Ye-APgyAkc"
+
+2024-11-05T10:18:01.094Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T10:18:03.220Z [INFO]:"code for stopped stream 7180 : 4294967294"
+
+2024-11-05T10:18:03.220Z [INFO]:"FFmpeg process exited with code 4294967294"
+
+2024-11-05T10:18:15.603Z [INFO]:"Database Stopping stream 6729ead37d187f68915dd7fb"
+
+2024-11-05T10:18:15.871Z [INFO]:"Ffmpeg stream stopped 6729ead37d187f68915dd7fb"
+
+2024-11-05T10:18:15.976Z [INFO]:"code for stopped stream 8904 : null"
+
+2024-11-05T10:18:15.977Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T10:28:43.889Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"Last Stream for YT","description":"test yt","scheduledStartTime":"2024-11-05T10:28:56.188Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.17.0","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeDClZCBQEF_phbApQ8uOyis2f5sRnc-HRXZ-BOCIvERdCm9V5FfbyUAwrzGhQItCm5CKGsvVJEIzfOCRUz3vPLlTJkH0H0rDgcdlA2kKcnHTS-CrywIvs8RiqzhCJEaSmlClwBISePY5XOaH79PyMDI3JTvtSsqeyPaPyZ1EAaCgYKARMSARESFQHGX2MiLa4ea0cGVER-J0ZILTq6PQ0177","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"Last Stream for YT\",\"description\":\"test yt\",\"scheduledStartTime\":\"2024-11-05T10:28:56.188Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"2CrPHAkXHugqvd3kxc3AsU9AfIQ","id":"9Yry-Dr3NvY","snippet":{"publishedAt":"2024-11-05T10:28:43Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Last Stream for YT","description":"test yt","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/9Yry-Dr3NvY/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/9Yry-Dr3NvY/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/9Yry-Dr3NvY/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T10:28:56Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILOVlyeS1EcjNOdlk"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/9Yry-Dr3NvY?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Tue, 05 Nov 2024 10:28:44 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-11-05T10:28:48.055Z [INFO]:"stream created "
+
+2024-11-05T10:28:52.337Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"2CrPHAkXHugqvd3kxc3AsU9AfIQ","id":"9Yry-Dr3NvY","snippet":{"publishedAt":"2024-11-05T10:28:43Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Last Stream for YT","description":"test yt","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/9Yry-Dr3NvY/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/9Yry-Dr3NvY/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/9Yry-Dr3NvY/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T10:28:56Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILOVlyeS1EcjNOdlk"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/9Yry-Dr3NvY?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"3sVjUObGeuESLzJ-NqG1Elu945Q","id":"dGq1qjb5R27ENhSCBj20gw1730802528290719","snippet":{"publishedAt":"2024-11-05T10:28:48Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Last Stream for YT","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"fz6c-7bys-fzkm-dzbs-aszw","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"ghUf17VzRO1V2NrCqF_T6CI1Q54","id":"9Yry-Dr3NvY","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1730802528290719","boundStreamLastUpdateTimeMs":"2024-11-05T10:28:48Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/9Yry-Dr3NvY?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"9Yry-Dr3NvY"}
+
+2024-11-05T10:28:52.991Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-11-05T10:28:56.168Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T10:30:00.858Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-05T10:30:00.901Z [INFO]:"Stream vG3ra4RsV00 has ended and and all files with this playlist id has been removed 1730721896901."
+
+2024-11-05T10:30:00.903Z [INFO]:"Stream 9Ye-APgyAkc has ended and and all files with this playlist id has been removed 1730801878429."
+
+2024-11-05T10:30:12.650Z [INFO]:"Ffmpeg stream stopped 6729f3689704f1b7c4408f4e"
+
+2024-11-05T10:30:12.761Z [INFO]:"code for stopped stream 7196 : null"
+
+2024-11-05T10:30:12.762Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T10:30:13.653Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T10:41:30.577Z [INFO]:"Ffmpeg stream stopped 6729f3689704f1b7c4408f4e"
+
+2024-11-05T10:41:30.603Z [INFO]:"code for stopped stream 11676 : null"
+
+2024-11-05T10:41:30.603Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T10:41:31.593Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T10:43:28.522Z [INFO]:"code for stopped stream 15072 : 4294957243"
+
+2024-11-05T10:43:28.522Z [INFO]:"FFmpeg process exited with code 4294957243"
+
+2024-11-05T11:30:00.425Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-05T11:30:00.686Z [INFO]:"Stream vG3ra4RsV00 has ended and and all files with this playlist id has been removed 1730721896901."
+
+2024-11-05T11:30:00.688Z [INFO]:"Stream 9Ye-APgyAkc has ended and and all files with this playlist id has been removed 1730801878429."
+
+2024-11-05T11:35:33.197Z [INFO]:"Database Stopping stream 6729f3689704f1b7c4408f4e"
+
+2024-11-05T11:35:33.301Z [INFO]:"Ffmpeg stream stopped 6729f3689704f1b7c4408f4e"
+
+2024-11-05T11:44:17.466Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"New Live 3","description":"test","scheduledStartTime":"2024-11-05T11:44:30.131Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.17.0","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeDClZDWRs3Z98r7aBA1BGai_k6YIao0KnbP0ElYQwHxo-eEWrpvt1YGgo_vpgUxHtuu5R6GZo8DQlSmhxAmm52sfQl5zqEvwEGU8YtcYByXV5nMT9wgR1YewWud8X6C6zbEwh-QeimFIPI6_C6uAL58CecLiT-v6em21x1-3AaCgYKAZMSARESFQHGX2Mi4t3SdUyaJ7DJ_JjlZa_GmA0177","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"New Live 3\",\"description\":\"test\",\"scheduledStartTime\":\"2024-11-05T11:44:30.131Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"9FQfLUgYW6lxY--gDw-pVpx_2h0","id":"BXugddQjBxw","snippet":{"publishedAt":"2024-11-05T11:44:17Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New Live 3","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/BXugddQjBxw/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/BXugddQjBxw/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/BXugddQjBxw/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T11:44:30Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILQlh1Z2RkUWpCeHc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/BXugddQjBxw?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Tue, 05 Nov 2024 11:44:18 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-11-05T11:44:21.686Z [INFO]:"stream created "
+
+2024-11-05T11:44:25.857Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"9FQfLUgYW6lxY--gDw-pVpx_2h0","id":"BXugddQjBxw","snippet":{"publishedAt":"2024-11-05T11:44:17Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New Live 3","description":"test","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/BXugddQjBxw/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/BXugddQjBxw/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/BXugddQjBxw/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T11:44:30Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILQlh1Z2RkUWpCeHc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/BXugddQjBxw?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"9rqaEmL-0nKe9xW3KfaKK7JDR9Y","id":"dGq1qjb5R27ENhSCBj20gw1730807061893098","snippet":{"publishedAt":"2024-11-05T11:44:22Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New Live 3","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"taj7-erax-15m7-718c-ctr2","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"MM8Ztung5EPqZ_XroF1Kqzk357g","id":"BXugddQjBxw","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1730807061893098","boundStreamLastUpdateTimeMs":"2024-11-05T11:44:22Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/BXugddQjBxw?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"BXugddQjBxw"}
+
+2024-11-05T11:44:26.497Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-11-05T11:44:29.281Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T11:45:55.739Z [INFO]:"Ffmpeg stream stopped 672a051d9704f1b7c440900a"
+
+2024-11-05T11:45:55.835Z [INFO]:"code for stopped stream 10620 : null"
+
+2024-11-05T11:45:55.836Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T11:45:56.752Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T11:54:19.845Z [INFO]:"Ffmpeg stream stopped 672a051d9704f1b7c440900a"
+
+2024-11-05T11:54:20.021Z [INFO]:"code for stopped stream 4776 : null"
+
+2024-11-05T11:54:20.022Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T11:54:20.854Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T12:00:22.553Z [INFO]:"Ffmpeg stream stopped 672a051d9704f1b7c440900a"
+
+2024-11-05T12:00:22.595Z [INFO]:"code for stopped stream 15896 : null"
+
+2024-11-05T12:00:22.596Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T12:00:23.575Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T12:16:38.524Z [INFO]:"Ffmpeg stream stopped 672a051d9704f1b7c440900a"
+
+2024-11-05T12:16:38.585Z [INFO]:"code for stopped stream 7924 : null"
+
+2024-11-05T12:16:38.586Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T12:16:39.528Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T12:18:38.244Z [INFO]:"Database Stopping stream 672a051d9704f1b7c440900a"
+
+2024-11-05T12:18:38.355Z [INFO]:"Ffmpeg stream stopped 672a051d9704f1b7c440900a"
+
+2024-11-05T12:18:38.412Z [INFO]:"code for stopped stream 9244 : null"
+
+2024-11-05T12:18:38.413Z [INFO]:"FFmpeg process exited with code null"
+
+2024-11-05T12:30:00.605Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-05T12:30:00.608Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-11-05T12:30:00.724Z [INFO]:"Stream vG3ra4RsV00 has ended and and all files with this playlist id has been removed 1730721896901."
+
+2024-11-05T12:30:00.725Z [INFO]:"Stream 9Ye-APgyAkc has ended and and all files with this playlist id has been removed 1730801878429."
+
+2024-11-05T12:30:00.726Z [INFO]:"Stream 9Yry-Dr3NvY has ended and and all files with this playlist id has been removed 1730802974553."
+
+2024-11-05T12:30:00.727Z [INFO]:"Stream BXugddQjBxw has ended and and all files with this playlist id has been removed 1730808669939."
+
+2024-11-05T12:36:13.313Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"New stream  s","description":"fsdf","scheduledStartTime":"2024-11-05T12:36:25.315Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.17.0","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeDClZD6aiI80NMpbYzjZ04YV3yNrSGCiJXM4SEZjlwDRIHDzZgVJTwIxMW5ThpTQF3oQICC6ttfubXKhK-jwzR-qxFzYXRXK8HacIdxuSPxyyiyEL3GwvhctBBPnslO-qRamPJloVvRqAA8eyzQFtNlckozx8W5vLAERrELnwaCgYKAbESARESFQHGX2MiBRt9jOhQ-Gz1Ez0tceDQaA0177","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"New stream  s\",\"description\":\"fsdf\",\"scheduledStartTime\":\"2024-11-05T12:36:25.315Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"SU0pL3PLliU6sSCgCj7cE-ANbrw","id":"csP5SckJjiU","snippet":{"publishedAt":"2024-11-05T12:36:12Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New stream  s","description":"fsdf","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/csP5SckJjiU/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/csP5SckJjiU/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/csP5SckJjiU/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T12:36:25Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILY3NQNVNja0pqaVU"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/csP5SckJjiU?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Tue, 05 Nov 2024 12:36:14 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-11-05T12:36:17.543Z [INFO]:"stream created "
+
+2024-11-05T12:36:21.636Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"SU0pL3PLliU6sSCgCj7cE-ANbrw","id":"csP5SckJjiU","snippet":{"publishedAt":"2024-11-05T12:36:12Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New stream  s","description":"fsdf","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/csP5SckJjiU/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/csP5SckJjiU/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/csP5SckJjiU/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-05T12:36:25Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILY3NQNVNja0pqaVU"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/csP5SckJjiU?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"efP6p4Sj6E4604JYJWMHCLp3TyY","id":"dGq1qjb5R27ENhSCBj20gw1730810177771467","snippet":{"publishedAt":"2024-11-05T12:36:18Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New stream  s","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"5dwk-wsvj-z1zr-vx07-17k6","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"Q6rEs1jrmn1YyFTIJy1QoiAhfvM","id":"csP5SckJjiU","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1730810177771467","boundStreamLastUpdateTimeMs":"2024-11-05T12:36:18Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/csP5SckJjiU?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"csP5SckJjiU"}
+
+2024-11-05T12:36:22.335Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-11-05T12:36:26.176Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-05T12:44:42.517Z [INFO]:"Database Stopping stream 672a114a60fba59746c173a2"
+
+2024-11-05T12:44:42.626Z [INFO]:"Ffmpeg stream stopped 672a114a60fba59746c173a2"
+
+2024-11-05T12:44:42.663Z [INFO]:"code for stopped stream 5164 : null"
+
+2024-11-05T12:44:42.664Z [INFO]:"FFmpeg process exited with code null"
+

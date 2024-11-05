@@ -1,3 +1,4 @@
+const { error } = require('console');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const path = require('path');
@@ -30,16 +31,15 @@ function reencodeVideo(inputPath, outputPath) {
 
 async function mergeVideos(videoPaths, outputPath, playlistId) {
   console.log("videoPaths", videoPaths);
-
   const tempDir = path.join(__dirname,'..', 'downloads');
   ensureDirectoryExistence(tempDir);
-
   try {
     const reencodedPaths = [];
 
     for (let i = 0; i < videoPaths.length; i++) {
       const inputPath = videoPaths[i];
       const reencodedPath = path.join(tempDir, `${playlistId}-reencoded-${i}.mp4`);
+      console.log(`Processing video and Re-encoding ${inputPath} to ${reencodedPath}`);
       await reencodeVideo(inputPath, reencodedPath);
       reencodedPaths.push(reencodedPath);
     }
@@ -69,9 +69,14 @@ async function mergeVideos(videoPaths, outputPath, playlistId) {
         })
         .save(outputPath);
     });
+
   } catch (err) {
     console.error('Error processing videos:', err);
-    throw err;
+    return { 
+      status : false,
+      error : err,
+      message : "Error in merging vidoes."
+    }
   }
 }
  

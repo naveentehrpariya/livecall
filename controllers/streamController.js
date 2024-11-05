@@ -273,29 +273,29 @@ const createAndBindLiveBroadcast = async (youtube, title, description, res) => {
 
 let activeStreams = {};
 const stopFlags = {}; 
-const stopffmpegstream = async (videoid) => {
-  const child = activeStreams[videoid];
+const stopffmpegstream = async (streamObjectID) => {
+  const child = activeStreams[streamObjectID];
   console.log(`child`, child);  
   if(child){
-    stopFlags[videoid] = true; // Set stop flag to indicate intentional stop
+    stopFlags[streamObjectID] = true; // Set stop flag to indicate intentional stop
     child.kill('SIGINT'); // Gracefully terminate the process
-    delete activeStreams[videoid]; 
-    logger(`Ffmpeg stream stopped ${videoid}`);
+    delete activeStreams[streamObjectID]; 
+    logger(`Ffmpeg stream stopped ${streamObjectID}`);
   }else {
-    logger(`there is no any ffmpeg proccess running - ${videoid}`);
+    logger(`there is no any ffmpeg proccess running - ${streamObjectID}`);
   }
   return true
 }
   
-const stopDbStream = async (videoId) => {
+const stopDbStream = async (streamObjectId) => {
   try {
-    const streamlast = await Stream.findById(videoId);
+    const streamlast = await Stream.findById(streamObjectId);
     if (!streamlast){
       console.log("Stream not found !!");
       return false;
     }
     console.log("Found stream: " + streamlast);
-    logger(`Database Stopping stream ${videoId}`);
+    logger(`Database Stopping stream ${streamObjectId}`);
     streamlast.status = '0';
     streamlast.endedAt = Date.now();
     const savedStream = await streamlast.save();
@@ -390,7 +390,7 @@ const createPlaylist = catchAsync (async (req, res, next) => {
 });
 
 async function start_ffmpeg(data) {
-  const { streamkey, audio, video, res, videoID, objectID, platformtype, stream_url } = data;
+  const { streamkey, audio, video, res, objectID, platformtype, stream_url } = data;
   const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamkey}` : `${stream_url}/${streamkey}`;
   
   console.log("ffmpeg data", data);
@@ -672,7 +672,6 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
         audio : req.body.audio, 
         video : req.body.video, 
         res: req.body.resolution, 
-        videoID : videoID,
         objectID: savedStream._id,
         stream_url : req.body.stream_url,
         platformtype : 'rtmp'
@@ -777,14 +776,16 @@ const edit_stream = catchAsync(async (req, res, next) => {
     const updatedStream = await stream.save();
 
     // Restart streaming if necessary
-    stopffmpegstream(stream.streamId);
+    stopffmpegstream(stream._id);
     setTimeout(() => {
       const payload = {
         streamkey : stream.streamkey, 
         audio : audio, 
         video : video, 
         res: req.body.resolution, 
-        videoID : stream.streamId
+        videoID : stream.streamId,
+        objectID: stream._id,
+        platformtype : 'youtube',
       }
       start_ffmpeg(payload);
     }, 1000);
@@ -835,7 +836,7 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
     const updatedStream = await stream.save();
 
     // Restart streaming if necessary
-    stopffmpegstream(stream.streamId);
+    stopffmpegstream(stream._id);
     setTimeout(() => {
       const payload = {
         videoID : stream.streamId,
@@ -844,7 +845,8 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
         video : req.body.video || stream.video, 
         res: req.body.resolution || stream.resolution, 
         stream_url : req.body.stream_url || stream.stream_url,
-        platformtype : 'rtmp'
+        platformtype : 'rtmp',
+        objectID: stream._id,
       }
       start_ffmpeg(payload);
     }, 1000);

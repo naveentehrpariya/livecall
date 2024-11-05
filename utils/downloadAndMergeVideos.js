@@ -26,6 +26,7 @@ async function downloadAndMergeVideos(videoUrls, id) {
             try {
                 await isValidVideo(url);
                 const videoPath = await downloadVideo(url, downloadDir, id);
+                console.log("Checked is this valid url", videoPath);
                 videoPaths.push(videoPath);
             } catch (downloadErr) {
                 console.error(`Error downloading video from ${url}: ${downloadErr.message}`);
@@ -35,6 +36,7 @@ async function downloadAndMergeVideos(videoUrls, id) {
             throw new Error("No valid videos available to create HLS playlist");
         }
         await mergeVideos(videoPaths, outputPath, id);
+        console.log("Merged video output", outputPath)
         return outputPath;
     } catch (err) {
       console.error(`Error processing videos: ${err.message}`);
