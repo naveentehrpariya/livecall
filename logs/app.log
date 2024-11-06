@@ -3600,3 +3600,49 @@
 
 2024-11-05T12:44:42.664Z [INFO]:"FFmpeg process exited with code null"
 
+2024-11-06T09:29:42.093Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-06T09:30:00.852Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-06T09:30:00.855Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-11-06T09:30:01.141Z [INFO]:"Stream vG3ra4RsV00 has ended and and all files with this playlist id has been removed 1730721896901."
+
+2024-11-06T09:30:01.154Z [INFO]:"Stream 9Ye-APgyAkc has ended and and all files with this playlist id has been removed 1730801878429."
+
+2024-11-06T09:30:01.155Z [INFO]:"Stream 9Yry-Dr3NvY has ended and and all files with this playlist id has been removed 1730802974553."
+
+2024-11-06T09:30:01.155Z [INFO]:"Stream BXugddQjBxw has ended and and all files with this playlist id has been removed 1730808669939."
+
+2024-11-06T09:30:01.156Z [INFO]:"Stream csP5SckJjiU has ended and and all files with this playlist id has been removed 1730810135674."
+
+2024-11-06T09:30:01.157Z [INFO]:"Stream sOmV6KW9UOg has ended and and all files with this playlist id has been removed 1730875217220."
+
+2024-11-06T09:31:24.348Z [INFO]:"there is no any ffmpeg proccess running - 66f300ab8e630b10295d6d9f"
+
+2024-11-06T09:31:25.363Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-06T09:31:25.552Z [INFO]:"code for stopped stream 4820 : 4294967294"
+
+2024-11-06T09:31:25.553Z [INFO]:"FFmpeg process exited with code 4294967294"
+
+2024-11-06T10:30:00.536Z [INFO]:"Stream u0wX27MlFTc has ended and and all files with this playlist id has been removed 1730885484112."
+
+2024-11-06T10:30:00.539Z [INFO]:"Stream vG3ra4RsV00 has ended and and all files with this playlist id has been removed 1730721896901."
+
+2024-11-06T10:30:00.540Z [INFO]:"Stream 9Ye-APgyAkc has ended and and all files with this playlist id has been removed 1730801878429."
+
+2024-11-06T10:30:00.541Z [INFO]:"Stream 9Yry-Dr3NvY has ended and and all files with this playlist id has been removed 1730802974553."
+
+2024-11-06T10:30:00.541Z [INFO]:"Stream BXugddQjBxw has ended and and all files with this playlist id has been removed 1730808669939."
+
+2024-11-06T10:30:00.542Z [INFO]:"Stream csP5SckJjiU has ended and and all files with this playlist id has been removed 1730810135674."
+
+2024-11-06T10:30:00.542Z [INFO]:"Stream sOmV6KW9UOg has ended and and all files with this playlist id has been removed 1730875217220."
+
+2024-11-06T10:30:00.668Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-06T10:42:33.141Z [INFO]:"code for stopped stream 3640 : null"
+
+2024-11-06T10:42:33.142Z [INFO]:"FFmpeg process exited with code null"
+
