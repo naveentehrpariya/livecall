@@ -3646,3 +3646,427 @@
 
 2024-11-06T10:42:33.142Z [INFO]:"FFmpeg process exited with code null"
 
+2024-11-12T15:55:13.508Z [INFO]:"Database Stopping stream 672b37066b642c5ea1622b17"
+
+2024-11-12T15:55:13.603Z [INFO]:"there is no any ffmpeg proccess running - 672b37066b642c5ea1622b17"
+
+2024-11-12T15:55:36.958Z [INFO]:"New token created successfully: {\n  token: '{\"access_token\":\"ya29.a0AeDClZCmx_s6r82ywc3nbBd7L5fzU5NuoD_Xwrt_2nK_Cw-7ayHv3oVxTFoPIV7B2bmxsQzRvZ23Gd9CyZCmh_pMWstTGNnbHwHR-QqipTK8Kj0kABU3vpSce2s6vG6Vx02RASsu0sGSL3VPvl6txesIdIR0yFa0aUv_OrFjaCgYKAYQSARESFQHGX2MiucR4lv-qE6NE3KzbjqLAkg0175\",\"refresh_token\":\"1//0gti4P7WWa33uCgYIARAAGBASNwF-L9IrUEHp0dAhptkd9Nr9zaXDs7qPl8TvVvaAcIjHnDbFB6B3jYz4WszG2375IPKwWxpGRl0\",\"scope\":\"https://www.googleapis.com/auth/youtube.force-ssl\",\"token_type\":\"Bearer\",\"expiry_date\":1731430535158}',\n  user: new ObjectId(\"6654b7ae3f6a8fea0ffa35c5\"),\n  channel: '{\"kind\":\"youtube#channel\",\"etag\":\"1iu6KtXu_DWGltW10xAgtscoSoo\",\"id\":\"UCdGq1qjb5R27ENhSCBj20gw\",\"snippet\":{\"title\":\"Naveen FP\",\"description\":\"\",\"customUrl\":\"@naveenfp\",\"publishedAt\":\"2024-04-03T05:57:16.768052Z\",\"thumbnails\":{\"default\":{\"url\":\"https://yt3.ggpht.com/2p6DHkq3Yn5K2lXNzmGf9iGcrdkn766vR5xYRPm-KndKt2IcU0HoftJqxGWHPf7jM736YYMW=s88-c-k-c0x00ffffff-no-rj\",\"width\":88,\"height\":88},\"medium\":{\"url\":\"https://yt3.ggpht.com/2p6DHkq3Yn5K2lXNzmGf9iGcrdkn766vR5xYRPm-KndKt2IcU0HoftJqxGWHPf7jM736YYMW=s240-c-k-c0x00ffffff-no-rj\",\"width\":240,\"height\":240},\"high\":{\"url\":\"https://yt3.ggpht.com/2p6DHkq3Yn5K2lXNzmGf9iGcrdkn766vR5xYRPm-KndKt2IcU0HoftJqxGWHPf7jM736YYMW=s800-c-k-c0x00ffffff-no-rj\",\"width\":800,\"height\":800}},\"localized\":{\"title\":\"Naveen FP\",\"description\":\"\"}},\"contentDetails\":{\"relatedPlaylists\":{\"likes\":\"LL\",\"uploads\":\"UUdGq1qjb5R27ENhSCBj20gw\"}},\"statistics\":{\"viewCount\":\"22\",\"subscriberCount\":\"1\",\"hiddenSubscriberCount\":false,\"videoCount\":\"1\"}}',\n  createdAt: 2024-11-12T15:45:59.397Z,\n  status: 'active',\n  _id: new ObjectId(\"67337a78b604b91a80cf8010\"),\n  __v: 0\n}"
+
+2024-11-12T17:30:00.735Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-12T17:44:35.777Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"test stream name","description":"afasf","scheduledStartTime":"2024-11-12T17:44:46.289Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/18.16.1","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeDClZBZhfEUE7xwI0c29K-S9iOryPXjhMrU1gQXkBhl3CG5qw2QHwv0fUyu1JLsAKlNAUbH7rv8jjvrNcQCclMipmvgAi4VCQMzYLZw_1j6Gf51lvDiB6I_IzCM3DHGhuMXMJd4DRmM9KHH_nGkBvdmMrzBCO9CJDLW2H-baCgYKAasSARESFQHGX2MiGW9JTJ1NZSMRMjOHw3W8gw0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"test stream name\",\"description\":\"afasf\",\"scheduledStartTime\":\"2024-11-12T17:44:46.289Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"2iLg99DKbfEO8ay8UbD2Z5FUiRo","id":"macTEJCMwic","snippet":{"publishedAt":"2024-11-12T17:44:34Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"test stream name","description":"afasf","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/macTEJCMwic/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/macTEJCMwic/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/macTEJCMwic/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-12T17:44:46Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILbWFjVEVKQ013aWM"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/macTEJCMwic?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","cache-control":"private","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Tue, 12 Nov 2024 17:44:35 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2024-11-12T17:44:39.977Z [INFO]:"stream created "
+
+2024-11-12T17:44:44.283Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"2iLg99DKbfEO8ay8UbD2Z5FUiRo","id":"macTEJCMwic","snippet":{"publishedAt":"2024-11-12T17:44:34Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"test stream name","description":"afasf","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/macTEJCMwic/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/macTEJCMwic/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/macTEJCMwic/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2024-11-12T17:44:46Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILbWFjVEVKQ013aWM"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/macTEJCMwic?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"Zu-LwDFtlMk9mzlQ4hbl4bHdP-s","id":"dGq1qjb5R27ENhSCBj20gw1731433479371137","snippet":{"publishedAt":"2024-11-12T17:44:39Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"test stream name","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"bh33-6wqw-1vsv-yydh-5hvd","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"vl8jKNGo2Oq2orivx1tIb9qHg-0","id":"macTEJCMwic","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1731433479371137","boundStreamLastUpdateTimeMs":"2024-11-12T17:44:39Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/macTEJCMwic?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"macTEJCMwic"}
+
+2024-11-12T17:44:45.200Z [INFO]:"downloading thumbnail is about to finish."
+
+2024-11-12T17:44:48.248Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-12T17:44:52.441Z [INFO]:"Database Stopping stream 67339410453501c6a0798aca"
+
+2024-11-12T17:44:52.496Z [INFO]:"Ffmpeg stream stopped 67339410453501c6a0798aca"
+
+2024-11-12T17:44:52.510Z [INFO]:"code for stopped stream 49907 : 251"
+
+2024-11-12T17:44:52.511Z [INFO]:"FFmpeg process exited with code 251"
+
+2024-11-13T04:30:00.815Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-13T04:30:01.200Z [INFO]:"Stream macTEJCMwic has ended and and all files with this playlist id has been removed 1731433471157."
+
+2024-11-13T13:30:00.678Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-14T05:30:00.116Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-14T05:30:00.455Z [INFO]:"Stream macTEJCMwic has ended and and all files with this playlist id has been removed 1731433471157."
+
+2024-11-14T06:30:00.612Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-14T06:30:00.627Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-11-14T06:30:00.981Z [INFO]:"Stream macTEJCMwic has ended and and all files with this playlist id has been removed 1731433471157."
+
+2024-11-18T10:29:07.045Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-18T10:29:48.612Z [INFO]:"there is no any ffmpeg proccess running - 66f300ab8e630b10295d6d9f"
+
+2024-11-18T10:29:49.613Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-18T10:29:49.689Z [INFO]:"code for stopped stream 30390 : 254"
+
+2024-11-18T10:29:49.689Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-18T10:30:00.319Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-18T10:30:00.356Z [INFO]:"Stream u0wX27MlFTc has ended and and all files with this playlist id has been removed 1731925788421."
+
+2024-11-18T11:47:26.865Z [INFO]:"Database Stopping stream 673b16f23f025bf140e5923b"
+
+2024-11-18T11:47:26.929Z [INFO]:"there is no any ffmpeg proccess running - 673b16f23f025bf140e5923b"
+
+2024-11-18T11:53:39.656Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-18T11:56:17.097Z [INFO]:"there is no any ffmpeg proccess running - 66f300ab8e630b10295d6d9f"
+
+2024-11-18T11:56:18.099Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-18T11:56:18.311Z [INFO]:"code for stopped stream 52240 : 254"
+
+2024-11-18T11:56:18.311Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-18T12:06:19.587Z [INFO]:"Database Stopping stream 673b2ac33a5c9a353f5960ff"
+
+2024-11-18T12:06:19.671Z [INFO]:"there is no any ffmpeg proccess running - 673b2ac33a5c9a353f5960ff"
+
+2024-11-18T12:07:21.653Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-18T12:09:44.120Z [INFO]:"Ffmpeg stream stopped 673b2df9b956713f61c52fd6"
+
+2024-11-18T12:09:44.415Z [INFO]:"code for stopped stream 54899 : 255"
+
+2024-11-18T12:09:44.415Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-18T12:09:45.123Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-18T12:09:45.293Z [INFO]:"code for stopped stream 55504 : 254"
+
+2024-11-18T12:09:45.294Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-18T12:12:29.820Z [INFO]:"Database Stopping stream 673b2df9b956713f61c52fd6"
+
+2024-11-18T12:12:29.872Z [INFO]:"there is no any ffmpeg proccess running - 673b2df9b956713f61c52fd6"
+
+2024-11-19T09:54:13.791Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T09:55:15.857Z [INFO]:"Ffmpeg stream stopped 673c60450c5101c29b29b189"
+
+2024-11-19T09:55:16.748Z [INFO]:"code for stopped stream 86518 : 255"
+
+2024-11-19T09:55:16.748Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-19T09:55:16.859Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T09:55:17.582Z [INFO]:"code for stopped stream 86766 : 254"
+
+2024-11-19T09:55:17.582Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T09:59:33.247Z [INFO]:"Database Stopping stream 673c60450c5101c29b29b189"
+
+2024-11-19T09:59:33.300Z [INFO]:"Ffmpeg stream stopped 673c60450c5101c29b29b189"
+
+2024-11-19T10:13:28.900Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T10:20:51.410Z [INFO]:"Database Stopping stream 673c64c86667ee94a6311cbe"
+
+2024-11-19T10:20:51.455Z [INFO]:"there is no any ffmpeg proccess running - 673c64c86667ee94a6311cbe"
+
+2024-11-19T10:29:23.624Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T10:29:23.633Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T10:30:00.011Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-19T10:30:00.737Z [INFO]:"Stream undefined has ended and and all files with this playlist id has been removed 1732011208762."
+
+2024-11-19T10:32:09.069Z [INFO]:"Ffmpeg stream stopped 673c6883df7971b921094b31"
+
+2024-11-19T10:32:09.292Z [INFO]:"code for stopped stream 95154 : 255"
+
+2024-11-19T10:32:09.292Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-19T10:32:10.071Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T10:32:10.075Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T10:32:10.248Z [INFO]:"code for stopped stream 95821 : 254"
+
+2024-11-19T10:32:10.248Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T10:56:15.545Z [INFO]:"there is no any ffmpeg proccess running - 673c6883df7971b921094b31"
+
+2024-11-19T11:00:36.255Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T11:00:36.272Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T11:01:09.958Z [INFO]:"Ffmpeg stream stopped 673c6fd4f2a9ca654d950657"
+
+2024-11-19T11:01:10.170Z [INFO]:"code for stopped stream 2756 : 255"
+
+2024-11-19T11:01:10.171Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-19T11:01:10.960Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T11:01:10.964Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T11:01:11.049Z [INFO]:"code for stopped stream 2897 : 254"
+
+2024-11-19T11:01:11.050Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T11:04:56.632Z [INFO]:"there is no any ffmpeg proccess running - 673c6fd4f2a9ca654d950657"
+
+2024-11-19T11:04:56.635Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T11:04:56.642Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T11:04:56.784Z [INFO]:"code for stopped stream 3765 : 254"
+
+2024-11-19T11:04:56.784Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T11:08:01.374Z [INFO]:"Database Stopping stream 673c6fd4f2a9ca654d950657"
+
+2024-11-19T11:08:01.415Z [INFO]:"there is no any ffmpeg proccess running - 673c6fd4f2a9ca654d950657"
+
+2024-11-19T11:34:26.079Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T11:34:26.091Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T11:34:49.536Z [INFO]:"Ffmpeg stream stopped 673c77c2b5d736806204667b"
+
+2024-11-19T11:34:49.537Z [INFO]:"Starting ffmpeg stream [object Object]"
+
+2024-11-19T11:34:49.538Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T11:34:49.673Z [INFO]:"code for stopped stream 8098 : 254"
+
+2024-11-19T11:34:49.673Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T11:34:49.796Z [INFO]:"code for stopped stream 7995 : 255"
+
+2024-11-19T11:34:49.796Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-19T11:40:31.970Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-19T11:40:31.980Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T11:40:32.140Z [INFO]:"code for stopped stream 9510 : 254"
+
+2024-11-19T11:40:32.140Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T11:45:10.055Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-19T11:45:20.071Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T11:45:20.206Z [INFO]:"code for stopped stream 10778 : 254"
+
+2024-11-19T11:45:20.206Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T12:17:10.402Z [INFO]:"Ffmpeg stream stopped 673c77c2b5d736806204667b"
+
+2024-11-19T12:17:20.410Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T12:17:20.579Z [INFO]:"code for stopped stream 13809 : 254"
+
+2024-11-19T12:17:20.579Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T12:18:03.735Z [INFO]:"Ffmpeg stream stopped 673c77c2b5d736806204667b"
+
+2024-11-19T12:18:13.754Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T12:18:13.871Z [INFO]:"code for stopped stream 14035 : 254"
+
+2024-11-19T12:18:13.871Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-19T12:27:38.061Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-19T12:28:02.236Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-19T12:28:36.628Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-19T12:33:11.528Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-19T12:33:12.544Z [INFO]:"activeStreams [object Object]"
+
+2024-11-19T12:33:12.611Z [INFO]:"code for stopped stream 17843 : 254"
+
+2024-11-19T12:33:12.611Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T02:30:00.771Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-21T02:30:14.699Z [INFO]:"Stream pyx6-mdsh-1fua-wsek-2cws has ended and and all files with this playlist id has been removed 1732014296474."
+
+2024-11-21T11:30:00.566Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-21T12:07:58.967Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-21T12:08:00.037Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:08:02.456Z [INFO]:"code for stopped stream 64073 : 254"
+
+2024-11-21T12:08:02.456Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:10:23.110Z [INFO]:"there is no any ffmpeg proccess running - 673c77c2b5d736806204667b"
+
+2024-11-21T12:10:24.125Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:10:24.289Z [INFO]:"code for stopped stream 64705 : 254"
+
+2024-11-21T12:10:24.289Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:10:44.602Z [INFO]:"Database Stopping stream 673c77c2b5d736806204667b"
+
+2024-11-21T12:10:44.670Z [INFO]:"Ffmpeg stream stopped 673c77c2b5d736806204667b"
+
+2024-11-21T12:11:18.412Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:14:16.957Z [INFO]:"Ffmpeg stream stopped 673f23661b1245ee5789963e"
+
+2024-11-21T12:14:17.309Z [INFO]:"code for stopped stream 64922 : 255"
+
+2024-11-21T12:14:17.310Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-21T12:14:17.963Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:14:18.103Z [INFO]:"code for stopped stream 65666 : 254"
+
+2024-11-21T12:14:18.103Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:14:37.805Z [INFO]:"Ffmpeg stream stopped 673f23661b1245ee5789963e"
+
+2024-11-21T12:14:38.810Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:14:38.894Z [INFO]:"code for stopped stream 65751 : 254"
+
+2024-11-21T12:14:38.894Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:16:11.249Z [INFO]:"Ffmpeg stream stopped 673f23661b1245ee5789963e"
+
+2024-11-21T12:16:12.258Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:16:12.333Z [INFO]:"code for stopped stream 66111 : 254"
+
+2024-11-21T12:16:12.333Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:19:11.859Z [INFO]:"Database Stopping stream 673f23661b1245ee5789963e"
+
+2024-11-21T12:19:11.908Z [INFO]:"there is no any ffmpeg proccess running - 673f23661b1245ee5789963e"
+
+2024-11-21T12:20:21.661Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:20:52.528Z [INFO]:"Ffmpeg stream stopped 673f2585d8eca62dd0dc61e8"
+
+2024-11-21T12:20:52.809Z [INFO]:"code for stopped stream 67435 : 255"
+
+2024-11-21T12:20:52.809Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-21T12:20:53.537Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:20:53.680Z [INFO]:"code for stopped stream 67562 : 254"
+
+2024-11-21T12:20:53.680Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:25:45.968Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:26:23.692Z [INFO]:"Ffmpeg stream stopped 673f26c9d8eca62dd0dc62a0"
+
+2024-11-21T12:26:24.634Z [INFO]:"code for stopped stream 68744 : 255"
+
+2024-11-21T12:26:24.635Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-21T12:26:24.698Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:26:24.773Z [INFO]:"code for stopped stream 68915 : 254"
+
+2024-11-21T12:26:24.773Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:30:00.702Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-21T12:30:00.717Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-11-21T12:30:00.801Z [INFO]:"there is no any ffmpeg proccess running - 673f26c9d8eca62dd0dc62a0"
+
+2024-11-21T12:31:26.845Z [INFO]:"there is no any ffmpeg proccess running - 673f26c9d8eca62dd0dc62a0"
+
+2024-11-21T12:31:27.862Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:31:28.061Z [INFO]:"code for stopped stream 70310 : 254"
+
+2024-11-21T12:31:28.061Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-21T12:33:39.890Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:35:19.778Z [INFO]:"there is no any ffmpeg proccess running - 673f28a3b4fdf9c4f3ec303d"
+
+2024-11-21T12:36:01.102Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:36:33.453Z [INFO]:"Ffmpeg stream stopped 673f29313f5b5e4f4c914fa5"
+
+2024-11-21T12:36:33.734Z [INFO]:"code for stopped stream 71681 : 255"
+
+2024-11-21T12:36:33.734Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-21T12:36:34.459Z [INFO]:"activeStreams [object Object]"
+
+2024-11-21T12:36:34.545Z [INFO]:"code for stopped stream 71820 : 254"
+
+2024-11-21T12:36:34.545Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-23T12:07:57.453Z [INFO]:"Database Stopping stream 673f29313f5b5e4f4c914fa5"
+
+2024-11-23T12:07:57.527Z [INFO]:"there is no any ffmpeg proccess running - 673f29313f5b5e4f4c914fa5"
+
+2024-11-23T12:14:20.490Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T12:18:05.503Z [INFO]:"there is no any ffmpeg proccess running - 6741c71cd3ebe3ac51652929"
+
+2024-11-23T12:30:00.685Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2024-11-23T12:30:00.690Z [INFO]:"Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>"
+
+2024-11-23T12:30:01.253Z [INFO]:"Stream vjrh-66z3-qsph-8773-2s8h has ended and and all files with this playlist id has been removed 1732192560913."
+
+2024-11-23T12:43:48.659Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T12:43:49.002Z [INFO]:"code for stopped stream 6746 : 254"
+
+2024-11-23T12:43:49.002Z [INFO]:"FFmpeg process exited with code 254"
+
+2024-11-23T12:45:15.606Z [INFO]:"Database Stopping stream 6741ce0487f0beaaff088298"
+
+2024-11-23T12:45:15.691Z [INFO]:"there is no any ffmpeg proccess running - 6741ce0487f0beaaff088298"
+
+2024-11-23T12:51:48.818Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T12:52:42.505Z [INFO]:"Ffmpeg stream stopped 6741cfe4586944b6cff1db05"
+
+2024-11-23T12:58:19.890Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T12:58:28.952Z [INFO]:"Database Stopping stream 6741cfe4586944b6cff1db05"
+
+2024-11-23T12:58:29.040Z [INFO]:"there is no any ffmpeg proccess running - 6741cfe4586944b6cff1db05"
+
+2024-11-23T13:00:14.673Z [INFO]:"Ffmpeg stream stopped 6741d16bc17a1e0675e6ac79"
+
+2024-11-23T13:03:07.101Z [INFO]:"there is no any ffmpeg proccess running - 6741d16bc17a1e0675e6ac79"
+
+2024-11-23T13:03:54.946Z [INFO]:"there is no any ffmpeg proccess running - 6741d16bc17a1e0675e6ac79"
+
+2024-11-23T13:03:56.965Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T13:04:16.068Z [INFO]:"Database Stopping stream 6741d16bc17a1e0675e6ac79"
+
+2024-11-23T13:04:16.166Z [INFO]:"Ffmpeg stream stopped 6741d16bc17a1e0675e6ac79"
+
+2024-11-23T13:04:20.573Z [INFO]:"code for stopped stream 14491 : 255"
+
+2024-11-23T13:04:20.573Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-23T13:07:42.922Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T13:08:43.201Z [INFO]:"Ffmpeg stream stopped 6741d39ee96454e03f5d41b4"
+
+2024-11-23T13:08:45.207Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T13:08:52.343Z [INFO]:"code for stopped stream 15283 : 255"
+
+2024-11-23T13:08:52.343Z [INFO]:"FFmpeg process exited with code 255"
+
+2024-11-23T13:10:14.099Z [INFO]:"Ffmpeg stream stopped 6741d39ee96454e03f5d41b4"
+
+2024-11-23T13:10:16.105Z [INFO]:"activeStreams [object Object]"
+
+2024-11-23T13:10:21.457Z [INFO]:"code for stopped stream 15558 : 255"
+
+2024-11-23T13:10:21.457Z [INFO]:"FFmpeg process exited with code 255"
+

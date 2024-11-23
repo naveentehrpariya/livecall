@@ -274,11 +274,12 @@ const createAndBindLiveBroadcast = async (youtube, title, description, res) => {
 let activeStreams = {};
 const stopFlags = {}; 
 const stopffmpegstream = async (streamObjectID) => {
+  console.log(`streamObjectID for stopping stream`, streamObjectID);  
   const child = activeStreams[streamObjectID];
-  console.log(`child`, child);  
   if(child){
-    stopFlags[streamObjectID] = true; // Set stop flag to indicate intentional stop
-    child.kill('SIGINT'); // Gracefully terminate the process
+    console.log(`stopping child ID`, streamObjectID);
+    stopFlags[streamObjectID] = true;
+    child.kill('SIGINT');
     delete activeStreams[streamObjectID]; 
     logger(`Ffmpeg stream stopped ${streamObjectID}`);
   }else {
@@ -392,10 +393,7 @@ const createPlaylist = catchAsync (async (req, res, next) => {
 async function start_ffmpeg(data) {
   const { streamkey, audio, video, res, objectID, platformtype, stream_url } = data;
   const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamkey}` : `${stream_url}/${streamkey}`;
-  
-  console.log("ffmpeg data", data);
-  logger(`Starting ffmpeg stream ${data}`);
-
+  console.log(`Starting ffmpeg stream`, data);
   try {
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
     let ffmpegCommand = [
@@ -421,7 +419,7 @@ async function start_ffmpeg(data) {
       `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
     ];
 
-    if (audio && audio !== null && audio !== '') {
+    if (audio && audio !== null && audio !== 'null' && audio !== '[]' && audio !== '') {
       console.log("ENTERED STREAM WITH AUDIO INPUT");
       ffmpegCommand = [
         '-loglevel', 'verbose',  // Increase logging level
@@ -482,10 +480,12 @@ async function start_ffmpeg(data) {
       if (!streamkey) {
         throw new Error('Required parameters missing');
       }
-      stopFlags[objectID] = false; // Reset stop flag before starting
+      stopFlags[objectID] = false;
       const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
+      console.log("FFMPEG PROCCESS ID", objectID)
       activeStreams[objectID] = child;
-      let retryCount = 0; 
+      logger(`activeStreams ${activeStreams}`);
+      
       child.on('close', (code) => {
           console.log(`FFmpeg process exited with code ${code}`);
           const err = `FFmpeg process exited with code ${code}`;
@@ -569,10 +569,13 @@ const start_stream = catchAsync(async (req, res, next) => {
       });
     }
     const videoID = streamData.broadcast.id;
+    const videos = req.body.videos;
+    const audios = req.body.audios;
+
     const stream = new Stream({
       title: req.body.title,
-      video: JSON.stringify(req.body.videos), 
-      audio: JSON.stringify(req.body.audios),
+      video: videos && videos.length ? JSON.stringify(videos) : '', 
+      audio: audios && audios.length ? JSON.stringify(audios) : '', 
       description: req.body.description,
       thumbnail: req.body.thumbnail,
       resolution: req.body.resolution,
@@ -627,75 +630,6 @@ const start_stream = catchAsync(async (req, res, next) => {
   }
 });
 
-const start_rmtp_stream = catchAsync(async (req, res, next) => {
-  try {
-    const videoID = req.body.streamkey;
-    const isAlready = await Stream.find({ streamkey: videoID });
-
-    let stream_id;
-    if(isAlready && isAlready.length > 0){
-      stream_id = req.body.streamkey+Math.floor(1000 + Math.random() * 9000);
-      // return res.status(200).json({
-      //   status: false,
-      //   isAlready : isAlready,
-      //   message: 'Stream already created with this stream key. Please reset your stream key.',
-      // });
-    }
-    const stream = new Stream({
-      title: req.body.title,
-      video: JSON.stringify(req.body.videos), 
-      audio: JSON.stringify(req.body.audios),
-      description: req.body.description,
-      thumbnail: req.body.thumbnail,
-      resolution: req.body.resolution,
-      stream_url: req.body.stream_url,
-      streamkey: req.body.streamkey,
-      user: req.user._id,
-      status: '1',
-      platformtype : 'rtmp',
-      radio : req.body.radio,
-      streamId: stream_id,
-      playlistId: req.body.playlistId,
-      stream_type:req.body.type,
-      ordered:req.body.ordered,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-    
-    const savedStream = await stream.save();
-    if (savedStream) {
-      if (activeStreams[stream_id]) {
-        return res.status(400).send('Stream already active.');
-      } 
-      const payload = {
-        streamkey : req.body.streamkey, 
-        audio : req.body.audio, 
-        video : req.body.video, 
-        res: req.body.resolution, 
-        objectID: savedStream._id,
-        stream_url : req.body.stream_url,
-        platformtype : 'rtmp'
-      }
-      await start_ffmpeg(payload);
-      res.json({
-        status: true,
-        message: 'Stream started.',
-        stream: savedStream,
-        streamUrl: `${req.body.stream_url}/${req.body.streamkey}`,
-      });
-    } else {
-      res.json({
-        status: false,
-        message: 'Failed to create stream.',
-      });
-    }
-  } catch (err) {
-    JSONerror(res, err, next);
-    console.error(`Stream creation error: ${err}`);
-    logger(err);
-    await deleteFilesStartingWithName(req.body.playlistId);
-  }
-});
 
 const edit_stream = catchAsync(async (req, res, next) => {
   try {
@@ -756,9 +690,9 @@ const edit_stream = catchAsync(async (req, res, next) => {
       resource: updateResource,
     });
 
-    // if (thumbnail) {
-    //   await handleThumbnail(thumbnail, title, youtube, streamId);
-    // }
+    if (thumbnail) {
+      await handleThumbnail(thumbnail, title, youtube, streamId);
+    }
 
     // Update local database
     stream.title = title || stream.title;
@@ -775,7 +709,6 @@ const edit_stream = catchAsync(async (req, res, next) => {
     stream.playlistId = playlistId || stream.playlistId;
     const updatedStream = await stream.save();
 
-    // Restart streaming if necessary
     stopffmpegstream(stream._id);
     setTimeout(() => {
       const payload = {
@@ -802,54 +735,116 @@ const edit_stream = catchAsync(async (req, res, next) => {
   }
 });
 
+
+const start_rmtp_stream = catchAsync(async (req, res, next) => {
+  try {
+    const videoID = req.body.streamkey;
+    const isAlready = await Stream.find({ streamkey: videoID });
+
+    if(isAlready && isAlready.length > 0){
+      return res.status(200).json({
+        status: false,
+        isAlready : isAlready,
+        message: 'Stream already created with this stream key. Please reset your stream key.',
+      });
+    }
+    const videos = req.body.videos;
+    const audios = req.body.audios;
+    const stream = new Stream({
+      title: req.body.title,
+      video: videos && videos.length ? JSON.stringify(videos) : '', 
+      audio: audios && audios.length ? JSON.stringify(audios) : '', 
+      description: req.body.description,
+      thumbnail: req.body.thumbnail,
+      resolution: req.body.resolution,
+      stream_url: req.body.stream_url,
+      streamkey: req.body.streamkey,
+      user: req.user._id,
+      status: '1',
+      platformtype : 'rtmp',
+      radio : req.body.radio,
+      streamId: req.body.streamkey,
+      playlistId: req.body.playlistId,
+      stream_type:req.body.type,
+      ordered:req.body.ordered,
+      createdAt: Date.now(),
+    });
+    
+    const savedStream = await stream.save();
+    if (savedStream) {
+      const payload = {
+        streamkey : req.body.streamkey, 
+        audio : req.body.audio !== '' ? req.body.audio : false, 
+        video : req.body.video !== '' ? req.body.video : false, 
+        res: req.body.resolution, 
+        objectID: savedStream._id,
+        stream_url : req.body.stream_url,
+        platformtype : 'rtmp'
+      }
+      console.log("payload =>>>>>>>>>>>", payload)
+      await start_ffmpeg(payload);
+      res.json({
+        status: true,
+        message: 'Stream started.',
+        stream: savedStream,
+        streamUrl: `${req.body.stream_url}/${req.body.streamkey}`,
+      });
+    } else {
+      res.json({
+        status: false,
+        message: 'Failed to create stream.',
+      });
+    }
+  } catch (err) {
+    JSONerror(res, err, next);
+    console.error(`Stream creation error: ${err}`);
+    logger(err);
+    await deleteFilesStartingWithName(req.body.playlistId);
+  }
+});
+
+
+
 const edit_rtmp_stream = catchAsync(async (req, res, next) => {
   try { 
-    console.log("req body",req.body)
-    const { video, audio,
-      id,  streamId, description, thumbnail, resolution, stream_url, streamkey, title,
-      videos, audios, radio, ordered, type, playlistId,
-      enableMonitorStream, enableDvr, enableContentEncryption, enableEmbed,
-      enableAutoStart, enableAutoStop, broadcastStreamDelayMs
-    } = req.body; 
+    const { id, video, audio, streamkey, title, resolution, stream_url } = req.body;
     if (!id) {
-      return res.status(200).json({ status: false, message: 'Stream is not found.' });
+      return res.status(400).json({ status: false, message: 'Stream ID is required.' });
     }
-    const stream = await Stream.findOne({id})
-    console.log("stream", stream)
-    if (!stream){
+    
+    const videos = req.body.videos;
+    const audios = req.body.audios;
+    const stream = await Stream.findById(id);
+    if (!stream) {
       return res.status(404).json({ status: false, message: 'Stream not found.' });
     }
 
     stream.title = title || stream.title;
-    stream.description = description;
-    stream.thumbnail = thumbnail || stream.thumbnail;
     stream.resolution = resolution || stream.resolution;
     stream.stream_url = stream_url || stream.stream_url;
-    stream.updatedAt = Date.now();
     stream.video = JSON.stringify(videos) || stream.video;
     stream.audio = JSON.stringify(audios) || stream.audio;
-    stream.radio = radio; 
-    stream.ordered = ordered;
-    stream.stream_type = type;
-    stream.playlistId = playlistId;
-    stream.streamkey = streamkey || stream.streamkey;
-    const updatedStream = await stream.save();
+    stream.updatedAt = Date.now();
 
-    // Restart streaming if necessary
-    stopffmpegstream(stream._id);
-    setTimeout(() => {
+    const updatedStream = await stream.save();
+    if(video || audio){
+      console.log("Stopping FFmpeg for stream ID:", stream._id);
+      await stopffmpegstream(stream._id);
       const payload = {
-        videoID : stream.streamId,
-        streamkey : streamkey || req.body.streamkey , 
-        audio : req.body.audio || stream.audio, 
-        video : req.body.video || stream.video, 
-        res: req.body.resolution || stream.resolution, 
-        stream_url : req.body.stream_url || stream.stream_url,
-        platformtype : 'rtmp',
+        streamkey: streamkey || stream.streamkey,
+        audio : audio, 
+        video : video,
+        res: stream.resolution,
         objectID: stream._id,
-      }
-      start_ffmpeg(payload);
-    }, 1000);
+        stream_url: stream.stream_url, 
+        platformtype: 'rtmp',
+      };
+      console.log("payload EDIT", payload)
+      console.log("Starting FFmpeg with payload:", payload);
+      setTimeout(() => {
+        start_ffmpeg(payload);
+      }, 2000);
+    }
 
     res.json({
       status: true,
@@ -862,6 +857,7 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
     JSONerror(res, err, next);
   }
 });
+
 
 const stop_stream = async (req, res, next) => {
   try {
@@ -962,7 +958,7 @@ const checkStreamStatus = async () => {
   } catch (error) {
     console.error('Error checking live stream status:', error);
   }
-};
+};  
 
 
 const checkStreamStatusAndSubscription = async () => {
