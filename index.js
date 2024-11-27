@@ -116,72 +116,67 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
 
 
 
-app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file'), checkUploadLimit,  async (req, res) => {
-  await authorizeB2();
-  try {
-    const { file } = req;
-    if (!file) {
-      return res.status(400).json({ status:false, message: 'No file found to upload.' });
-    }
-    const sanitizedFileName = file.originalname.trim().replace(/\s+/g, '-');
-    const uploadUrlResponse = await b2.getUploadUrl({
-      bucketId: bucket_id 
-    });
-    const fileData = fs.readFileSync(file.path);
+// app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file'), checkUploadLimit,  async (req, res) => {
+//   await authorizeB2();
+//   try {
+//     const { file } = req;
+//     if (!file) {
+//       return res.status(400).json({ status:false, message: 'No file found to upload.' });
+//     }
+//     const sanitizedFileName = file.originalname.trim().replace(/\s+/g, '-');
+//     const uploadUrlResponse = await b2.getUploadUrl({
+//       bucketId: bucket_id 
+//     });
+//     const fileData = fs.readFileSync(file.path);
 
-    const uploadResponse = await b2.uploadFile({
-      uploadUrl: uploadUrlResponse.data.uploadUrl,
-      uploadAuthToken: uploadUrlResponse.data.authorizationToken,
-      fileName: sanitizedFileName,
-      data: fileData
-    });
+//     const uploadResponse = await b2.uploadFile({
+//       uploadUrl: uploadUrlResponse.data.uploadUrl,
+//       uploadAuthToken: uploadUrlResponse.data.authorizationToken,
+//       fileName: sanitizedFileName,
+//       data: fileData
+//     });
  
-    fs.unlinkSync(file.path);
-    const fileUrl = `https://files.runstream.cloud/file/${bucket_name}/${sanitizedFileName}`;
+//     fs.unlinkSync(file.path);
+//     const fileUrl = `https://files.runstream.cloud/file/${bucket_name}/${sanitizedFileName}`;
    
-    console.log("uploadResponse",uploadResponse)
-    if(uploadResponse){
-      const uploadedfile = new Files({
-        name: file.originalname,
-        mime: uploadResponse.data.contentType,
-        filename: uploadResponse.data.fileName,
-        fileId: uploadResponse.data.fileId,
-        url: fileUrl,
-        user: req.user?._id,
-        size: uploadResponse.data.contentLength,
-      }); 
+//     console.log("uploadResponse",uploadResponse)
+//     if(uploadResponse){
+//       const uploadedfile = new Files({
+//         name: file.originalname,
+//         mime: uploadResponse.data.contentType,
+//         filename: uploadResponse.data.fileName,
+//         fileId: uploadResponse.data.fileId,
+//         url: fileUrl,
+//         user: req.user?._id,
+//         size: uploadResponse.data.contentLength,
+//       }); 
 
-      const fileUploaded = await uploadedfile.save();
-      res.status(201).json({
-        status: true,
-        message: "File uploaded to storage.",
-        file_data: fileUploaded,
-        fileUrl: fileUrl,
-      });
-    } else { 
-      res.status(500).json({
-        status:false,
-        message: "File failed to upload on cloud.",
-        error: uploadResponse.data
-      });
-    }
-  } catch (error) {
-    console.log("error",error)
-    res.status(500).json({
-      status:false,
-      message: "File failed to upload on cloud.",
-      error: error
-    });
-  }
-});
+//       const fileUploaded = await uploadedfile.save();
+//       res.status(201).json({
+//         status: true,
+//         message: "File uploaded to storage.",
+//         file_data: fileUploaded,
+//         fileUrl: fileUrl,
+//       });
+//     } else { 
+//       res.status(500).json({
+//         status:false,
+//         message: "File failed to upload on cloud.",
+//         error: uploadResponse.data
+//       });
+//     }
+//   } catch (error) {
+//     console.log("error",error)
+//     res.status(500).json({
+//       status:false,
+//       message: "File failed to upload on cloud.",
+//       error: error
+//     });
+//   }
+// });
 
 // console.log("process.env.CLOUDFLARE_ACCESS_KEY_ID",process.env.CLOUDFLARE_ACCESS_KEY_ID);
 // console.log("process.env.CLOUDFLARE_ACCESS_KEY_ID",process.env.CLOUDFLARE_SECRET_ACCESS_KEY);
-
-
-
- 
-
 
 app.get('/', (req, res) => {
   res.send({
