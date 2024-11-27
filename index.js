@@ -37,33 +37,103 @@ app.use("", require('./routes/planRoutes'));
 app.use("", require('./routes/FilesRoutes'));
 app.use("", require('./routes/rajorpayRoutes'));
 app.use("", require('./routes/webRoutes'));
- 
-
 app.use(express.json());
-const bucket_name = process.env.BUCKET_NAME;
-const bucket_id = process.env.BUCKET_ID;
-const APP_ID = process.env.CLOUD_APPLICATION_ID;
-const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
-
-// Blackblaze cloud
-const b2 = new B2({
-  applicationKeyId: APP_ID,
-  applicationKey: APP_KEY
-});
 
 const upload = multer({ dest: 'uploads/' });
-async function authorizeB2() {
-  try {
-    await b2.authorize();
-    console.log('B2 authorization successful');
-  } catch (error) {
-    console.error('Error authorizing B2:', error);
-  }
-} 
 
- 
+// const bucket_name = process.env.BUCKET_NAME;
+// const bucket_id = process.env.BUCKET_ID;
+// const APP_ID = process.env.CLOUD_APPLICATION_ID;
+// const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
+// const b2 = new B2({
+//   applicationKeyId: APP_ID,
+//   applicationKey: APP_KEY
+// });
+// async function authorizeB2() {
+//   try {
+//     await b2.authorize();
+//     console.log('B2 authorization successful');
+//   } catch (error) {
+//     console.error('Error authorizing B2:', error);
+//   }
+// } 
 
 app.options("/cloud/upload", cors(corsOptions));
+const AWS = require('aws-sdk');
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const bucketName = "runstream";
+const s3 = new AWS.S3({ 
+  endpoint: process.env.CLOUDFLARE_ENDPOINT,
+  accessKeyId: process.env.CLOUDFLARE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.CLOUDFLARE_SECRET_ACCESS_KEY
+});
+
+app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), checkUploadLimit,  async (req, res) => {
+  try {
+    const { file } = req;
+    if (!file) {
+      return res.status(400).json({ 
+        status:false, 
+        message: 'No file found to upload.' 
+      });
+    }
+    const sanitizedFileName = file.originalname.trim().replace(/\s+/g, '-');
+        const params = {
+            Bucket: process.env.BUCKET_NAME || 'runstream',
+            Key: sanitizedFileName,
+            Body: fs.readFileSync(file.path),
+        };
+        s3.upload(params, async (err, data) => {
+          if (err) {
+            console.error("Error uploading file:", err);
+            res.status(500).json({
+              status:false,
+              message: "File failed to upload on cloud. Something went wrong.",
+              error: err
+            }); 
+          } else {
+            fs.unlinkSync(file.path);
+            console.log("data", data)
+            if(data){
+              const fileUrl = `${process.env.CLOUDFLARE_URL}${data.Key}`;
+              const uploadedfile = new Files({
+                name: file.originalname,
+                mime: file.mimetype,
+                filename: data.Key,
+                fileId: data.VersionId,
+                url: fileUrl,
+                user: req.user?._id,
+                size: file.size,
+              }); 
+
+              const fileUploaded = await uploadedfile.save();
+              res.status(201).json({
+                status: true,
+                message: "File uploaded to storage.",
+                file_data: fileUploaded,
+                fileUrl: fileUrl,
+              });
+            } else { 
+              res.status(500).json({
+                status:false,
+                message: "File failed to upload on cloud.",
+                error: data
+              });
+            }
+          }
+        });
+  } catch (error) {
+    console.log("error",error)
+    res.status(500).json({
+      status:false,
+      message: "File failed to upload on cloud.",
+      error: error
+    });
+  }
+});
+
+
+
 app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file'), checkUploadLimit,  async (req, res) => {
   await authorizeB2();
   try {
@@ -122,7 +192,14 @@ app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file
     });
   }
 });
+
+// console.log("process.env.CLOUDFLARE_ACCESS_KEY_ID",process.env.CLOUDFLARE_ACCESS_KEY_ID);
+// console.log("process.env.CLOUDFLARE_ACCESS_KEY_ID",process.env.CLOUDFLARE_SECRET_ACCESS_KEY);
+
+
+
  
+
 
 app.get('/', (req, res) => {
   res.send({

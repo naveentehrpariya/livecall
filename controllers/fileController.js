@@ -9,13 +9,16 @@ const B2 = require('backblaze-b2');
 const fs = require('fs');
 const cron = require('node-cron');
 const Stream = require("../db/Stream");
+const AWS = require('aws-sdk');
+
+
+
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
 const b2 = new B2({
   applicationKeyId: APP_ID,
   applicationKey: APP_KEY
 });
-
 async function authorizeB2() {
   try {
     await b2.authorize();
@@ -70,9 +73,18 @@ const myMedia = catchAsync(async (req, res) => {
 });
 
 
+
+
+const bucketName = "runstream";
+const s3 = new AWS.S3({ 
+  endpoint: process.env.CLOUDFLARE_ENDPOINT,
+  accessKeyId: process.env.CLOUDFLARE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.CLOUDFLARE_SECRET_ACCESS_KEY
+});
+
+
 const deleteMedia = async (req, res) => {
   try{
-    await authorizeB2();
     const { id } = req.params;
     const file = await Files.findById(id);
     if (!file) {
@@ -81,20 +93,35 @@ const deleteMedia = async (req, res) => {
         message: "File not found"
       });
     }
-    b2.deleteFileVersion({
-      fileId: file.fileId,
-      fileName: file.filename
-    }).then(response => {
-        console.log('File deleted:', response.data);
-    }).catch(error => {
-      console.error('Error deleting file:', error);
+    const params = {
+      Bucket: process.env.BUCKET_NAME || 'runstream',
+      Key: file.filename,
+      VersionId: file.fileId,
+    };
+
+    s3.deleteObject(params, (err, data) => {
+      if (err) {
+        console.error("Error deleting object version:", err);
+      } else {
+        console.log("Object version deleted successfully:", data);
+      }
     });
+    
+    // b2.deleteFileVersion({
+    //   fileId: file.fileId,
+    //   fileName: file.filename
+    // }).then(response => {
+    //     console.log('File deleted:', response.data);
+    // }).catch(error => {
+    //   console.error('Error deleting file:', error);
+    // });
+
     file.deletedAt = Date.now();
     await file.save();
-      res.json({
-        status: true,
-        message: "File deleted successfully"
-      }); 
+    res.json({
+      status: true,
+      message: "File deleted successfully"
+    }); 
   } catch(err){ 
     console.log("err", err)
     res.json({
@@ -151,21 +178,21 @@ const uploadMedia = catchAsync(async (req, res) => {
 
 
 const totalFileUploaded = catchAsync(async (req, res) => {
-      const userId = req.user._id;
-      try {
-          const userFiles = await Files.find({ user:userId, deletedAt: null || '' });
-          const totalSize = userFiles.reduce((acc, file) => acc + parseInt(file.size), 0);
-          res.json({
-              status:true,
-              totalSize: totalSize,
-          });
-      } catch (error) {
-          res.status(500).json({ 
-            status: false,
-            error:error,
-            message: 'Server error'
-          });
-      }
+    const userId = req.user._id;
+    try {
+        const userFiles = await Files.find({ user:userId, deletedAt: null || '' });
+        const totalSize = userFiles.reduce((acc, file) => acc + parseInt(file.size), 0);
+        res.json({
+            status:true,
+            totalSize: totalSize,
+        });
+    } catch (error) {
+        res.status(500).json({ 
+          status: false,
+          error:error,
+          message: 'Server error'
+        });
+    }
 });
 
 function formatBytes(bytes, decimals = 2) {
