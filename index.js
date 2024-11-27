@@ -40,24 +40,6 @@ app.use("", require('./routes/webRoutes'));
 app.use(express.json());
 
 const upload = multer({ dest: 'uploads/' });
-
-// const bucket_name = process.env.BUCKET_NAME;
-// const bucket_id = process.env.BUCKET_ID;
-// const APP_ID = process.env.CLOUD_APPLICATION_ID;
-// const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
-// const b2 = new B2({
-//   applicationKeyId: APP_ID,
-//   applicationKey: APP_KEY
-// });
-// async function authorizeB2() {
-//   try {
-//     await b2.authorize();
-//     console.log('B2 authorization successful');
-//   } catch (error) {
-//     console.error('Error authorizing B2:', error);
-//   }
-// } 
-
 app.options("/cloud/upload", cors(corsOptions));
 const AWS = require('aws-sdk');
 const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
