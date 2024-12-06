@@ -136,7 +136,7 @@ const uploadMedia = catchAsync(async (req, res) => {
   await authorizeB2();
   const attachment = req.files?.attachment?.[0];
   res.setHeader('Access-Control-Allow-Origin', '*');
-  if (!attachment) {
+  if(!attachment) {
     return res.status(400).json({ message: "Nothing uploaded" });
   }
   try {

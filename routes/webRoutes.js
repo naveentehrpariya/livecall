@@ -7,12 +7,9 @@ router.route('/edit-feature').post(webController.editFeature);
 router.route('/remove-feature/:id').get(webController.deleteFeature);
 router.route('/all-features').get(webController.allFeatures);
 
-
 router.route('/add-testimonial').post(webController.addTestimonial);
 router.route('/edit-testimonial').post(webController.editTestimonial);
 router.route('/remove-testimonial/:id').get(webController.deleteTestimonial);
 router.route('/all-testimonial').get(webController.allTestimonial);
-
-
 
 module.exports = router;
