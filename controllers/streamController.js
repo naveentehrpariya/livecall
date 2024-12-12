@@ -82,7 +82,6 @@ const storeToken = async (token, userId) => {
         channel:JSON.stringify(channel)
       });
       const savetoken = await createToken.save();
-      logger(`New token created successfully: ${savetoken}`);
       if(!savetoken){
         res.json({
           status:false,
@@ -488,9 +487,7 @@ async function start_ffmpeg(data) {
       
       child.on('close', (code) => {
           console.log(`FFmpeg process exited with code ${code}`);
-          const err = `FFmpeg process exited with code ${code}`;
           logger(`code for stopped stream ${child.pid} : ${code}`);
-          logger(err);
           // if (code !== 0 && !stopFlags[objectID]) {
           //     retryCount++;
           //     logger(`process retrying to start FFmpeg, count ${retryCount}`);
@@ -811,7 +808,6 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
     if (!id) {
       return res.status(400).json({ status: false, message: 'Stream ID is required.' });
     }
-    
     const videos = req.body.videos;
     const audios = req.body.audios;
     const stream = await Stream.findById(id);
@@ -840,7 +836,6 @@ const edit_rtmp_stream = catchAsync(async (req, res, next) => {
         platformtype: 'rtmp',
       };
       console.log("payload EDIT", payload)
-      console.log("Starting FFmpeg with payload:", payload);
       setTimeout(() => {
         start_ffmpeg(payload);
       }, 2000);
@@ -926,7 +921,7 @@ const admin_stop_stream = async (req, res, next) => {
 
 const checkStreamStatus = async () => {
   try {
-    const activeStreams = await Stream.find({ status: 1 });
+    const activeStreams = await Stream.find({ status: 1, platformtype: 'youtube' }).populate("user");
     logger("Youtube status checker is running to check is any stream is live on Youtube or not.");
     if (activeStreams && activeStreams.length < 1) {
       console.log(`Currently there are not any live streams active.`);
@@ -946,12 +941,14 @@ const checkStreamStatus = async () => {
         continue;
       }
       const videoDetails = response.data.items[0];
-      console.log("videoDetails", videoDetails);
+      const dbstream = await Stream.findOne({ streamId: videoId });
+      
       if (videoDetails && videoDetails.liveStreamingDetails && videoDetails.liveStreamingDetails.actualEndTime) {
-        logger(`Live stream has ended for video ID: ${videoId} via cron job status check is live on Youtube. ??`);
-        await stopDbStream(videoId);
-        await stopffmpegstream(videoId);
-      } else { 
+          logger(`Live stream has ended for video ID: ${videoId} /n ${videoDetails} /n via cron job status check is live on Youtube. ${stream}`);
+          console.log(`Live stream has ended for video ID: ${videoId} /n ${videoDetails} /n via cron job status check is live on Youtube. ${stream}`);
+          await stopDbStream(dbstream._id);
+          await stopffmpegstream(dbstream._id);
+      } else {  
         console.log(`Live stream is live: ${videoId}`);
       }
     }
@@ -960,24 +957,35 @@ const checkStreamStatus = async () => {
   }
 };  
 
+const youtubeStreamStatusCron = async (req, res, next) => {
+  try {
+    checkStreamStatus();
+    return res.status(200).json({
+      status: false,
+      message: 'Cron has been run.',
+    });
+  } catch(err) {
+    console.error(`Stream stop error: ${err}`);
+    JSONerror(res, err, next);
+  }
+};
+
+
 
 const checkStreamStatusAndSubscription = async () => {
   try {
     const activeStreams = await Stream.find({ status: 1 }).populate("user");
     logger('check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>');
+    
+    console.log("All activeStreams", activeStreams);
+
     if (activeStreams && activeStreams.length < 1) {
       console.log(`Currently there are not any live streams active.`);
       return; 
     }
     for (const stream of activeStreams) {
       const user = stream.user;
-      const userSubscription = await Subscription.findOne({ user: user, status: 'active' }).populate("plan");
-      if (!userSubscription) {
-        console.log(`User ${user} does not have an active subscription.`);
-        logger(`User ${user} does not have an active subscription.`);
-        continue;
-      }
-      const maxStreamsAllowed = userSubscription && userSubscription.plan && userSubscription.plan.allowed_streams || 0;
+      const maxStreamsAllowed = user.streamLimit || 0;
       const userActiveStreams = await Stream.find({ user: user, status: 1 });
       if (userActiveStreams.length >= maxStreamsAllowed) {
         console.log(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
@@ -995,7 +1003,18 @@ const checkStreamStatusAndSubscription = async () => {
     console.error('Error checking live stream status and subscription:', error);
   }
 };
-
+const checkAvailableStreamLimit = async (req, res, next) => {
+  try {
+    checkStreamStatusAndSubscription();
+    return res.status(200).json({
+      status: false,
+      message: 'Check availbale stream limit has been run.',
+    });
+  } catch(err) {
+    console.error(`Stream stop error: ${err}`);
+    JSONerror(res, err, next);
+  }
+};
 
 const force_start_stream = async (req, res, next) => {
   try {
@@ -1018,9 +1037,7 @@ const force_start_stream = async (req, res, next) => {
   }
 };
 
-
 cron.schedule('0 * * * *', async () => {
-  console.log('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   // checkStreamStatusAndSubscription();
 });
@@ -1030,9 +1047,9 @@ cron.schedule('0 * * * *', async () => {
 // Job will stop the ffmpeg process and make stream status ended
 cron.schedule('0 */3 * * *', async () => {
   console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
   if(process.env.CHECK_STREAM_STATUS === 'production') {
     checkStreamStatus();
+    logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
   }
 });
 
@@ -1224,6 +1241,7 @@ cron.schedule('0 * * * *', async () => {
       sub.status = 'expired';
       await sub.save(); 
       console.log(`Subscription for ${sub.user.email} marked as inactive`);
+      logger(`Subscription for ${sub.user.email} marked as inactive`);
 
       // Adjust user stream limits and resolutions
       const currentuser = await User.findById(sub.user._id);
@@ -1255,6 +1273,7 @@ cron.schedule('0 * * * *', async () => {
           await stopDbStream(excessStream.streamId);
           await stopffmpegstream(excessStream.streamId);
           console.log(`Stopped excess stream: ${excessStream.streamId}`); 
+          logger(`Stopped excess stream: ${excessStream.streamId}`); 
         }
       }
     });
@@ -1266,5 +1285,5 @@ cron.schedule('0 * * * *', async () => {
 });
 
 
-module.exports = { edit_rtmp_stream, start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
+module.exports = {checkAvailableStreamLimit, youtubeStreamStatusCron, edit_rtmp_stream, start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 
 

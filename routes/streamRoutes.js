@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { edit_stream, edit_rtmp_stream, createPlaylist, force_start_stream, start_stream, start_rmtp_stream, stop_stream, oauth, oauth2callback} = require('../controllers/streamController');
+const { checkAvailableStreamLimit, youtubeStreamStatusCron, edit_stream, edit_rtmp_stream, createPlaylist, force_start_stream, start_stream, start_rmtp_stream, stop_stream, oauth, oauth2callback} = require('../controllers/streamController');
 const { streamDetails, unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit } = require('../controllers/youtubeStreamController');
 const { validateToken } = require('../controllers/authController');
 
@@ -30,6 +30,9 @@ router.route('/oauth2callback').get(validateToken, oauth2callback);
 router.route('/check-youtube-link-status').get(validateToken, checkIsYoutubeLinked);
 
 router.route('/unLinkYoutube').get(validateToken, unLinkYoutube);
+
+router.route('/run-youtube-cron').get(youtubeStreamStatusCron);
+router.route('/checklimit').get(checkAvailableStreamLimit);
 
 module.exports = router; 
 
