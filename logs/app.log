@@ -68,3 +68,15 @@
 
 2024-12-12T07:58:35.522Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
 
+2024-12-12T11:43:51.071Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-12-12T11:43:51.373Z [INFO]:"Live stream has ended for video ID: iTuZQMVi-oc /n [object Object] /n via cron job status check is live on Youtube. {\n  _id: new ObjectId(\"675aa428c99e73171bf209b6\"),\n  title: 'Buy Me a Car',\n  stream_type: 'video',\n  resolution: '1080p',\n  thumbnail: 'https://pub-d5e15f44173d4364b5fb2b8cf6ad6aab.r2.dev/test-tube-thumbnail.png',\n  audio: '',\n  video: '[{\"_id\":\"675077081b92b5132e290b2d\",\"name\":\"testtube.mp4\",\"mime\":\"video/mp4\",\"size\":\"3249803\",\"filename\":\"testtube.mp4\",\"fileId\":\"7e6c6daf7053a6b296b2a69c67bd0818\",\"url\":\"https://pub-d5e15f44173d4364b5fb2b8cf6ad6aab.r2.dev/testtube.mp4\",\"user\":\"6654b7ae3f6a8fea0ffa35c5\",\"createdAt\":\"2024-12-04T10:04:35.133Z\",\"deletedAt\":null,\"__v\":0}]',\n  radio: null,\n  status: '1',\n  platformtype: 'youtube',\n  stream_url: '',\n  streamkey: 'zash-6y1a-xqc3-c2p6-5qp8',\n  streamId: 'iTuZQMVi-oc',\n  ordered: true,\n  description: 'hello',\n  playlistId: '1733993497703',\n  user: {\n    _id: new ObjectId(\"6654b7ae3f6a8fea0ffa35c5\"),\n    name: 'Naveen Tehrpariya',\n    username: 'nk40114',\n    email: 'nk40114@gmail.com',\n    status: 'active',\n    role: '0',\n    createdAt: 2024-05-27T16:40:48.606Z,\n    free_trial: 2024-10-04T16:41:18.301Z,\n    __v: 17,\n    passwordResetToken: '6565c8653453e58a3fe268f0d9e26d5bf81b7b124d84c4d516bc90e6680379a9',\n    resetTokenExpire: 2024-06-12T06:14:46.804Z,\n    mailVerifiedAt: 2024-07-06T19:52:22.668Z,\n    plan: new ObjectId(\"66d74f0565890f8db9e1df4b\"),\n    plan_end_on: 2024-12-04T15:13:37.651Z,\n    country: 'India',\n    country_code: 'IN',\n    currency: 'INR',\n    plan_months: '2',\n    allowed_resolutions: [ '720p', '720x1080', '1080p', '2160p' ],\n    streamLimit: 9,\n    storageLimit: 25,\n    trialStatus: 'ended',\n    planStatus: 'ended',\n    id: '6654b7ae3f6a8fea0ffa35c5'\n  },\n  createdAt: 2024-12-12T08:51:52.691Z,\n  updatedAt: 2024-12-12T08:51:52.691Z,\n  __v: 0\n}"
+
+2024-12-12T11:43:51.419Z [INFO]:"Database Stopping stream 675aa428c99e73171bf209b6"
+
+2024-12-12T11:43:51.467Z [INFO]:"there is no any ffmpeg proccess running - 675aa428c99e73171bf209b6"
+
+2024-12-12T11:45:38.488Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+
+2024-12-12T11:45:47.457Z [INFO]:"Youtube status checker is running to check is any stream is live on Youtube or not."
+

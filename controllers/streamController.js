@@ -944,7 +944,9 @@ const checkStreamStatus = async () => {
       const dbstream = await Stream.findOne({ streamId: videoId });
       
       if (videoDetails && videoDetails.liveStreamingDetails && videoDetails.liveStreamingDetails.actualEndTime) {
-          logger(`Live stream has ended for video ID: ${videoId} /n ${videoDetails} /n via cron job status check is live on Youtube. ${stream}`);
+          logger(JSON.stringify(videoDetails));
+          console.log("videoDetails",videoDetails)
+          logger(`Live stream has ended for video ID: ${videoId} /n  /n via cron job status check is live on Youtube. ${stream}`);
           console.log(`Live stream has ended for video ID: ${videoId} /n ${videoDetails} /n via cron job status check is live on Youtube. ${stream}`);
           await stopDbStream(dbstream._id);
           await stopffmpegstream(dbstream._id);
@@ -971,14 +973,11 @@ const youtubeStreamStatusCron = async (req, res, next) => {
 };
 
 
-
 const checkStreamStatusAndSubscription = async () => {
   try {
     const activeStreams = await Stream.find({ status: 1 }).populate("user");
     logger('check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>');
-    
     console.log("All activeStreams", activeStreams);
-
     if (activeStreams && activeStreams.length < 1) {
       console.log(`Currently there are not any live streams active.`);
       return; 
