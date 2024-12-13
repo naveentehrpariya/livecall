@@ -480,10 +480,8 @@ async function start_ffmpeg(data) {
         throw new Error('Required parameters missing');
       }
       stopFlags[objectID] = false;
-      const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
-      console.log("FFMPEG PROCCESS ID", objectID)
-      activeStreams[objectID] = child;
-      logger(`activeStreams ${activeStreams}`);
+      const child = execFile('ffmpeg', ffmpegCommand, { detached: true }); 
+      activeStreams[objectID] = child; 
       
       child.on('close', (code) => {
           console.log(`FFmpeg process exited with code ${code}`);
@@ -944,9 +942,31 @@ const checkStreamStatus = async () => {
       const dbstream = await Stream.findOne({ streamId: videoId });
       
       if (videoDetails && videoDetails.liveStreamingDetails && videoDetails.liveStreamingDetails.actualEndTime) {
+<<<<<<< HEAD
           logger(JSON.stringify(videoDetails));
           console.log("videoDetails",videoDetails)
           logger(`Live stream has ended for video ID: ${videoId} /n  /n via cron job status check is live on Youtube. ${stream}`);
+=======
+        const message = `<html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+          <meta http-equiv="content-type" content="text/html; charset=utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+          <meta name="format-detection" content="telephone=no" />
+          <title>🚨 Your Plan Has Expired</title>
+        </head>
+        <body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" marginwidth="0" marginheight="0" width="100%" style="border-collapse: collapse; border-spacing: 0;  padding: 0; width: 100%; height: 100%; -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%;
+          background-color: #ffffff;
+          color: #000000;" bgcolor="#ffffff" text="#000000">
+          ${JSON.stringify(videoDetails)}
+        </body>
+        </html>`;
+          await sendEmail({
+            email: 'naveen@internetbusinesssolutionsindia.com',
+            subject: "🚨 Live Stream Stopped",
+            message
+          });
+          logger(`Live stream has ended for video ID: ${videoId} /n ${JSON.stringify(videoDetails)} /n via cron job status check is live on Youtube. ${stream}`);
+>>>>>>> fcd3dfd551f4be38de91d4b0aaf70deebb1d303c
           console.log(`Live stream has ended for video ID: ${videoId} /n ${videoDetails} /n via cron job status check is live on Youtube. ${stream}`);
           await stopDbStream(dbstream._id);
           await stopffmpegstream(dbstream._id);
