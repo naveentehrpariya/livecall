@@ -19,7 +19,6 @@ const downloadAndMergeAudios = require("../utils/downloadAndMergeAudios");
 const deleteFilesStartingWithName = require("../utils/deleteFilesStartingWithName");
 const convertImageToVideo = require("../utils/convertImageToVideo");
 const User = require("../db/Users");
-const { youtube } = require("googleapis/build/src/apis/youtube");
 const sendEmail = require("../utils/Email");
 const SizeReducer = require("../utils/SizeReducer");
 const Pricing = require("../db/Pricing");
@@ -485,29 +484,35 @@ async function start_ffmpeg(data) {
       
       child.on('close', (code) => {
           console.log(`FFmpeg process exited with code ${code}`);
-          logger(`code for stopped stream ${child.pid} : ${code}`);
-          // if (code !== 0 && !stopFlags[objectID]) {
-          //     retryCount++;
-          //     logger(`process retrying to start FFmpeg, count ${retryCount}`);
-          //     if (retryCount < 1){
-          //         setTimeout(() => startFFmpegProcess(objectID), 5000);  // Retry with delay
-          //     } else { 
-          //         stopffmpegstream(objectID);
-          //         logger(`Unable to restart the stream after ${retryCount} retries, stopped ${videoID}`);
-          //     }
-          // } 
+          logger(`code for stopped stream`);
+          logger(JSON.stringify(code));
+
+          if (code !== 0 && !stopFlags[objectID]){
+              retryCount++;
+              logger(`process retrying to start FFmpeg, count ${retryCount}`);
+              if (retryCount < 3){
+                  setTimeout(() => startFFmpegProcess(objectID), 3000); 
+              } else {   
+                  stopffmpegstream(objectID); 
+                  logger(`Unable to restart the stream after ${retryCount} retries, stopped ${objectID}`);
+              } 
+          } 
       });
+
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        if (data.includes('HTTP error 404 Not Found')) {
-          console.error('The provided video URL returned a 404 error');
+        if (data.includes('encoder error') || data.includes('decoder error')) {
+          const timestamp = new Date().toISOString();
+          console.error(`${timestamp} - Specific Error: ${data}`);
+          logger(`${timestamp} - Specific Error: ${data}`);
         }
       });
       child.on('error', (err) => {
-        const lerr = `Child process error: ${err}`;
-        console.error(lerr);
-        logger(lerr);
+        console.error(`Child process error:`);
+        console.error(err);
+        logger(`Child process error:`);
+        logger(err);
         stopffmpegstream(objectID);
       });
     };
@@ -516,6 +521,7 @@ async function start_ffmpeg(data) {
     console.log("ffmpeg stopping error =>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", err);
   }
 } 
+
 
 const start_stream = catchAsync(async (req, res, next) => {
   try {
@@ -799,7 +805,6 @@ const start_rmtp_stream = catchAsync(async (req, res, next) => {
 });
 
 
-
 const edit_rtmp_stream = catchAsync(async (req, res, next) => {
   try { 
     const { id, video, audio, streamkey, title, resolution, stream_url } = req.body;
@@ -885,6 +890,7 @@ const stop_stream = async (req, res, next) => {
   }
 };
 
+
 const admin_stop_stream = async (req, res, next) => {
   try {
     const streamId  = req.params.streamId;
@@ -942,11 +948,6 @@ const checkStreamStatus = async () => {
       const dbstream = await Stream.findOne({ streamId: videoId });
       
       if (videoDetails && videoDetails.liveStreamingDetails && videoDetails.liveStreamingDetails.actualEndTime) {
-<<<<<<< HEAD
-          logger(JSON.stringify(videoDetails));
-          console.log("videoDetails",videoDetails)
-          logger(`Live stream has ended for video ID: ${videoId} /n  /n via cron job status check is live on Youtube. ${stream}`);
-=======
         const message = `<html xmlns="http://www.w3.org/1999/xhtml">
         <head>
           <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -966,7 +967,6 @@ const checkStreamStatus = async () => {
             message
           });
           logger(`Live stream has ended for video ID: ${videoId} /n ${JSON.stringify(videoDetails)} /n via cron job status check is live on Youtube. ${stream}`);
->>>>>>> fcd3dfd551f4be38de91d4b0aaf70deebb1d303c
           console.log(`Live stream has ended for video ID: ${videoId} /n ${videoDetails} /n via cron job status check is live on Youtube. ${stream}`);
           await stopDbStream(dbstream._id);
           await stopffmpegstream(dbstream._id);
@@ -978,6 +978,7 @@ const checkStreamStatus = async () => {
     console.error('Error checking live stream status:', error);
   }
 };  
+
 
 const youtubeStreamStatusCron = async (req, res, next) => {
   try {
@@ -1002,26 +1003,27 @@ const checkStreamStatusAndSubscription = async () => {
       console.log(`Currently there are not any live streams active.`);
       return; 
     }
-    for (const stream of activeStreams) {
-      const user = stream.user;
-      const maxStreamsAllowed = user.streamLimit || 0;
-      const userActiveStreams = await Stream.find({ user: user, status: 1 });
-      if (userActiveStreams.length >= maxStreamsAllowed) {
-        console.log(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
-        logger(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
-        const excessStreams = userActiveStreams.slice(maxStreamsAllowed);
-        for (const excessStream of excessStreams) {
-          logger(`Stopping excess stream: ${excessStream.streamId}`);
-          await stopDbStream(excessStream.streamId);
-          await stopffmpegstream(excessStream.streamId);
-        }
-        continue;
-      }
-    }
+    // for (const stream of activeStreams) {
+    //   const user = stream.user;
+    //   const maxStreamsAllowed = user.streamLimit || 0;
+    //   const userActiveStreams = await Stream.find({ user: user, status: 1 });
+    //   if (userActiveStreams.length >= maxStreamsAllowed) {
+    //     console.log(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
+    //     logger(`User ${user} has reached the maximum allowed live streams (${maxStreamsAllowed}).`);
+    //     const excessStreams = userActiveStreams.slice(maxStreamsAllowed);
+    //     for (const excessStream of excessStreams) {
+    //       logger(`Stopping excess stream: ${excessStream.streamId}`);
+    //       await stopDbStream(excessStream.streamId);
+    //       await stopffmpegstream(excessStream.streamId);
+    //     }
+    //     continue;
+    //   }
+    // }
   } catch (error) {
     console.error('Error checking live stream status and subscription:', error);
   }
 };
+
 const checkAvailableStreamLimit = async (req, res, next) => {
   try {
     checkStreamStatusAndSubscription();
@@ -1054,254 +1056,252 @@ const force_start_stream = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}; 
 
 cron.schedule('0 * * * *', async () => {
-  logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
+  // logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
   // checkStreamStatusAndSubscription();
 });
 
 
 // Cron job to status any stream has been ended from youtube but on our system has status of running.
-// Job will stop the ffmpeg process and make stream status ended
 cron.schedule('0 */3 * * *', async () => {
-  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  if(process.env.CHECK_STREAM_STATUS === 'production') {
-    checkStreamStatus();
-    logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  }
+  // console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  // if(process.env.CHECK_STREAM_STATUS === 'production') {
+  //   checkStreamStatus();
+  //   logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  // }
 });
 
  
-cron.schedule('0 * * * *', async () => {
-  console.log('Running hourly job to remove expired plans');
-  const currentDate = new Date();
-  try {
-    const subscriptions = await Subscription.find({endOn: { $lt: currentDate }, status: 'active'}).populate("user").populate("plan");
-    const updates = subscriptions.map(async (sub) => {
-      const planname = sub.plan.name;
-      const message = `<html xmlns="http://www.w3.org/1999/xhtml">
-          <head>
-            <meta http-equiv="content-type" content="text/html; charset=utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0;">
-            <meta name="format-detection" content="telephone=no" />
+// cron.schedule('0 * * * *', async () => {
+//   console.log('Running hourly job to remove expired plans');
+//   const currentDate = new Date();
+//   try {
+//     const subscriptions = await Subscription.find({endOn: { $lt: currentDate }, status: 'active'}).populate("user").populate("plan");
+//     const updates = subscriptions.map(async (sub) => {
+//       const planname = sub.plan.name;
+//       const message = `<html xmlns="http://www.w3.org/1999/xhtml">
+//           <head>
+//             <meta http-equiv="content-type" content="text/html; charset=utf-8">
+//             <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+//             <meta name="format-detection" content="telephone=no" />
 
-            <style>
-              body {
-                margin: 0;
-                padding: 0;
-                min-width: 100%;
-                width: 100% !important;
-                height: 100% !important;
-              }
+//             <style>
+//               body {
+//                 margin: 0;
+//                 padding: 0;
+//                 min-width: 100%;
+//                 width: 100% !important;
+//                 height: 100% !important;
+//               }
 
-              body,
-              table,
-              td,
-              div,
-              p,
-              a {
-                -webkit-font-smoothing: antialiased;
-                text-size-adjust: 100%;
-                -ms-text-size-adjust: 100%;
-                -webkit-text-size-adjust: 100%;
-                line-height: 100%;
-              }
+//               body,
+//               table,
+//               td,
+//               div,
+//               p,
+//               a {
+//                 -webkit-font-smoothing: antialiased;
+//                 text-size-adjust: 100%;
+//                 -ms-text-size-adjust: 100%;
+//                 -webkit-text-size-adjust: 100%;
+//                 line-height: 100%;
+//               }
 
-              table,
-              td {
-                mso-table-lspace: 0pt;
-                mso-table-rspace: 0pt;
-                border-collapse: collapse !important;
-                border-spacing: 0;
-              }
+//               table,
+//               td {
+//                 mso-table-lspace: 0pt;
+//                 mso-table-rspace: 0pt;
+//                 border-collapse: collapse !important;
+//                 border-spacing: 0;
+//               }
 
-              img {
-                border: 0;
-                line-height: 100%;
-                outline: none;
-                text-decoration: none;
-                -ms-interpolation-mode: bicubic;
-              }
+//               img {
+//                 border: 0;
+//                 line-height: 100%;
+//                 outline: none;
+//                 text-decoration: none;
+//                 -ms-interpolation-mode: bicubic;
+//               }
 
-              #outlook a {
-                padding: 0;
-              }
+//               #outlook a {
+//                 padding: 0;
+//               }
 
-              .ReadMsgBody {
-                width: 100%;
-              }
+//               .ReadMsgBody {
+//                 width: 100%;
+//               }
 
-              .ExternalClass {
-                width: 100%;
-              }
+//               .ExternalClass {
+//                 width: 100%;
+//               }
 
-              .ExternalClass,
-              .ExternalClass p,
-              .ExternalClass span,
-              .ExternalClass font,
-              .ExternalClass td,
-              .ExternalClass div {
-                line-height: 100%;
-              }
+//               .ExternalClass,
+//               .ExternalClass p,
+//               .ExternalClass span,
+//               .ExternalClass font,
+//               .ExternalClass td,
+//               .ExternalClass div {
+//                 line-height: 100%;
+//               }
 
-              @media all and (min-width: 560px) {
-                body {
-                  margin-top: 30px;
-                }
-              }
+//               @media all and (min-width: 560px) {
+//                 body {
+//                   margin-top: 30px;
+//                 }
+//               }
               
-              /* Rounded corners */
-              @media all and (min-width: 560px) {
-                .container {
-                  border-radius: 8px;
-                  -webkit-border-radius: 8px;
-                  -moz-border-radius: 8px;
-                  -khtml-border-radius: 8px;
-                }
-              }
-              /* Links */
-              a,
-              a:hover {
-                color: #127DB3;
-              }
+//               /* Rounded corners */
+//               @media all and (min-width: 560px) {
+//                 .container {
+//                   border-radius: 8px;
+//                   -webkit-border-radius: 8px;
+//                   -moz-border-radius: 8px;
+//                   -khtml-border-radius: 8px;
+//                 }
+//               }
+//               /* Links */
+//               a,
+//               a:hover {
+//                 color: #127DB3;
+//               }
 
-              .footer a,
-              .footer a:hover {
-                color: #999999;
-              }
-            </style>
-            <title>🚨 Your Plan Has Expired</title>
-          </head>
+//               .footer a,
+//               .footer a:hover {
+//                 color: #999999;
+//               }
+//             </style>
+//             <title>🚨 Your Plan Has Expired</title>
+//           </head>
 
-          <!-- BODY -->
-          <body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" marginwidth="0" marginheight="0" width="100%" style="border-collapse: collapse; border-spacing: 0;  padding: 0; width: 100%; height: 100%; -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%;
-            background-color: #ffffff;
-            color: #000000;" bgcolor="#ffffff" text="#000000">
-            <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; width: 100%;" class="background">
-              <tr>
-                <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;" bgcolor="#ffffff">
-                  <table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
-            max-width: 560px;" class="container">
-                    <tr>
-                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 24px; font-weight: bold; line-height: 130%;padding-top: 25px;color: #000000;font-family: sans-serif;" class="header">
-                        <img border="0" vspace="0" hspace="0" src="https://runstream.co/logo-white.png" style="max-width: 250px;" alt="The Idea" title="Runstream" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
-                padding-top: 25px;" class="line">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
-                padding-top: 25px; 
-                color: #000000;
-                font-family: sans-serif;" class="paragraph">
-                        Hi ${sub.user.name || ""},<br> We wanted to let you know that your ${planname} plan expired today. We’re sorry to see you go, but we’re here to help you get back on track!
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; padding-top: 25px;padding-bottom: 5px;" class="button">
-                          <table border="0" cellpadding="0" cellspacing="0" align="center" style="max-width: 240px; min-width: 120px; border-collapse: collapse; border-spacing: 0; padding: 0;">
-                            <tr>
-                              <td align="center" valign="middle"  >
-                                <a target="_blank" style=" background-color: #df3939; padding: 12px 24px; margin: 0; text-decoration: none; border-collapse: collapse; border-spacing: 0; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; -khtml-border-radius: 10px;text-decoration: none;
-                                  color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;" href="https://runstream.co">
-                                    Reactivate My Plan
-                                </a>
-                              </td>
-                            </tr>
-                          </table>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
-                padding-top: 25px;" class="line">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
-                padding-top: 20px;
-                padding-bottom: 25px;
-                color: #000000;
-                font-family: sans-serif;" class="paragraph">
-                        If you have any questions or need assistance, feel free to reach out to our support team at <a href="mailto:Support@runstream.co" target="_blank" style=" color: #4b57ff; ">support@runstream.co</a>. We’re here to help!
-                      </td>
-                    </tr>
-                  </table>
-                  <table border="0" cellpadding="0" cellspacing="0" align="center" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
-            max-width: 560px;" class="wrapper">
-                    <tr>
-                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 13px; font-weight: 400; line-height: 150%;
-                padding-top: 20px;
-                padding-bottom: 20px;
-                color: #999999;
-                font-family: sans-serif;" class="footer">
-                        For more information <a href="https://runstream.co/contact" target="_blank" style=" color: #999999; ">contact us</a>. Our support
-                        team is available to help you 24 hours a day, seven days a week.
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </body>
-          </html>`; 
+//           <!-- BODY -->
+//           <body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" marginwidth="0" marginheight="0" width="100%" style="border-collapse: collapse; border-spacing: 0;  padding: 0; width: 100%; height: 100%; -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%;
+//             background-color: #ffffff;
+//             color: #000000;" bgcolor="#ffffff" text="#000000">
+//             <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; width: 100%;" class="background">
+//               <tr>
+//                 <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;" bgcolor="#ffffff">
+//                   <table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+//             max-width: 560px;" class="container">
+//                     <tr>
+//                       <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 24px; font-weight: bold; line-height: 130%;padding-top: 25px;color: #000000;font-family: sans-serif;" class="header">
+//                         <img border="0" vspace="0" hspace="0" src="https://runstream.co/logo-white.png" style="max-width: 250px;" alt="The Idea" title="Runstream" />
+//                       </td>
+//                     </tr>
+//                     <tr>
+//                       <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+//                 padding-top: 25px;" class="line">
+//                       </td>
+//                     </tr>
+//                     <tr>
+//                       <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+//                 padding-top: 25px; 
+//                 color: #000000;
+//                 font-family: sans-serif;" class="paragraph">
+//                         Hi ${sub.user.name || ""},<br> We wanted to let you know that your ${planname} plan expired today. You live stream will stop in sometimes. We’re sorry to see you go, but we’re here to help you get back on track!
+//                       </td>
+//                     </tr>
+//                     <tr>
+//                       <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; padding-top: 25px;padding-bottom: 5px;" class="button">
+//                           <table border="0" cellpadding="0" cellspacing="0" align="center" style="max-width: 240px; min-width: 120px; border-collapse: collapse; border-spacing: 0; padding: 0;">
+//                             <tr>
+//                               <td align="center" valign="middle"  >
+//                                 <a target="_blank" style=" background-color: #df3939; padding: 12px 24px; margin: 0; text-decoration: none; border-collapse: collapse; border-spacing: 0; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; -khtml-border-radius: 10px;text-decoration: none;
+//                                   color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;" href="https://runstream.co">
+//                                     Reactivate My Plan
+//                                 </a>
+//                               </td>
+//                             </tr>
+//                           </table>
+//                       </td>
+//                     </tr>
+//                     <tr>
+//                       <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+//                 padding-top: 25px;" class="line">
+//                       </td>
+//                     </tr>
+//                     <tr>
+//                       <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+//                 padding-top: 20px;
+//                 padding-bottom: 25px;
+//                 color: #000000;
+//                 font-family: sans-serif;" class="paragraph">
+//                         If you have any questions or need assistance, feel free to reach out to our support team at <a href="mailto:Support@runstream.co" target="_blank" style=" color: #4b57ff; ">support@runstream.co</a>. We’re here to help!
+//                       </td>
+//                     </tr>
+//                   </table>
+//                   <table border="0" cellpadding="0" cellspacing="0" align="center" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+//             max-width: 560px;" class="wrapper">
+//                     <tr>
+//                       <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 13px; font-weight: 400; line-height: 150%;
+//                 padding-top: 20px;
+//                 padding-bottom: 20px;
+//                 color: #999999;
+//                 font-family: sans-serif;" class="footer">
+//                         For more information <a href="https://runstream.co/contact" target="_blank" style=" color: #999999; ">contact us</a>. Our support
+//                         team is available to help you 24 hours a day, seven days a week.
+//                       </td>
+//                     </tr>
+//                   </table>
+//                 </td>
+//               </tr>
+//             </table>
+//           </body>
+//           </html>`; 
 
-      // Send email notification
-      await sendEmail({
-        email: sub.user.email,
-        subject: "🚨 Your Plan Has Expired",
-        message
-      });
+//       // Send email notification
+//       await sendEmail({
+//         email: sub.user.email,
+//         subject: "🚨 Your Plan Has Expired",
+//         message
+//       });
       
-      console.log(`Email sent to ${sub.user.email}`);
-      sub.status = 'expired';
-      await sub.save(); 
-      console.log(`Subscription for ${sub.user.email} marked as inactive`);
-      logger(`Subscription for ${sub.user.email} marked as inactive`);
+//       console.log(`Email sent to ${sub.user.email}`);
+//       sub.status = 'expired';
+//       await sub.save(); 
+//       console.log(`Subscription for ${sub.user.email} marked as inactive`);
+//       logger(`Subscription for ${sub.user.email} marked as inactive`);
 
-      // Adjust user stream limits and resolutions
-      const currentuser = await User.findById(sub.user._id);
-      let allowedResolutions = new Set();
-      let streamLimit = 0;
-      let storage = 0;
+//       // Adjust user stream limits and resolutions
+//       const currentuser = await User.findById(sub.user._id);
+//       let allowedResolutions = new Set();
+//       let streamLimit = 0;
+//       let storage = 0;
       
-      for (const sub of subscriptions) {
-        const plan = await Pricing.findById(sub.plan);
-        const rs = JSON.parse(plan.resolutions);
-        streamLimit += plan.allowed_streams;
-        allowedResolutions = new Set([...allowedResolutions, ...rs]);
-        storage = parseInt(storage) + parseInt(plan.storage);
-      }
+//       for (const sub of subscriptions) {
+//         const plan = await Pricing.findById(sub.plan);
+//         const rs = JSON.parse(plan.resolutions);
+//         streamLimit += plan.allowed_streams;
+//         allowedResolutions = new Set([...allowedResolutions, ...rs]);
+//         storage = parseInt(storage) + parseInt(plan.storage);
+//       }
  
-      currentuser.streamLimit = streamLimit;
-      currentuser.allowed_resolutions = Array.from(allowedResolutions);
-      currentuser.storageLimit = storage;
-      await currentuser.save();
-      console.log(`Updated user ${currentuser.email} stream limit and resolutions`);
+//       currentuser.streamLimit = streamLimit;
+//       currentuser.allowed_resolutions = Array.from(allowedResolutions);
+//       currentuser.storageLimit = storage;
+//       await currentuser.save();
+//       console.log(`Updated user ${currentuser.email} stream limit and resolutions`);
 
-      // Check and stop excess streams
-      const userActiveStreams = await Stream.find({ user: currentuser._id, status: 1 });
-      let totalstream = userActiveStreams.length;
+//       const userActiveStreams = await Stream.find({ user: currentuser._id, status: 1 });
+//       let totalstream = userActiveStreams.length;
 
-      for (const excessStream of userActiveStreams) {
-        if (totalstream > streamLimit) {
-          totalstream--; 
-          await stopDbStream(excessStream.streamId);
-          await stopffmpegstream(excessStream.streamId);
-          console.log(`Stopped excess stream: ${excessStream.streamId}`); 
-          logger(`Stopped excess stream: ${excessStream.streamId}`); 
-        }
-      }
-    });
-    await Promise.all(updates);
-    console.log(`Processed ${subscriptions.length} users with expired plans.`);
-  } catch (err) {
-    console.error('Error running the cron job:', err);
-  }
-});
+//       // for (const excessStream of userActiveStreams) {
+//       //   if (totalstream > streamLimit) {
+//       //     totalstream--; 
+//       //     await stopDbStream(excessStream._id);
+//       //     await stopffmpegstream(excessStream._id);
+//       //     console.log(`Stopped excess stream: ${excessStream.streamId}`); 
+//       //     logger(`Stopped excess stream: ${excessStream.streamId}`); 
+//       //   }
+//       // }
+//     });
+//     await Promise.all(updates);
+//     console.log(`Processed ${subscriptions.length} users with expired plans.`);
+//   } catch (err) {
+//     console.error('Error running the cron job:', err);
+//   }
+// });
 
 
 module.exports = {checkAvailableStreamLimit, youtubeStreamStatusCron, edit_rtmp_stream, start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 

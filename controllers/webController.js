@@ -13,7 +13,6 @@ exports.addFeature = catchAsync(async (req, res) => {
       title : title, 
       description : description,
     }); 
-    
     await feature.save();
     res.json({
         status: true,

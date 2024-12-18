@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const B2 = require('backblaze-b2');
 const cors = require('cors');
 const fs = require('fs');
 const morgan = require('morgan');
@@ -42,8 +41,6 @@ app.use(express.json());
 const upload = multer({ dest: 'uploads/' });
 app.options("/cloud/upload", cors(corsOptions));
 const AWS = require('aws-sdk');
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
-const bucketName = "runstream";
 const s3 = new AWS.S3({ 
   endpoint: process.env.CLOUDFLARE_ENDPOINT,
   accessKeyId: process.env.CLOUDFLARE_ACCESS_KEY_ID,

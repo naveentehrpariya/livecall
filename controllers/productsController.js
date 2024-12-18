@@ -3,7 +3,6 @@ const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
 
 const addproducts = catchAsync ( async (req, res)=>{
-   
     const updated = Object.assign( {user_id:5}, req.body );
     const product = await Products.create(updated);
     if(product){ 

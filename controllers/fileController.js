@@ -11,14 +11,13 @@ const cron = require('node-cron');
 const Stream = require("../db/Stream");
 const AWS = require('aws-sdk');
 
-
-
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
 const b2 = new B2({
   applicationKeyId: APP_ID,
   applicationKey: APP_KEY
 });
+
 async function authorizeB2() {
   try {
     await b2.authorize();
@@ -74,14 +73,12 @@ const myMedia = catchAsync(async (req, res) => {
 
 
 
-
 const bucketName = "runstream";
 const s3 = new AWS.S3({ 
   endpoint: process.env.CLOUDFLARE_ENDPOINT,
   accessKeyId: process.env.CLOUDFLARE_ACCESS_KEY_ID,
   secretAccessKey: process.env.CLOUDFLARE_SECRET_ACCESS_KEY
 });
-
 
 const deleteMedia = async (req, res) => {
   try{
@@ -229,24 +226,6 @@ const checkUploadLimit = catchAsync ( async (req, res, next) => {
 
 
 // Function to get streams ended and updated in the last 48 hours
-const getRecentEndedStreams = async () => {
-    try {
-        const now = new Date();
-        const fortyEightHoursAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000); // 48 hours ago
-        const streams = await Stream.find({
-            endedAt: { $exists: true },
-            updatedAt: { $gte: fortyEightHoursAgo }
-        });
-        streams.forEach(stream => {
-            logger(`Stream ${stream.streamId} has ended and and all files with this playlist id has been removed ${stream.playlistId}.`);
-            deleteFilesStartingWithName(stream.playlistId);
-        });
-    } catch (error) {
-        console.error('Error fetching streams:', error);
-    }
-};
-
- 
 const restStreamLimit = catchAsync(async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -264,11 +243,24 @@ const restStreamLimit = catchAsync(async (req, res) => {
   }
 });
 
+const getRecentEndedStreams = async () => {
+  try {
+      const streams = await Stream.find({
+          status: 0,
+      });
+      streams.forEach(stream => {
+          logger(`Stream ${stream.streamId} has ended and and all files with this playlist id has been removed ${stream.playlistId}.`);
+          deleteFilesStartingWithName(stream.playlistId);
+      });
+  } catch (error) {
+      console.error('Error fetching streams:', error);
+  }
+};
 
 // REMOVE ALL UNWANTED FILES FROM SYSTEM
-cron.schedule('0 * * * *', async () => {
-  await getRecentEndedStreams();
-});
+// cron.schedule('0 0 * * 0', async () => {
+//   await getRecentEndedStreams();
+// });
 
 
 module.exports = { restStreamLimit, checkUploadLimit, totalFileUploaded, uploadMedia, myMedia, deleteMedia } 
