@@ -395,7 +395,7 @@ async function start_ffmpeg(data) {
   try {
     const { resolution, videoBitrate, maxrate, bufsize, preset, gop } = resolutionSettings[res || '1080p'];
     let ffmpegCommand = [
-      '-loglevel', 'verbose',  // Increase logging level
+      '-loglevel', 'verbose',
       '-re',
       '-stream_loop', '-1',
       '-i', video,
@@ -420,7 +420,7 @@ async function start_ffmpeg(data) {
     if (audio && audio !== null && audio !== 'null' && audio !== '[]' && audio !== '') {
       console.log("ENTERED STREAM WITH AUDIO INPUT");
       ffmpegCommand = [
-        '-loglevel', 'verbose',  // Increase logging level
+        '-loglevel', 'verbose',
         '-re',
         '-stream_loop', '-1',
         '-i', audio,
@@ -450,7 +450,7 @@ async function start_ffmpeg(data) {
       ];
     } else {
       ffmpegCommand = [
-        '-loglevel', 'verbose',  // Increase logging level
+        '-loglevel', 'verbose', 
         '-stream_loop', '-1',
         '-re',
         '-i', video,
@@ -479,40 +479,38 @@ async function start_ffmpeg(data) {
         throw new Error('Required parameters missing');
       }
       stopFlags[objectID] = false;
-      const child = execFile('ffmpeg', ffmpegCommand, { detached: true }); 
-      activeStreams[objectID] = child; 
+      const child = execFile('ffmpeg', ffmpegCommand, { detached: true });
+      console.log("FFMPEG PROCCESS ID", objectID) 
+      activeStreams[objectID] = child;
+      logger(`activeStreams ${activeStreams}`);
       
       child.on('close', (code) => {
-          console.log(`FFmpeg process exited with code ${code}`);
-          logger(`code for stopped stream`);
-          logger(JSON.stringify(code));
-
-          if (code !== 0 && !stopFlags[objectID]){
-              retryCount++;
-              logger(`process retrying to start FFmpeg, count ${retryCount}`);
-              if (retryCount < 3){
-                  setTimeout(() => startFFmpegProcess(objectID), 3000); 
-              } else {   
-                  stopffmpegstream(objectID); 
-                  logger(`Unable to restart the stream after ${retryCount} retries, stopped ${objectID}`);
-              } 
-          } 
+          console.log(code);
+          const err = `FFmpeg process exited with code ${code}`;
+          logger(`code for stopped stream ${child.pid} : ${code}`);
+          logger(err);
+          // if (code !== 0 && !stopFlags[objectID]) {
+          //     retryCount++;
+          //     logger(`process retrying to start FFmpeg, count ${retryCount}`);
+          //     if (retryCount < 1){
+          //         setTimeout(() => startFFmpegProcess(objectID), 5000);  // Retry with delay
+          //     } else { 
+          //         stopffmpegstream(objectID);
+          //         logger(`Unable to restart the stream after ${retryCount} retries, stopped ${videoID}`);
+          //     }
+          // } 
       });
-
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        if (data.includes('encoder error') || data.includes('decoder error')) {
-          const timestamp = new Date().toISOString();
-          console.error(`${timestamp} - Specific Error: ${data}`);
-          logger(`${timestamp} - Specific Error: ${data}`);
+        if (data.includes('HTTP error 404 Not Found')) {
+          console.error('The provided video URL returned a 404 error');
         }
       });
       child.on('error', (err) => {
-        console.error(`Child process error:`);
-        console.error(err);
-        logger(`Child process error:`);
-        logger(err);
+        const lerr = `Child process error: ${err}`;
+        console.error(lerr);
+        logger(lerr);
         stopffmpegstream(objectID);
       });
     };
@@ -1058,20 +1056,20 @@ const force_start_stream = async (req, res, next) => {
   }
 }; 
 
-cron.schedule('0 * * * *', async () => {
-  // logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
-  // checkStreamStatusAndSubscription();
-});
+// cron.schedule('0 * * * *', async () => {
+//   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
+//   checkStreamStatusAndSubscription();
+// });
 
 
 // Cron job to status any stream has been ended from youtube but on our system has status of running.
-cron.schedule('0 */3 * * *', async () => {
-  // console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  // if(process.env.CHECK_STREAM_STATUS === 'production') {
-  //   checkStreamStatus();
-  //   logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-  // }
-});
+// cron.schedule('0 */3 * * *', async () => {
+//   console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+//   if(process.env.CHECK_STREAM_STATUS === 'production') {
+//     checkStreamStatus();
+//     logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+//   }
+// });
 
  
 // cron.schedule('0 * * * *', async () => {

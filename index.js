@@ -95,8 +95,8 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
             } else { 
               res.status(500).json({
                 status:false,
-                message: "File failed to upload on cloud.",
-                error: data
+                error: data,
+                message: data.message ||"File failed to upload on cloud."
               });
             }
           }
@@ -110,8 +110,6 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
     });
   }
 });
-
-
 
 // app.post('/cloud/upload', cors(corsOptions), validateToken,  upload.single('file'), checkUploadLimit,  async (req, res) => {
 //   await authorizeB2();
@@ -195,7 +193,6 @@ app.all('/files', (req, res, next) => {
       message: `NOT FOUND`
   });
 });
-
 
 const port = process.env.PORT;
 app.listen(port, () => { console.log(`On PORT ${port} SERVER RUNNINGGGGG.....`) });

@@ -4,31 +4,11 @@ const Files = require("../db/Files");
 const User = require("../db/Users");
 const APIFeatures  = require("../utils/APIFeatures");
 const catchAsync  = require("../utils/catchAsync");
-const handleFileUpload = require('../utils/file-upload-util');
 const B2 = require('backblaze-b2');
 const fs = require('fs');
 const cron = require('node-cron');
 const Stream = require("../db/Stream");
 const AWS = require('aws-sdk');
-
-const APP_ID = process.env.CLOUD_APPLICATION_ID;
-const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
-const b2 = new B2({
-  applicationKeyId: APP_ID,
-  applicationKey: APP_KEY
-});
-
-async function authorizeB2() {
-  try {
-    await b2.authorize();
-    console.log('conncted B2:');
-    return;
-  } catch (error) {
-    console.error('Error authorizing B2:', error);
-    return;
-  }
-}
-
 
 // all/ image / video / audio
 const myMedia = catchAsync(async (req, res) => {
@@ -70,10 +50,6 @@ const myMedia = catchAsync(async (req, res) => {
      message: data.length ? undefined : "No files found"
    });
 });
-
-
-
-const bucketName = "runstream";
 const s3 = new AWS.S3({ 
   endpoint: process.env.CLOUDFLARE_ENDPOINT,
   accessKeyId: process.env.CLOUDFLARE_ACCESS_KEY_ID,
@@ -130,47 +106,109 @@ const deleteMedia = async (req, res) => {
 };
 
 const uploadMedia = catchAsync(async (req, res) => {
-  await authorizeB2();
-  const attachment = req.files?.attachment?.[0];
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  if(!attachment) {
-    return res.status(400).json({ message: "Nothing uploaded" });
-  }
   try {
-    const uploadResponse = await handleFileUpload(attachment);
-    if (uploadResponse) {
-      const file = new Files({
-        name: uploadResponse.file.originalname,
-        mime: uploadResponse.mime,
-        filename: uploadResponse.filename,
-        url: uploadResponse.url,
-        user: req.user?._id,
-        size: uploadResponse.size,
-      });
-      const fileUploaded = await file.save();
-      if (!fileUploaded) {
-        return res.status(500).json({
-          message: "File upload failed",
-          error: uploadResponse
-        });
-      }
-      return res.status(201).json({
-        message: "File uploaded to storage.",
-        file_data: fileUploaded,
-      });
-   
-    } else {
-      res.status(500).json({
-        message: "File upload failed",
-        error: uploadResponse
+    const { file } = req;
+    if (!file) {
+      return res.status(400).json({ 
+        status:false, 
+        message: 'No file found to upload.' 
       });
     }
+    const sanitizedFileName = file.originalname.trim().replace(/\s+/g, '-');
+      const params = {
+          Bucket: process.env.BUCKET_NAME || 'runstream',
+          Key: sanitizedFileName,
+          Body: fs.readFileSync(file.path),
+      };
+      s3.upload(params, async (err, data) => {
+        if (err) {
+          console.error("Error uploading file:", err);
+          res.status(500).json({
+            status:false,
+            message: "File failed to upload on cloud. Something went wrong.",
+            error: err
+          }); 
+        } else {
+          fs.unlinkSync(file.path);
+          console.log("data", data)
+          if(data){
+            const fileUrl = `${process.env.CLOUDFLARE_URL}${data.Key}`;
+            const uploadedfile = new Files({
+              name: file.originalname,
+              mime: file.mimetype,
+              filename: data.Key,
+              fileId: data.VersionId,
+              url: fileUrl,
+              user: req.user?._id,
+              size: file.size,
+            }); 
+
+            const fileUploaded = await uploadedfile.save();
+            res.status(201).json({
+              status: true,
+              message: "File uploaded to storage.",
+              file_data: fileUploaded,
+              fileUrl: fileUrl,
+            });
+          } else { 
+            res.status(500).json({
+              status:false,
+              error: data,
+              file_data: null,
+              message: data.message ||"File failed to upload on cloud."
+            });
+          }
+        }
+      });
   } catch (error) {
-    console.error(error);
+    console.log("error",error)
     res.status(500).json({
-      message: "An error occurred during file upload",
+      status:false,
+      message: "File failed to upload on cloud.",
+      error: error
     });
   }
+  // await authorizeB2();
+  // const attachment = req.files?.attachment?.[0];
+  // res.setHeader('Access-Control-Allow-Origin', '*');
+  // if(!attachment) {
+  //   return res.status(400).json({ message: "Nothing uploaded" });
+  // }
+  // try {
+  //   const uploadResponse = await handleFileUpload(attachment);
+  //   if (uploadResponse) {
+  //     const file = new Files({
+  //       name: uploadResponse.file.originalname,
+  //       mime: uploadResponse.mime,
+  //       filename: uploadResponse.filename,
+  //       url: uploadResponse.url,
+  //       user: req.user?._id,
+  //       size: uploadResponse.size,
+  //     });
+  //     const fileUploaded = await file.save();
+  //     if (!fileUploaded) {
+  //       return res.status(500).json({
+  //         message: "File upload failed",
+  //         error: uploadResponse
+  //       });
+  //     }
+  //     return res.status(201).json({
+  //       message: "File uploaded to storage.",
+  //       file_data: fileUploaded,
+  //     });
+   
+  //   } else {
+  //     res.status(500).json({
+  //       message: "File upload failed",
+  //       error: uploadResponse
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({
+  //     message: "An error occurred during file upload",
+  //   });
+  // }
 });
 
 
@@ -223,7 +261,6 @@ const checkUploadLimit = catchAsync ( async (req, res, next) => {
     });
   }
 });
-
 
 // Function to get streams ended and updated in the last 48 hours
 const restStreamLimit = catchAsync(async (req, res) => {
