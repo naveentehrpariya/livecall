@@ -50,6 +50,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.CLOUDFLARE_SECRET_ACCESS_KEY
 });
 
+
 app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'), checkUploadLimit,  async (req, res) => {
   try {
     const { file } = req;
@@ -180,7 +181,7 @@ app.post('/cloud/upload', cors(corsOptions), validateToken, upload.single('file'
 
 app.get('/', (req, res) => {
   res.send({
-    message: "ACTIVE last2",
+    message: "ACTIVE last 5",
     status: 200
   });
 });

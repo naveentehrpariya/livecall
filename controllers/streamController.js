@@ -390,6 +390,7 @@ const createPlaylist = catchAsync (async (req, res, next) => {
 });
 
 async function start_ffmpeg(data) {
+  const allpayload = data;
   const { streamkey, audio, video, res, objectID, platformtype, stream_url } = data;
   const StreamURL =  platformtype === 'youtube' ? `rtmp://a.rtmp.youtube.com/live2/${streamkey}` : `${stream_url}/${streamkey}`;
   console.log(`Starting ffmpeg stream`, data);
@@ -415,7 +416,10 @@ async function start_ffmpeg(data) {
       '-avoid_negative_ts', 'make_zero',
       '-strict', '-2',
       '-f', 'flv',
-      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`
+      `rtmp://a.rtmp.youtube.com/live2/${streamkey}`,
+      '-reconnect', '1',
+      '-reconnect_streamed', '1',
+      '-reconnect_delay_max', '2',
     ];
 
     if (audio && audio !== null && audio !== 'null' && audio !== '[]' && audio !== '') {
@@ -486,17 +490,9 @@ async function start_ffmpeg(data) {
       child.on('close', (code) => {
           console.log(`FFmpeg process exited with code ${code}`);
           logger(`code for stopped stream ${child.pid} : ${code}`);
-          // if (code !== 0 && !stopFlags[objectID]) {
-          //     retryCount++;
-          //     logger(`process retrying to start FFmpeg, count ${retryCount}`);
-          //     if (retryCount < 1){
-          //         setTimeout(() => startFFmpegProcess(objectID), 5000);  // Retry with delay
-          //     } else { 
-          //         stopffmpegstream(objectID);
-          //         logger(`Unable to restart the stream after ${retryCount} retries, stopped ${videoID}`);
-          //     }
-          // } 
+          start_ffmpeg(allpayload);
       });
+      
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       child.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
@@ -525,6 +521,7 @@ const start_stream = catchAsync(async (req, res, next) => {
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
     oAuth2Client.setCredentials(token);
+    logger("oAuth2Client",oAuth2Client);
     
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description, res);
@@ -552,7 +549,7 @@ const start_stream = catchAsync(async (req, res, next) => {
     
       await downloadThumbnail(thumbnail, thumbnailPath);
       await SizeReducer(thumbnailPath, OutputPath);
-    
+      logger("OutputPath",OutputPath);
       await youtube.thumbnails.set({
         videoId: streamData.broadcast.id,
         media: {
@@ -587,8 +584,11 @@ const start_stream = catchAsync(async (req, res, next) => {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+
     
     const savedStream = await stream.save();
+    logger("savedStream",savedStream);
+
     if (savedStream) {
       const video = req.body.video;
       if (activeStreams[videoID]) {
@@ -619,8 +619,8 @@ const start_stream = catchAsync(async (req, res, next) => {
     }
   } catch (err) {
     JSONerror(res, err, next);
-    console.error(`Stream creation error: ${err}`);
     logger(err);
+    console.error(`Stream creation error: ${err}`);
     await deleteFilesStartingWithName(req.body.playlistId);
   }
 });

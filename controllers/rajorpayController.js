@@ -48,7 +48,7 @@ async function convertCurrency(amount, fromCurrency, toCurrency) {
          console.log('Invalid or missing conversion rate, using a default.');
          return {
             amount: amount,
-            convertedAmount: amount * 100, // Fallback, assuming no conversion
+            convertedAmount: amount * 100,
           }; 
        }
 
@@ -117,7 +117,6 @@ exports.createOrder = catchAsync(async (req, res) => {
       res.status(500).json({ status:false, error: 'Failed to create payment link.' });
    }
 });
- 
 
 exports.paymentWebhook = catchAsync (async (req,res) => {
    const shasum = crypto.createHmac('sha256', SECRET);
@@ -162,6 +161,7 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
             console.log("next streamLimit", streamLimit);
             console.log("next allowedResolutions", allowedResolutions);
         }
+
         allowedResolutions = Array.from(allowedResolutions);
         user.storageLimit = storage;
         user.streamLimit = streamLimit;
