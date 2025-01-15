@@ -1055,29 +1055,43 @@ const force_start_stream = async (req, res, next) => {
   }
 }; 
 
-// cron.schedule('0 * * * *', async () => {
-//   logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
-//   checkStreamStatusAndSubscription();
-// });
+cron.schedule('0 * * * *', async () => {
+  logger('Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>');
+  checkStreamStatusAndSubscription();
+});
 
 
 // Cron job to status any stream has been ended from youtube but on our system has status of running.
-// cron.schedule('0 */3 * * *', async () => {
-//   console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-//   if(process.env.CHECK_STREAM_STATUS === 'production') {
-//     checkStreamStatus();
-//     logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
-//   }
-// });
+cron.schedule('0 */3 * * *', async () => {
+  console.log('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  if(process.env.CHECK_STREAM_STATUS === 'production') {
+    checkStreamStatus();
+    logger('Running scheduled task to check live stream status =>>>>>>>>>>>>>>>>');
+  }
+});
 
  
-// cron.schedule('0 * * * *', async () => {
+// Run cron job every hour
+// cron.schedule('* * * * *', async () => {
 //   console.log('Running hourly job to remove expired plans');
 //   const currentDate = new Date();
+
 //   try {
-//     const subscriptions = await Subscription.find({endOn: { $lt: currentDate }, status: 'active'}).populate("user").populate("plan");
-//     const updates = subscriptions.map(async (sub) => {
-//       const planname = sub.plan.name;
+//     // Fetch expired subscriptions
+//     const subscriptions = await Subscription.find({
+//       endOn: { $lt: currentDate },
+//       status: 'active'
+//     }).populate('user').populate('plan');
+
+//     if (subscriptions.length === 0) {
+//       console.log('No expired subscriptions found.');
+//       return;
+//     }
+
+//     for (const sub of subscriptions) {
+//       const user = sub.user;
+//       const plan = sub.plan;
+
 //       const message = `<html xmlns="http://www.w3.org/1999/xhtml">
 //           <head>
 //             <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -1249,56 +1263,312 @@ const force_start_stream = async (req, res, next) => {
 
 //       // Send email notification
 //       await sendEmail({
-//         email: sub.user.email,
-//         subject: "🚨 Your Plan Has Expired",
+//         email: user.email,
+//         subject: '🚨 Your Plan Has Expired',
 //         message
 //       });
-      
-//       console.log(`Email sent to ${sub.user.email}`);
+//       console.log(`Email sent to ${user.email}`);
+
+//       // Update subscription status to 'expired'
 //       sub.status = 'expired';
-//       await sub.save(); 
-//       console.log(`Subscription for ${sub.user.email} marked as inactive`);
-//       logger(`Subscription for ${sub.user.email} marked as inactive`);
+//       await sub.save();
+//       console.log(`Subscription for ${user.email} marked as expired`);
+//     }
 
-//       // Adjust user stream limits and resolutions
-//       const currentuser = await User.findById(sub.user._id);
-//       let allowedResolutions = new Set();
+//     // Update user stream limits and resolutions
+//     for (const sub of subscriptions) {
+//       const user = sub.user;
+
+//       // Fetch all active subscriptions for the user
+//       const activeSubs = await Subscription.find({
+//         user: user._id,
+//         status: 'active'
+//       }).populate('plan');
+
 //       let streamLimit = 0;
-//       let storage = 0;
-      
-//       for (const sub of subscriptions) {
-//         const plan = await Pricing.findById(sub.plan);
-//         const rs = JSON.parse(plan.resolutions);
-//         streamLimit += plan.allowed_streams;
-//         allowedResolutions = new Set([...allowedResolutions, ...rs]);
-//         storage = parseInt(storage) + parseInt(plan.storage);
+//       let storageLimit = 0;
+//       let allowedResolutions = new Set();
+
+//       for (const activeSub of activeSubs) {
+//         streamLimit += activeSub.plan.allowed_streams;
+//         storageLimit += parseInt(activeSub.plan.storage);
+//         const resolutions = JSON.parse(activeSub.plan.resolutions);
+//         allowedResolutions = new Set([...allowedResolutions, ...resolutions]);
 //       }
- 
-//       currentuser.streamLimit = streamLimit;
-//       currentuser.allowed_resolutions = Array.from(allowedResolutions);
-//       currentuser.storageLimit = storage;
-//       await currentuser.save();
-//       console.log(`Updated user ${currentuser.email} stream limit and resolutions`);
 
-//       const userActiveStreams = await Stream.find({ user: currentuser._id, status: 1 });
-//       let totalstream = userActiveStreams.length;
+//       user.streamLimit = streamLimit;
+//       user.storageLimit = storageLimit;
+//       user.allowed_resolutions = Array.from(allowedResolutions);
+//       await user.save();
+//       console.log(`Updated user ${user.email} stream limit and storage limit`);
 
-//       // for (const excessStream of userActiveStreams) {
-//       //   if (totalstream > streamLimit) {
-//       //     totalstream--; 
-//       //     await stopDbStream(excessStream._id);
-//       //     await stopffmpegstream(excessStream._id);
-//       //     console.log(`Stopped excess stream: ${excessStream.streamId}`); 
-//       //     logger(`Stopped excess stream: ${excessStream.streamId}`); 
-//       //   }
-//       // }
-//     });
-//     await Promise.all(updates);
-//     console.log(`Processed ${subscriptions.length} users with expired plans.`);
-//   } catch (err) {
-//     console.error('Error running the cron job:', err);
+//       // Manage user's active streams
+//       const userActiveStreams = await Stream.find({ user: user._id, status: 1 });
+//       let activeStreamCount = userActiveStreams.length;
+
+//       for (const stream of userActiveStreams) {
+//         if (activeStreamCount > user.streamLimit) {
+//           stream.status = 0; // Stop the stream
+//           await stream.save();
+//           activeStreamCount--;
+//           console.log(`Stopped excess stream for user ${user.email}`);
+//         }
+//       }
+//     }
+//   } catch (error) {
+//     console.error('Error in cron job:', error);
 //   }
 // });
+
+ 
+// Run cron job every hour
+cron.schedule('*/10 * * * *', async () => {
+  console.log('Running hourly job to remove expired plans');
+  const currentDate = new Date();
+
+  try {
+    // Fetch expired subscriptions
+    const subscriptions = await Subscription.find({
+      endOn: { $lt: currentDate },
+      status: 'active'
+    }).populate('user').populate('plan');
+
+    if (subscriptions.length === 0) {
+      console.log('No expired subscriptions found.');
+    }
+
+    for (const sub of subscriptions) {
+      const user = sub.user;
+      const planname = sub.plan.name || "Active plan";
+
+      // Email content
+      const message = `<html xmlns="http://www.w3.org/1999/xhtml">
+          <head>
+            <meta http-equiv="content-type" content="text/html; charset=utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+            <meta name="format-detection" content="telephone=no" />
+
+            <style>
+              body {
+                margin: 0;
+                padding: 0;
+                min-width: 100%;
+                width: 100% !important;
+                height: 100% !important;
+              }
+
+              body,
+              table,
+              td,
+              div,
+              p,
+              a {
+                -webkit-font-smoothing: antialiased;
+                text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+                line-height: 100%;
+              }
+
+              table,
+              td {
+                mso-table-lspace: 0pt;
+                mso-table-rspace: 0pt;
+                border-collapse: collapse !important;
+                border-spacing: 0;
+              }
+
+              img {
+                border: 0;
+                line-height: 100%;
+                outline: none;
+                text-decoration: none;
+                -ms-interpolation-mode: bicubic;
+              }
+
+              #outlook a {
+                padding: 0;
+              }
+
+              .ReadMsgBody {
+                width: 100%;
+              }
+
+              .ExternalClass {
+                width: 100%;
+              }
+
+              .ExternalClass,
+              .ExternalClass p,
+              .ExternalClass span,
+              .ExternalClass font,
+              .ExternalClass td,
+              .ExternalClass div {
+                line-height: 100%;
+              }
+
+              @media all and (min-width: 560px) {
+                body {
+                  margin-top: 30px;
+                }
+              }
+              
+              /* Rounded corners */
+              @media all and (min-width: 560px) {
+                .container {
+                  border-radius: 8px;
+                  -webkit-border-radius: 8px;
+                  -moz-border-radius: 8px;
+                  -khtml-border-radius: 8px;
+                }
+              }
+              /* Links */
+              a,
+              a:hover {
+                color: #127DB3;
+              }
+
+              .footer a,
+              .footer a:hover {
+                color: #999999;
+              }
+            </style>
+            <title>🚨 Your Plan Has Expired</title>
+          </head>
+
+          <!-- BODY -->
+          <body topmargin="0" rightmargin="0" bottommargin="0" leftmargin="0" marginwidth="0" marginheight="0" width="100%" style="border-collapse: collapse; border-spacing: 0;  padding: 0; width: 100%; height: 100%; -webkit-font-smoothing: antialiased; text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 100%;
+            background-color: #ffffff;
+            color: #000000;" bgcolor="#ffffff" text="#000000">
+            <table width="100%" align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; width: 100%;" class="background">
+              <tr>
+                <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;" bgcolor="#ffffff">
+                  <table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+            max-width: 560px;" class="container">
+                    <tr>
+                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 24px; font-weight: bold; line-height: 130%;padding-top: 25px;color: #000000;font-family: sans-serif;" class="header">
+                        <img border="0" vspace="0" hspace="0" src="https://runstream.co/logo-white.png" style="max-width: 250px;" alt="The Idea" title="Runstream" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+                padding-top: 25px;" class="line">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+                padding-top: 25px; 
+                color: #000000;
+                font-family: sans-serif;" class="paragraph">
+                        Hi ${sub.user.name || ""},<br> We wanted to let you know that your ${planname} plan expired today. You live stream will stop in sometimes. We’re sorry to see you go, but we’re here to help you get back on track!
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; padding-top: 25px;padding-bottom: 5px;" class="button">
+                          <table border="0" cellpadding="0" cellspacing="0" align="center" style="max-width: 240px; min-width: 120px; border-collapse: collapse; border-spacing: 0; padding: 0;">
+                            <tr>
+                              <td align="center" valign="middle"  >
+                                <a target="_blank" style=" background-color: #df3939; padding: 12px 24px; margin: 0; text-decoration: none; border-collapse: collapse; border-spacing: 0; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; -khtml-border-radius: 10px;text-decoration: none;
+                                  color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;" href="https://runstream.co">
+                                    Reactivate My Plan
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%;
+                padding-top: 25px;" class="line">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%;
+                padding-top: 20px;
+                padding-bottom: 25px;
+                color: #000000;
+                font-family: sans-serif;" class="paragraph">
+                        If you have any questions or need assistance, feel free to reach out to our support team at <a href="mailto:Support@runstream.co" target="_blank" style=" color: #4b57ff; ">support@runstream.co</a>. We’re here to help!
+                      </td>
+                    </tr>
+                  </table>
+                  <table border="0" cellpadding="0" cellspacing="0" align="center" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+            max-width: 560px;" class="wrapper">
+                    <tr>
+                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 13px; font-weight: 400; line-height: 150%;
+                padding-top: 20px;
+                padding-bottom: 20px;
+                color: #999999;
+                font-family: sans-serif;" class="footer">
+                        For more information <a href="https://runstream.co/contact" target="_blank" style=" color: #999999; ">contact us</a>. Our support
+                        team is available to help you 24 hours a day, seven days a week.
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </body>
+          </html>`; 
+
+      // Send email notification
+      await sendEmail({
+        email: user.email,
+        subject: '🚨 Your Plan Has Expired',
+        message
+      });
+      console.log(`Email sent to ${user.email}`);
+      sub.status = 'expired';
+      await sub.save();
+      console.log(`Subscription for ${user.email} marked as expired`);
+    }
+
+    const users = await User.find();
+
+    for (const user of users) {
+      // Fetch all active subscriptions for the user
+      const activeSubs = await Subscription.find({
+        user: user._id,
+        status: 'active'
+      }).populate('plan');
+
+      let streamLimit = 0;
+      let storageLimit = 0;
+      let allowedResolutions = new Set();
+
+      // Calculate user's total limits based on active subscriptions
+      for (const activeSub of activeSubs) {
+        streamLimit += activeSub.plan.allowed_streams;
+        storageLimit += parseInt(activeSub.plan.storage);
+        const resolutions = JSON.parse(activeSub.plan.resolutions);
+        allowedResolutions = new Set([...allowedResolutions, ...resolutions]);
+      }
+
+      // Update user's limits
+      user.streamLimit = streamLimit;
+      user.storageLimit = storageLimit;
+      user.allowed_resolutions = Array.from(allowedResolutions);
+      await user.save();
+
+      // Fetch user's active streams
+      const userActiveStreams = await Stream.find({ user: user._id, status: 1 });
+
+      // If active streams exceed the stream limit, stop the excess streams
+      if (userActiveStreams.length > streamLimit) {
+        const excessStreams = userActiveStreams.slice(streamLimit);
+        for (const stream of excessStreams) {
+          stream.status = 0; 
+          await stopDbStream(stream._id);
+          await stopffmpegstream(stream._id);
+          await stream.save();
+          console.log(`Stopped excess stream ${stream._id} for user ${user.email}`);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error in cron job:', error);
+  }
+});
 
 
 module.exports = {checkAvailableStreamLimit, youtubeStreamStatusCron, edit_rtmp_stream, start_rmtp_stream, edit_stream, createPlaylist, admin_stop_stream, getOAuth2Client, loadClientSecrets, force_start_stream, start_stream, stop_stream, oauth, oauth2callback } 

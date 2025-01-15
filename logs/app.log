@@ -62,3 +62,41 @@
 
 2025-01-06T11:30:38.572Z [INFO]:"code for stopped stream 568 : null"
 
+2025-01-15T07:30:00.868Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-01-15T07:30:01.383Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-01-15T07:42:31.387Z [INFO]:"Database Stopping stream 677cb6831edd98451e42a1f5"
+
+2025-01-15T07:42:31.440Z [INFO]:"there is no any ffmpeg proccess running - 677cb6831edd98451e42a1f5"
+
+2025-01-15T07:43:09.596Z [INFO]:"{\"id\":\"pay_PjdmprYXzricPu\",\"entity\":\"payment\",\"amount\":129929,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_PjdmVLbtrjsef8\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#PjdmSTzR1a77ma\",\"card_id\":null,\"bank\":\"BARB_R\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+9119813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"1\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":3067,\"tax\":468,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"8714781\"},\"created_at\":1736926986,\"reward\":null,\"base_amount\":129929}"
+
+2025-01-15T07:45:03.707Z [INFO]:"Subscription for nk40114@gmail.com marked as inactive"
+
+2025-01-15T08:03:54.638Z [INFO]:"{\"id\":\"pay_PjdmprYXzricPu\",\"entity\":\"payment\",\"amount\":129929,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_PjdmVLbtrjsef8\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#PjdmSTzR1a77ma\",\"card_id\":null,\"bank\":\"BARB_R\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+9119813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"1\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":3067,\"tax\":468,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"8714781\"},\"created_at\":1736926986,\"reward\":null,\"base_amount\":129929}"
+
+2025-01-15T08:30:00.720Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-01-15T08:30:01.087Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-01-15T09:20:07.494Z [INFO]:"{\"id\":\"pay_PjfRGbSVrvBFOJ\",\"entity\":\"payment\",\"amount\":129929,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_PjfR4pEBrbSY2h\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#PjfR3ANC3uC8Xd\",\"card_id\":null,\"bank\":\"BARB_R\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"1\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":3067,\"tax\":468,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"1287376\"},\"created_at\":1736932804,\"reward\":null,\"base_amount\":129929}"
+
+2025-01-15T09:24:38.286Z [INFO]:"{\"id\":\"pay_PjfW2O48DaJqKE\",\"entity\":\"payment\",\"amount\":259858,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_PjfVtShDti3w68\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#PjfVsWjYGK2eVQ\",\"card_id\":null,\"bank\":\"BARB_R\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d74f0565890f8db9e1df4b\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"2\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":6134,\"tax\":936,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"3152468\"},\"created_at\":1736933074,\"reward\":null,\"base_amount\":259858}"
+
+2025-01-15T09:25:42.878Z [INFO]:"{\"id\":\"pay_PjfX7AabkJmRPC\",\"entity\":\"payment\",\"amount\":259858,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_PjfWruNoMc3stn\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#PjfWqyRJZXGclw\",\"card_id\":null,\"bank\":\"BARB_R\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d8338e65890f8db9e1dfb3\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"2\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":6134,\"tax\":936,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"8802767\"},\"created_at\":1736933136,\"reward\":null,\"base_amount\":259858}"
+
+2025-01-15T09:30:00.167Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-01-15T09:30:00.213Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-01-15T09:47:33.719Z [INFO]:"WEBHOOK NOT WORKING"
+
+2025-01-15T09:47:33.721Z [INFO]:"\"payment.failed\""
+
+2025-01-15T09:47:45.546Z [INFO]:"{\"id\":\"pay_PjfuSOy2qJ3M4U\",\"entity\":\"payment\",\"amount\":259858,\"currency\":\"INR\",\"status\":\"captured\",\"order_id\":\"order_Pjfslok8290op4\",\"invoice_id\":null,\"international\":false,\"method\":\"netbanking\",\"amount_refunded\":0,\"refund_status\":null,\"captured\":true,\"description\":\"#PjfsjjUp4fcFnB\",\"card_id\":null,\"bank\":\"BARB_R\",\"wallet\":null,\"vpa\":null,\"email\":\"void@razorpay.com\",\"contact\":\"+919813089043\",\"notes\":{\"planID\":\"66d0c424d493cb116d604644\",\"userId\":\"6654b7ae3f6a8fea0ffa35c5\",\"duration\":\"2\",\"userEmail\":\"nk40114@gmail.com\"},\"fee\":6134,\"tax\":936,\"error_code\":null,\"error_description\":null,\"error_source\":null,\"error_step\":null,\"error_reason\":null,\"acquirer_data\":{\"bank_transaction_id\":\"2388586\"},\"created_at\":1736934461,\"reward\":null,\"base_amount\":259858}"
+
+2025-01-15T10:30:00.727Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-01-15T10:30:01.031Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+

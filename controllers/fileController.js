@@ -243,15 +243,23 @@ const checkUploadLimit = catchAsync ( async (req, res, next) => {
     const userId = req.user._id;
     const user = await User.findById(userId);
     const fileSize = req.file.size; 
-    const uploadLimit = user && user.storage ? (parseInt(user.storage) * 1024 * 1024 * 1024) : (1* 1024 * 1024 * 1024);
+    console.log("user",user)
+    const uploadLimit = user && user.storageLimit ? (parseInt(user.storageLimit) * 1024 * 1024 * 1024) : (1* 1024 * 1024 * 1024);
     const uploadedFiles = await Files.find({ user:userId, deletedAt:null || ''});
+
+
+    console.log("uploadLimit",uploadLimit/1024/1024)
     const totalUploadedSize = uploadedFiles.reduce((total, file) => total + parseInt(file.size), 0);
+    console.log("totalUploadedSize",totalUploadedSize/1024/1024)
     const remainingLimit = uploadLimit - totalUploadedSize;
+    console.log("remainingLimit",remainingLimit/1024/1024)
+    const remainingInMb = remainingLimit /1024/1024
+    const updateremainingInMb = remainingInMb && remainingInMb.toFixed(2)
     if (fileSize > remainingLimit) {
       fs.unlinkSync(req.file.path);
       return res.json({ 
         status: false,
-        message: 'Upload limit exceeded. You cannot upload more files.'
+      message: `Limit exceeded. You have only ${updateremainingInMb} MB space is available.`
         });
     }
     next();
@@ -295,9 +303,9 @@ const getRecentEndedStreams = async () => {
 };
 
 // REMOVE ALL UNWANTED FILES FROM SYSTEM
-// cron.schedule('0 0 * * 0', async () => {
-//   await getRecentEndedStreams();
-// });
+cron.schedule('0 0 * * 0', async () => {
+  await getRecentEndedStreams();
+});
 
 
 module.exports = { restStreamLimit, checkUploadLimit, totalFileUploaded, uploadMedia, myMedia, deleteMedia } 

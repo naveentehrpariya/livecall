@@ -8,8 +8,6 @@ const logger = require("../utils/logger");
 const axios = require('axios');
 const sendEmail = require("../utils/Email");
 const domain = process.env.DOMAIN_URL;
-const cron = require('node-cron');
-
 const SECRET = process.env.RAJORPAY_SECRET
 const razorpay = new Razorpay({
    key_id: process.env.RAJORPAY_ID,
@@ -63,7 +61,6 @@ async function convertCurrency(amount, fromCurrency, toCurrency) {
        console.log('Error converting currency:', error);
    }
 }
-
 
 exports.createOrder = catchAsync(async (req, res) => {
    console.log("req.body", req.body);
@@ -342,7 +339,8 @@ exports.paymentWebhook = catchAsync (async (req,res) => {
           subject:`🎉 Your Plan Purchase Confirmation!`,
           message
         });
-     } else { 
+     }
+      else { 
         logger('WEBHOOK NOT WORKING');
         logger(JSON.stringify(event));
      }

@@ -4,8 +4,8 @@ const { checkAvailableStreamLimit, youtubeStreamStatusCron, edit_stream, edit_rt
 const { streamDetails, unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit } = require('../controllers/youtubeStreamController');
 const { validateToken } = require('../controllers/authController');
 
-// router.route('/create-playlist').post(validateToken, checkUserStreamLimit, createPlaylist);
-router.route('/create-playlist').post(validateToken, createPlaylist);
+router.route('/create-playlist').post(validateToken, checkUserStreamLimit, createPlaylist);
+// router.route('/create-playlist').post(validateToken, createPlaylist);
 
 router.route('/force-create-stream').post(validateToken, force_start_stream);
 

@@ -3,7 +3,6 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const Files = require('./Files');
-const Subscription = require('./Subscription');
 
 const schema = new mongoose.Schema({
     name: {
@@ -28,6 +27,8 @@ const schema = new mongoose.Schema({
     storageLimit: { type: Number, default: 0},
     plan_end_on: {type: Date},
     streamLimit: { type: Number, default: 0},
+
+
     allowed_resolutions: { type: [String], default: ['1080'] }, 
     avatar: {type: String},
     uploaded_content: { type : String},
@@ -85,6 +86,7 @@ const schema = new mongoose.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
+
 
 schema.virtual('trialStatus').get(function () {
     const currentDate = new Date();
