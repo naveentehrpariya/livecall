@@ -4,6 +4,6 @@ const { createOrder, verifyPayment,paymentWebhook } = require('../controllers/ra
 
 const { validateToken } = require('../controllers/authController');
 router.route('/create-order').post(validateToken, createOrder);
-router.route('/paymentWebhook').post(paymentWebhook);
+router.route('/stripepaymentWebhook').post(paymentWebhook);
 
 module.exports = router;

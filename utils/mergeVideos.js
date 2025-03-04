@@ -30,12 +30,10 @@ function reencodeVideo(inputPath, outputPath) {
 }
 
 async function mergeVideos(videoPaths, outputPath, playlistId) {
-  console.log("videoPaths", videoPaths);
   const tempDir = path.join(__dirname,'..', 'downloads');
   ensureDirectoryExistence(tempDir);
   try {
     const reencodedPaths = [];
-
     for (let i = 0; i < videoPaths.length; i++) {
       const inputPath = videoPaths[i];
       const reencodedPath = path.join(tempDir, `${playlistId}-reencoded-${i}.mp4`);
@@ -43,7 +41,6 @@ async function mergeVideos(videoPaths, outputPath, playlistId) {
       await reencodeVideo(inputPath, reencodedPath);
       reencodedPaths.push(reencodedPath);
     }
-
     const concatListPath = path.join(tempDir, 'concat_list.txt');
     const concatListContent = reencodedPaths.map(filePath => `file '${filePath}'`).join('\n');
     fs.writeFileSync(concatListPath, concatListContent);
