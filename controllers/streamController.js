@@ -51,7 +51,8 @@ const getOAuth2Client = (credentials, redirectUri) => {
 const generateAuthUrl = (oAuth2Client) => {
   try {
     return oAuth2Client.generateAuthUrl({
-      access_type: 'offline',
+      access_type: 'offline',  // Request refresh token
+      prompt: 'consent',       // Forces Google to always send a refresh token
       scope: SCOPES,
     });
   } catch (err) {
@@ -63,28 +64,35 @@ const generateAuthUrl = (oAuth2Client) => {
 // Store tokens
 const storeToken = async (token, userId) => {
   try {
+    console.log("Received token:", token); // Log token to check if refresh token is included
+    if (!token.refresh_token) {
+      console.error("Refresh token is missing!");
+      return;
+    }
+
     const channel = await channelDetails(token);
     const isAlreadyExist = await Token.findOne({ user: userId });
+
     if (isAlreadyExist) {
       isAlreadyExist.token = JSON.stringify(token);
       isAlreadyExist.channel = JSON.stringify(channel);
-      isAlreadyExist.status = "active"
+      isAlreadyExist.status = "active";
+      isAlreadyExist.refresh_token = token.refresh_token;
       const saved = await isAlreadyExist.save();
-      if (saved) {
-        console.log('Token updated successfully:', token);
-      }
+      if (saved) console.log('Token updated successfully:', token);
     } else {
       const createToken = new Token({
         token: JSON.stringify(token),
         user: userId,
         status: "active",
-        channel:JSON.stringify(channel)
+        channel: JSON.stringify(channel),
+        refresh_token : token.refresh_token
       });
       const savetoken = await createToken.save();
-      if(!savetoken){
+      if (!savetoken) {
         res.json({
-          status:false,
-          message:"Failed to save token."
+          status: false,
+          message: "Failed to save token.",
         });
       }
       console.log('Token stored successfully:', token);
@@ -94,11 +102,34 @@ const storeToken = async (token, userId) => {
   }
 };
 
-// Get stored token
-const getStoredToken = async (userId) => {
+
+const refreshAccessToken = async (userId, oAuth2Client) => {
   try {
-     const token = await Token.findOne({ user: userId, status:"active" });
-    console.log(token);
+    const { credentials } = await oAuth2Client.refreshAccessToken();
+    console.log("New access token:", credentials.access_token);
+
+    // Store the new token (only update access_token, do not overwrite refresh_token)
+    const storedToken = await getStoredToken(userId);
+    if (storedToken) {
+      storedToken.token.access_token = credentials.access_token;
+      await storeToken(storedToken.token, userId);
+    }
+
+    return credentials.access_token;
+  } catch (err) {
+    console.error("Error refreshing access token:", err);
+    return null;
+  }
+};
+
+
+
+
+// Get stored token
+const getStoredToken = async (userId, oAuth2Client) => {
+  try {
+    await refreshAccessToken(userId, oAuth2Client);
+    const token = await Token.findOne({ user: userId, status:"active" });
      if(!token){
        return null;
      }
@@ -193,8 +224,9 @@ const downloadThumbnail = async (url, dest) => {
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const createAndBindLiveBroadcast = async (youtube, title, description, res) => {
   try{
+    
+
     const scheduledStartTime = new Date(Date.now() + 15000).toISOString();
-    console.log(`scheduledStartTime `, scheduledStartTime);
     const broadcastResponse = await youtube.liveBroadcasts.insert({
       part: 'snippet,status,contentDetails',
       requestBody: {
@@ -261,6 +293,7 @@ const createAndBindLiveBroadcast = async (youtube, title, description, res) => {
     logger(result);
     return result ;
   } catch(err){
+    console.log("err",err)
     res.json({
       status:false,
       message: "Your youtube token has been expired please relink youtube account.",
@@ -298,13 +331,13 @@ const stopDbStream = async (streamObjectId) => {
     streamlast.status = '0';
     streamlast.endedAt = Date.now();
     const savedStream = await streamlast.save();
-    if (!savedStream) {
+    if (!streamlast) {
       console.log("Stream not saved.");
       return false;
     }
-    console.log("Updated stream: ", savedStream);
+    console.log("Updated stream: ", streamlast);
     deleteFilesStartingWithName(streamlast.playlistId);
-    return savedStream;
+    return streamlast;
   } catch (error) {
     console.error("Error saving stream:", error);
     return false;
@@ -488,11 +521,18 @@ async function start_ffmpeg(data) {
       activeStreams[objectID] = child;
       logger(`activeStreams ${activeStreams}`);
       
-      child.on('close', (code) => {
+      child.on('close', async (code) => {
           console.log(code);
           const err = `FFmpeg process exited with code ${code}`;
           logger(`code for stopped stream ${child.pid} : ${code}`);
-          start_ffmpeg(allpayload);
+          console.log(code);
+          // check if active stream stataus is 1 then start again other dont
+          const activestream  = await Stream.findById(objectID);
+          if(activestream.endedAt){
+            return 
+          } else { 
+            start_ffmpeg(allpayload);
+          }
       });
       
       child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
@@ -520,9 +560,18 @@ const start_stream = catchAsync(async (req, res, next) => {
   try {
     const { title, description, audio, thumbnail, type } = req.body;
     const userId = req.user._id;
-    const { token } = await getStoredToken(userId);
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
+
+    const { token } = await getStoredToken(userId, oAuth2Client);
+    if (!token || !token.refresh_token) {
+      console.error("Stored refresh token is missing!");
+      return res.json({
+        status: false,
+        message: "Your YouTube token has expired. Please relink your account.",
+      });
+    }
+   
     oAuth2Client.setCredentials(token);
     logger("oAuth2Client",oAuth2Client);
     
@@ -865,6 +914,7 @@ const stop_stream = async (req, res, next) => {
       return false;
     }
 
+    console.log("objectID",objectID);
     const stop = await stopDbStream(objectID);
     await stopffmpegstream(objectID);
     console.log("stop",stop)

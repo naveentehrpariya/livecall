@@ -108,3 +108,153 @@
 
 2025-03-04T07:30:01.090Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
 
+2025-03-05T08:55:58.274Z [INFO]:"Database Stopping stream 67b466964324cab1605cbbf5"
+
+2025-03-05T08:55:58.277Z [INFO]:"there is no any ffmpeg proccess running - 67b466964324cab1605cbbf5"
+
+2025-03-05T08:56:42.148Z [INFO]:"Database Stopping stream 67b466964324cab1605cbbf5"
+
+2025-03-05T08:56:42.154Z [INFO]:"there is no any ffmpeg proccess running - 67b466964324cab1605cbbf5"
+
+2025-03-05T08:56:53.212Z [INFO]:"Database Stopping stream 67b466964324cab1605cbbf5"
+
+2025-03-05T08:56:53.258Z [INFO]:"there is no any ffmpeg proccess running - 67b466964324cab1605cbbf5"
+
+2025-03-05T09:00:54.153Z [INFO]:"oAuth2Client"
+
+2025-03-05T09:00:54.158Z [INFO]:{"code":"ERR_HTTP_HEADERS_SENT"}
+
+2025-03-05T09:04:07.891Z [INFO]:"oAuth2Client"
+
+2025-03-05T09:04:07.905Z [INFO]:{"code":"ERR_HTTP_HEADERS_SENT"}
+
+2025-03-05T09:11:41.494Z [INFO]:"oAuth2Client"
+
+2025-03-05T09:11:41.507Z [INFO]:{"code":"ERR_HTTP_HEADERS_SENT"}
+
+2025-03-05T09:28:40.325Z [INFO]:"oAuth2Client"
+
+2025-03-05T09:28:43.484Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"New Sign Up  ","description":"asdasdasd AS","scheduledStartTime":"2025-03-05T09:28:55.327Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/22.12.0","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeXRPp6PEfxtCmC44IA3IEMCc5v1EPBwxs8lapv4xtLIBJB8M_LMWlPaMTKWaw7-JIJNEz7sNBkFAgyO1DyijTAbZMR2oVSiA6wV1k6fmL7tGQ6ikOFSOXrMqYv81zK68eWoXmL6gvB8t2dGo7CtOMiN9fxctyXNXYNb1-LNaCgYKAT0SARESFQHGX2MidPN14ld0dMcW7dX4jnBApg0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"New Sign Up  \",\"description\":\"asdasdasd AS\",\"scheduledStartTime\":\"2025-03-05T09:28:55.327Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"IEtzYx6ByyxjUnwI77wKZnNVOB4","id":"vYTtwOIT-qg","snippet":{"publishedAt":"2025-03-05T09:28:41Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New Sign Up","description":"asdasdasd AS","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/vYTtwOIT-qg/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/vYTtwOIT-qg/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/vYTtwOIT-qg/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2025-03-05T09:28:55Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILdllUdHdPSVQtcWc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/vYTtwOIT-qg?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Wed, 05 Mar 2025 09:28:43 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2025-03-05T09:28:47.651Z [INFO]:"stream created "
+
+2025-03-05T09:28:51.851Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"IEtzYx6ByyxjUnwI77wKZnNVOB4","id":"vYTtwOIT-qg","snippet":{"publishedAt":"2025-03-05T09:28:41Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New Sign Up","description":"asdasdasd AS","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/vYTtwOIT-qg/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/vYTtwOIT-qg/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/vYTtwOIT-qg/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2025-03-05T09:28:55Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILdllUdHdPSVQtcWc"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/vYTtwOIT-qg?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"PiVdBHTs_l2UC9U6Gnu3mSYEmmI","id":"dGq1qjb5R27ENhSCBj20gw1741166926811624","snippet":{"publishedAt":"2025-03-05T09:28:47Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"New Sign Up","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"qqq3-kzj2-w1zq-sp8q-5m4w","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"rGxgmQDZjQp5eFHefX8i5zEznF4","id":"vYTtwOIT-qg","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1741166926811624","boundStreamLastUpdateTimeMs":"2025-03-05T09:28:47Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/vYTtwOIT-qg?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"vYTtwOIT-qg"}
+
+2025-03-05T09:28:52.363Z [INFO]:"downloading thumbnail is about to finish."
+
+2025-03-05T09:28:52.498Z [INFO]:"OutputPath"
+
+2025-03-05T09:28:57.505Z [INFO]:"savedStream"
+
+2025-03-05T09:28:57.985Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:30:00.701Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-05T09:30:01.144Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-03-05T09:31:01.108Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:31:01.166Z [INFO]:"Ffmpeg stream stopped 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:31:01.253Z [INFO]:"code for stopped stream 20660 : null"
+
+2025-03-05T09:31:01.258Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:32:40.564Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:32:40.606Z [INFO]:"Ffmpeg stream stopped 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:32:40.727Z [INFO]:"code for stopped stream 20956 : null"
+
+2025-03-05T09:32:40.735Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:32:55.932Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:32:55.971Z [INFO]:"Ffmpeg stream stopped 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:32:56.051Z [INFO]:"code for stopped stream 23220 : null"
+
+2025-03-05T09:32:56.057Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:33:04.590Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:33:04.637Z [INFO]:"Ffmpeg stream stopped 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:33:04.713Z [INFO]:"code for stopped stream 5616 : null"
+
+2025-03-05T09:33:04.718Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:34:11.675Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:34:11.713Z [INFO]:"Ffmpeg stream stopped 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:34:11.792Z [INFO]:"code for stopped stream 24648 : null"
+
+2025-03-05T09:34:11.797Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:35:11.719Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:35:11.782Z [INFO]:"Ffmpeg stream stopped 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:35:11.907Z [INFO]:"code for stopped stream 25388 : null"
+
+2025-03-05T09:35:11.915Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:36:05.794Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:36:05.887Z [INFO]:"Ffmpeg stream stopped 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:36:05.966Z [INFO]:"code for stopped stream 12984 : null"
+
+2025-03-05T09:36:05.972Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:45:05.287Z [INFO]:"Database Stopping stream 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:45:05.336Z [INFO]:"there is no any ffmpeg proccess running - 67c8195970f8713ac71a5a9a"
+
+2025-03-05T09:45:26.336Z [INFO]:"oAuth2Client"
+
+2025-03-05T09:45:28.836Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"Buy Me a Car","description":"dfsdfsf","scheduledStartTime":"2025-03-05T09:45:41.338Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/22.12.0","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeXRPp6PEfxtCmC44IA3IEMCc5v1EPBwxs8lapv4xtLIBJB8M_LMWlPaMTKWaw7-JIJNEz7sNBkFAgyO1DyijTAbZMR2oVSiA6wV1k6fmL7tGQ6ikOFSOXrMqYv81zK68eWoXmL6gvB8t2dGo7CtOMiN9fxctyXNXYNb1-LNaCgYKAT0SARESFQHGX2MidPN14ld0dMcW7dX4jnBApg0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"Buy Me a Car\",\"description\":\"dfsdfsf\",\"scheduledStartTime\":\"2025-03-05T09:45:41.338Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"qY8Wli6XKqh8v-iHo4LBFGZO_YM","id":"JOPyQBQnXwI","snippet":{"publishedAt":"2025-03-05T09:45:27Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Buy Me a Car","description":"dfsdfsf","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/JOPyQBQnXwI/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/JOPyQBQnXwI/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/JOPyQBQnXwI/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2025-03-05T09:45:41Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILSk9QeVFCUW5Yd0k"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/JOPyQBQnXwI?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Wed, 05 Mar 2025 09:45:28 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2025-03-05T09:45:33.057Z [INFO]:"stream created "
+
+2025-03-05T09:45:37.143Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"qY8Wli6XKqh8v-iHo4LBFGZO_YM","id":"JOPyQBQnXwI","snippet":{"publishedAt":"2025-03-05T09:45:27Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Buy Me a Car","description":"dfsdfsf","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/JOPyQBQnXwI/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/JOPyQBQnXwI/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/JOPyQBQnXwI/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2025-03-05T09:45:41Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILSk9QeVFCUW5Yd0k"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/JOPyQBQnXwI?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"cWINedilUWMeht4m78bNYbz5bOI","id":"dGq1qjb5R27ENhSCBj20gw1741167932212612","snippet":{"publishedAt":"2025-03-05T09:45:32Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Buy Me a Car","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"bge7-4u52-ymh5-062r-3bgr","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"1f_5_f_cmqva3JCzmAi-DP4-o6c","id":"JOPyQBQnXwI","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1741167932212612","boundStreamLastUpdateTimeMs":"2025-03-05T09:45:32Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/JOPyQBQnXwI?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"JOPyQBQnXwI"}
+
+2025-03-05T09:45:37.398Z [INFO]:"downloading thumbnail is about to finish."
+
+2025-03-05T09:45:37.480Z [INFO]:"OutputPath"
+
+2025-03-05T09:45:41.049Z [INFO]:"savedStream"
+
+2025-03-05T09:45:41.060Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:46:25.037Z [INFO]:"Database Stopping stream 67c81d455de8ebecebef5627"
+
+2025-03-05T09:46:25.077Z [INFO]:"Ffmpeg stream stopped 67c81d455de8ebecebef5627"
+
+2025-03-05T09:46:25.097Z [INFO]:"code for stopped stream 19044 : null"
+
+2025-03-05T09:47:50.407Z [INFO]:"oAuth2Client"
+
+2025-03-05T09:47:53.018Z [INFO]:{"config":{"url":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails","method":"POST","apiVersion":"","userAgentDirectives":[{"product":"google-api-nodejs-client","version":"7.2.0","comment":"gzip"}],"data":{"snippet":{"title":"Buy Me a Car ","description":" asdsadsa","scheduledStartTime":"2025-03-05T09:48:05.410Z"},"status":{"privacyStatus":"public"},"contentDetails":{"monitorStream":{"enableMonitorStream":true},"enableAutoStart":true,"enableAutoStop":true}},"headers":{"x-goog-api-client":"gdcl/7.2.0 gl-node/22.12.0","Accept-Encoding":"gzip","User-Agent":"google-api-nodejs-client/7.2.0 (gzip)","Authorization":"Bearer ya29.a0AeXRPp6PEfxtCmC44IA3IEMCc5v1EPBwxs8lapv4xtLIBJB8M_LMWlPaMTKWaw7-JIJNEz7sNBkFAgyO1DyijTAbZMR2oVSiA6wV1k6fmL7tGQ6ikOFSOXrMqYv81zK68eWoXmL6gvB8t2dGo7CtOMiN9fxctyXNXYNb1-LNaCgYKAT0SARESFQHGX2MidPN14ld0dMcW7dX4jnBApg0175","Content-Type":"application/json"},"params":{"part":"snippet,status,contentDetails"},"retry":true,"body":"{\"snippet\":{\"title\":\"Buy Me a Car \",\"description\":\" asdsadsa\",\"scheduledStartTime\":\"2025-03-05T09:48:05.410Z\"},\"status\":{\"privacyStatus\":\"public\"},\"contentDetails\":{\"monitorStream\":{\"enableMonitorStream\":true},\"enableAutoStart\":true,\"enableAutoStop\":true}}","responseType":"unknown"},"data":{"kind":"youtube#liveBroadcast","etag":"_IzwuZadVmxzjruxpkAxNjTu3S8","id":"lw6JBREdK_k","snippet":{"publishedAt":"2025-03-05T09:47:51Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Buy Me a Car","description":"asdsadsa","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/lw6JBREdK_k/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/lw6JBREdK_k/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/lw6JBREdK_k/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2025-03-05T09:48:05Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILbHc2SkJSRWRLX2s"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/lw6JBREdK_k?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"headers":{"alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","connection":"close","content-encoding":"gzip","content-type":"application/json; charset=UTF-8","date":"Wed, 05 Mar 2025 09:47:52 GMT","server":"scaffolding on HTTPServer2","transfer-encoding":"chunked","vary":"Origin, X-Origin, Referer","x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","x-xss-protection":"0"},"status":200,"statusText":"OK","request":{"responseURL":"https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2Cstatus%2CcontentDetails"}}
+
+2025-03-05T09:47:57.083Z [INFO]:"stream created "
+
+2025-03-05T09:48:01.269Z [INFO]:{"broadcast":{"kind":"youtube#liveBroadcast","etag":"_IzwuZadVmxzjruxpkAxNjTu3S8","id":"lw6JBREdK_k","snippet":{"publishedAt":"2025-03-05T09:47:51Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Buy Me a Car","description":"asdsadsa","thumbnails":{"default":{"url":"https://i.ytimg.com/vi/lw6JBREdK_k/default_live.jpg","width":120,"height":90},"medium":{"url":"https://i.ytimg.com/vi/lw6JBREdK_k/mqdefault_live.jpg","width":320,"height":180},"high":{"url":"https://i.ytimg.com/vi/lw6JBREdK_k/hqdefault_live.jpg","width":480,"height":360}},"scheduledStartTime":"2025-03-05T09:48:05Z","isDefaultBroadcast":false,"liveChatId":"KicKGFVDZEdxMXFqYjVSMjdFTmhTQ0JqMjBndxILbHc2SkJSRWRLX2s"},"status":{"lifeCycleStatus":"created","privacyStatus":"public","recordingStatus":"notRecording","madeForKids":false,"selfDeclaredMadeForKids":false},"contentDetails":{"monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/lw6JBREdK_k?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"stream":{"kind":"youtube#liveStream","etag":"K5kgHPHsKR24Vfqf7PTgKbhD-sw","id":"dGq1qjb5R27ENhSCBj20gw1741168076292779","snippet":{"publishedAt":"2025-03-05T09:47:56Z","channelId":"UCdGq1qjb5R27ENhSCBj20gw","title":"Buy Me a Car","description":"","isDefaultStream":false},"cdn":{"ingestionType":"rtmp","ingestionInfo":{"streamName":"3mhp-zjp9-hkvu-wa61-52hj","ingestionAddress":"rtmp://a.rtmp.youtube.com/live2","backupIngestionAddress":"rtmp://b.rtmp.youtube.com/live2?backup=1","rtmpsIngestionAddress":"rtmps://a.rtmps.youtube.com/live2","rtmpsBackupIngestionAddress":"rtmps://b.rtmps.youtube.com/live2?backup=1"},"resolution":"1080p","frameRate":"30fps"}},"bind":{"kind":"youtube#liveBroadcast","etag":"YtplOT6zxuxtBSDqbIVJlr5Bja8","id":"lw6JBREdK_k","contentDetails":{"boundStreamId":"dGq1qjb5R27ENhSCBj20gw1741168076292779","boundStreamLastUpdateTimeMs":"2025-03-05T09:47:56Z","monitorStream":{"enableMonitorStream":true,"broadcastStreamDelayMs":0,"embedHtml":"<iframe width=\"425\" height=\"344\" src=\"https://www.youtube.com/embed/lw6JBREdK_k?autoplay=1&livemonitor=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"},"enableEmbed":false,"enableDvr":true,"enableContentEncryption":false,"recordFromStart":true,"enableClosedCaptions":false,"closedCaptionsType":"closedCaptionsDisabled","enableLowLatency":false,"latencyPreference":"normal","projection":"rectangular","enableAutoStart":true,"enableAutoStop":true}},"broadcastId":"lw6JBREdK_k"}
+
+2025-03-05T09:48:01.527Z [INFO]:"downloading thumbnail is about to finish."
+
+2025-03-05T09:48:01.617Z [INFO]:"OutputPath"
+
+2025-03-05T09:48:04.831Z [INFO]:"savedStream"
+
+2025-03-05T09:48:04.844Z [INFO]:"activeStreams [object Object]"
+
+2025-03-05T09:48:09.523Z [INFO]:"Database Stopping stream 67c81dd47c4b0b6840c7c2f7"
+
+2025-03-05T09:48:09.571Z [INFO]:"Ffmpeg stream stopped 67c81dd47c4b0b6840c7c2f7"
+
+2025-03-05T09:48:09.591Z [INFO]:"code for stopped stream 14224 : null"
+
+2025-03-05T09:48:09.633Z [INFO]:"activeStreams [object Object]"
+
