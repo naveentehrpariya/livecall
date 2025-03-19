@@ -107,14 +107,12 @@ const refreshAccessToken = async (userId, oAuth2Client) => {
   try {
     const { credentials } = await oAuth2Client.refreshAccessToken();
     console.log("New access token:", credentials.access_token);
-
     // Store the new token (only update access_token, do not overwrite refresh_token)
-    const storedToken = await getStoredToken(userId);
+    const {storedToken} = await getStoredToken(userId);
     if (storedToken) {
-      storedToken.token.access_token = credentials.access_token;
-      await storeToken(storedToken.token, userId);
+      storedToken.access_token = credentials.access_token;
+      await storeToken(storedToken, userId);
     }
-
     return credentials.access_token;
   } catch (err) {
     console.error("Error refreshing access token:", err);
@@ -122,13 +120,9 @@ const refreshAccessToken = async (userId, oAuth2Client) => {
   }
 };
 
-
-
-
 // Get stored token
 const getStoredToken = async (userId, oAuth2Client) => {
   try {
-    await refreshAccessToken(userId, oAuth2Client);
     const token = await Token.findOne({ user: userId, status:"active" });
      if(!token){
        return null;
@@ -555,14 +549,13 @@ async function start_ffmpeg(data) {
   }
 } 
 
-
 const start_stream = catchAsync(async (req, res, next) => {
   try {
     const { title, description, audio, thumbnail, type } = req.body;
     const userId = req.user._id;
     const credentials = loadClientSecrets();
     const oAuth2Client = getOAuth2Client(credentials, redirectUri);
-
+    await refreshAccessToken(userId, oAuth2Client);
     const { token } = await getStoredToken(userId, oAuth2Client);
     if (!token || !token.refresh_token) {
       console.error("Stored refresh token is missing!");
@@ -573,8 +566,6 @@ const start_stream = catchAsync(async (req, res, next) => {
     }
    
     oAuth2Client.setCredentials(token);
-    logger("oAuth2Client",oAuth2Client);
-    
     const youtube = google.youtube({ version: 'v3', auth: oAuth2Client });
     const streamData = await createAndBindLiveBroadcast(youtube, title, description, res);
     if(!streamData){
