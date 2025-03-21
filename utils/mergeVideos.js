@@ -36,10 +36,11 @@ async function mergeVideos(videoPaths, outputPath, playlistId) {
     const reencodedPaths = [];
     for (let i = 0; i < videoPaths.length; i++) {
       const inputPath = videoPaths[i];
-      const reencodedPath = path.join(tempDir, `${playlistId}-reencoded-${i}.mp4`);
-      console.log(`Processing video and Re-encoding ${inputPath} to ${reencodedPath}`);
-      await reencodeVideo(inputPath, reencodedPath);
-      reencodedPaths.push(reencodedPath);
+      // const reencodedPath = path.join(tempDir, `${playlistId}-reencoded-${i}.mp4`);
+      // console.log(`Processing video and Re-encoding ${inputPath} to ${reencodedPath}`);
+      // await reencodeVideo(inputPath, reencodedPath);
+      // reencodedPaths.push(reencodedPath);
+      reencodedPaths.push(inputPath);
     }
     const concatListPath = path.join(tempDir, 'concat_list.txt');
     const concatListContent = reencodedPaths.map(filePath => `file '${filePath}'`).join('\n');
@@ -53,20 +54,15 @@ async function mergeVideos(videoPaths, outputPath, playlistId) {
         .on('error', (err) => {
           console.error('Error during merging videos:', err);
           reject(err);
-        })
-        .on('end', () => {
+        }).on('end', () => {
           console.log('Merging videos finished');
           resolve();
-        })
-        .on('progress', (progress) => {
+        }).on('progress', (progress) => {
           console.log('Merging progress:', progress.percent);
-        })
-        .on('start', (commandLine) => {
+        }).on('start', (commandLine) => {
           console.log('Starting ffmpeg with command:', commandLine);
-        })
-        .save(outputPath);
+        }).save(outputPath);
     });
-
   } catch (err) {
     console.error('Error processing videos:', err);
     return { 

@@ -258,3 +258,53 @@
 
 2025-03-05T09:48:09.633Z [INFO]:"activeStreams [object Object]"
 
+2025-03-20T04:30:00.916Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-20T04:30:01.439Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-03-20T06:30:00.520Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-20T06:30:00.942Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-03-20T07:30:00.619Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-20T07:30:00.934Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-03-20T12:30:00.522Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-20T12:30:00.835Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-03-20T12:30:01.222Z [INFO]:"Database Stopping stream 67dc08f5c170f1a4b05fc7bb"
+
+2025-03-20T12:30:01.270Z [INFO]:"there is no any ffmpeg proccess running - 67dc08f5c170f1a4b05fc7bb"
+
+2025-03-20T12:50:04.231Z [INFO]:"Database Stopping stream 67c8235ec170f1a4b05cc87b"
+
+2025-03-20T12:50:04.279Z [INFO]:"there is no any ffmpeg proccess running - 67c8235ec170f1a4b05cc87b"
+
+2025-03-20T18:30:00.161Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-21T06:30:00.370Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-21T06:30:00.750Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-03-21T10:30:00.050Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-21T10:30:00.350Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-03-21T12:00:09.686Z [INFO]:"Database Stopping stream 67c2cb047f8863b1d5f90440"
+
+2025-03-21T12:00:09.730Z [INFO]:"there is no any ffmpeg proccess running - 67c2cb047f8863b1d5f90440"
+
+2025-03-21T12:00:09.808Z [INFO]:"Database Stopping stream 67c2cbc67f8863b1d5f90459"
+
+2025-03-21T12:00:09.855Z [INFO]:"there is no any ffmpeg proccess running - 67c2cbc67f8863b1d5f90459"
+
+2025-03-21T12:00:09.930Z [INFO]:"Database Stopping stream 67c2cc2a7f8863b1d5f90472"
+
+2025-03-21T12:00:09.971Z [INFO]:"there is no any ffmpeg proccess running - 67c2cc2a7f8863b1d5f90472"
+
+2025-03-21T12:30:00.844Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-21T12:30:01.184Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
