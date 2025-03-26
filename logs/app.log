@@ -308,3 +308,15 @@
 
 2025-03-21T12:30:01.184Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
 
+2025-03-26T12:13:22.338Z [INFO]:"Database Stopping stream 67dd4983c170f1a4b06000ca"
+
+2025-03-26T12:13:22.408Z [INFO]:"there is no any ffmpeg proccess running - 67dd4983c170f1a4b06000ca"
+
+2025-03-26T12:20:04.565Z [INFO]:"Database Stopping stream 67e3eedfc170f1a4b0612fec"
+
+2025-03-26T12:20:04.607Z [INFO]:"there is no any ffmpeg proccess running - 67e3eedfc170f1a4b0612fec"
+
+2025-03-26T12:30:00.974Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-03-26T12:30:01.472Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
