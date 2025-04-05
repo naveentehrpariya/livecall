@@ -36,7 +36,13 @@ const checkUserStreamLimit = catchAsync ( async (req, res, next) => {
 });
 
 const active_stream_lists = catchAsync ( async (req, res)=>{
-  const records = await Stream.find({user: req.user._id}).populate('user').sort({createdAt: -1});
+
+  let queryObj = {
+    $or: [{ deletedAt: null }]
+  };
+  queryObj.user = req.user._id;
+  const records = await Stream.find(queryObj).populate('user').sort({createdAt: -1});
+
   if (records) {
     res.json({
       status : true,
@@ -58,6 +64,28 @@ const streamDetails = catchAsync ( async (req, res)=>{
     res.json({
       status : true,
       stream : record
+    });
+  } else {
+    res.json({
+      status : false,
+      stream : null,
+      message:"Stream not found.",
+      error:record
+    });
+  }
+});
+
+const deleteStream = catchAsync ( async (req, res)=>{
+  const streamId  = req.params.streamId;
+  const record = await Stream.findById(streamId);
+  record.deletedAt = Date.now();
+  const saved = await record.save();
+
+  if (saved) {
+    res.json({
+      status : true,
+      message:"Stream deleted successfully.",
+      stream : saved
     });
   } else {
     res.json({
@@ -101,4 +129,4 @@ const unLinkYoutube = catchAsync ( async (req, res)=>{
   }
 });
  
-module.exports = {  streamDetails, unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 
+module.exports = {  deleteStream, streamDetails, unLinkYoutube, checkIsYoutubeLinked, active_stream_lists, checkUserStreamLimit  } 
