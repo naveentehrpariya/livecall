@@ -574,32 +574,31 @@ const start_stream = catchAsync(async (req, res, next) => {
       return false;
     }
     const streamkey = streamData && streamData.stream.cdn.ingestionInfo.streamName;
-    if (thumbnail) {
-      const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
-      const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
-      
-      const removeUploadedFile = () => {
-        try {
-          fs.unlinkSync(thumbnailPath); // Ensure file is not in use
-          fs.unlinkSync(OutputPath);
-        } catch (error) {
-          console.error("Failed to delete files:", error);
-        }
-      }
+    // if (thumbnail) {
+    //   const thumbnailPath = path.resolve(__dirname, `${title}-thumbnail.jpg`);
+    //   const OutputPath = path.resolve(__dirname, `${title}-output-thumbnail.jpg`);
+    //   const removeUploadedFile = () => {
+    //     try {
+    //       fs.unlinkSync(thumbnailPath); // Ensure file is not in use
+    //       fs.unlinkSync(OutputPath);
+    //     } catch (error) {
+    //       console.error("Failed to delete files:", error);
+    //     }
+    //   }
     
-      await downloadThumbnail(thumbnail, thumbnailPath);
-      await SizeReducer(thumbnailPath, OutputPath);
-      logger("OutputPath",OutputPath);
-      await youtube.thumbnails.set({
-        videoId: streamData.broadcast.id,
-        media: {
-          mimeType: 'image/jpeg',
-          body: fs.createReadStream(OutputPath).on('close', () => {
-            removeUploadedFile();
-          }),
-        },
-      });
-    }
+    //   await downloadThumbnail(thumbnail, thumbnailPath);
+    //   await SizeReducer(thumbnailPath, OutputPath);
+    //   logger("OutputPath",OutputPath);
+    //   await youtube.thumbnails.set({
+    //     videoId: streamData.broadcast.id,
+    //     media: {
+    //       mimeType: 'image/jpeg',
+    //       body: fs.createReadStream(OutputPath).on('close', () => {
+    //         removeUploadedFile();
+    //       }),
+    //     },
+    //   });
+    // }
     const videoID = streamData.broadcast.id;
     const videos = req.body.videos;
     const audios = req.body.audios;
@@ -624,10 +623,7 @@ const start_stream = catchAsync(async (req, res, next) => {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
-
-    
     const savedStream = await stream.save();
-    logger("savedStream",savedStream);
 
     if (savedStream) {
       const video = req.body.video;
