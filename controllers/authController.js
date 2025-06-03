@@ -324,6 +324,7 @@ const login = catchAsync ( async (req, res, next) => {
       return next(new AppError("Email and password is required !!", 401))
    }
    const user = await User.findOne({email}).select('+password');
+   console.log('user', user);
    if(admin && user && user.role !== '1'){
     res.status(200).json({
       status : false,
@@ -342,7 +343,7 @@ const login = catchAsync ( async (req, res, next) => {
       message:"Email or password is invalid !!",
      });   
    }
-   const token = await signToken(user._id);
+   const token = await signToken(user?._id);
    res.cookie('jwt', token, {
     expires:new Date(Date.now() + 30*24*60*60*1000),
     httpOnly:true,

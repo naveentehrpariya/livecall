@@ -350,3 +350,43 @@
 
 2025-04-09T10:11:35.603Z [INFO]:"there is no any ffmpeg proccess running - 67f63d6519e2c2a2ca20ca04"
 
+2025-06-02T06:30:00.355Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-06-02T06:30:00.656Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-06-02T07:30:00.299Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-06-02T07:30:00.758Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-06-03T09:30:00.093Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-06-03T09:30:00.762Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+
+2025-06-03T09:30:04.765Z [INFO]:"Database Stopping stream 67c2c85d7f8863b1d5f90334"
+
+2025-06-03T09:30:04.803Z [INFO]:"there is no any ffmpeg proccess running - 67c2c85d7f8863b1d5f90334"
+
+2025-06-03T09:30:04.870Z [INFO]:"Database Stopping stream 67c2c8e37f8863b1d5f9034d"
+
+2025-06-03T09:30:04.908Z [INFO]:"there is no any ffmpeg proccess running - 67c2c8e37f8863b1d5f9034d"
+
+2025-06-03T09:30:04.979Z [INFO]:"Database Stopping stream 67c2c9317f8863b1d5f90366"
+
+2025-06-03T09:30:05.017Z [INFO]:"there is no any ffmpeg proccess running - 67c2c9317f8863b1d5f90366"
+
+2025-06-03T09:30:05.084Z [INFO]:"Database Stopping stream 67c2c95a7f8863b1d5f9037f"
+
+2025-06-03T09:30:05.123Z [INFO]:"there is no any ffmpeg proccess running - 67c2c95a7f8863b1d5f9037f"
+
+2025-06-03T09:30:05.196Z [INFO]:"Database Stopping stream 67c2c9ba7f8863b1d5f90398"
+
+2025-06-03T09:30:05.234Z [INFO]:"there is no any ffmpeg proccess running - 67c2c9ba7f8863b1d5f90398"
+
+2025-06-03T09:30:05.299Z [INFO]:"Database Stopping stream 67c2ca0b7f8863b1d5f903b1"
+
+2025-06-03T09:30:05.332Z [INFO]:"there is no any ffmpeg proccess running - 67c2ca0b7f8863b1d5f903b1"
+
+2025-06-03T09:30:05.397Z [INFO]:"Database Stopping stream 67c2ca827f8863b1d5f90411"
+
+2025-06-03T09:30:05.432Z [INFO]:"there is no any ffmpeg proccess running - 67c2ca827f8863b1d5f90411"
+
