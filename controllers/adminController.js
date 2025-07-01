@@ -114,16 +114,16 @@ const dashboard = catchAsync(async (req, res) => {
      status: true,
      message: 'Dashboard data retrieved successfully.',
      result: [
-      { route:"/admin/users/active", title : 'Total Users', data: totalUsers },
-      { route:"/admin/users/active", title : 'Active Users', data: activeUsers },
-      { route:"/admin/users/inactive", title : 'Inactive Users', data: inactiveUsers },
-      { route:"/admin/media/image", title : 'Uploaded Content', data: formatBytes(totalSize) },
-      { route:"/admin/streams/all", title : 'Total Streams', data: totalStreams },
-      { route:"/admin/streams/1", title : 'Live Streams', data: totalliveStreams },
-      // { route:"/admin/streams/0", title : 'Ended Streams', data: totalInactiveStreams },
-      { route:"/admin/subscriptions/all", title : 'Total Subscriptions', data: totalSubscriptions },
-      { route:"/admin/subscriptions/paid", title : 'Active Subscriptions', data: totalActiveSubscriptions },
-      { route:"/admin/inquiries", title : 'Total Enquires', data: totalEnquires },
+      { route:"/admin/runstream/x93tzwkdtsmf/users/active", title : 'Total Users', data: totalUsers },
+      { route:"/admin/runstream/x93tzwkdtsmf/users/active", title : 'Active Users', data: activeUsers },
+      { route:"/admin/runstream/x93tzwkdtsmf/users/inactive", title : 'Inactive Users', data: inactiveUsers },
+      { route:"/admin/runstream/x93tzwkdtsmf/media/image", title : 'Uploaded Content', data: formatBytes(totalSize) },
+      { route:"/admin/runstream/x93tzwkdtsmf/streams/all", title : 'Total Streams', data: totalStreams },
+      { route:"/admin/runstream/x93tzwkdtsmf/streams/1", title : 'Live Streams', data: totalliveStreams },
+      // { route:"/admin/runstream/x93tzwkdtsmf/streams/0", title : 'Ended Streams', data: totalInactiveStreams },
+      { route:"/admin/runstream/x93tzwkdtsmf/subscriptions/all", title : 'Total Subscriptions', data: totalSubscriptions },
+      { route:"/admin/runstream/x93tzwkdtsmf/subscriptions/paid", title : 'Active Subscriptions', data: totalActiveSubscriptions },
+      { route:"/admin/runstream/x93tzwkdtsmf/inquiries", title : 'Total Enquires', data: totalEnquires },
      ] 
    });
 });

@@ -390,3 +390,7 @@
 
 2025-06-03T09:30:05.432Z [INFO]:"there is no any ffmpeg proccess running - 67c2ca827f8863b1d5f90411"
 
+2025-07-01T16:30:00.055Z [INFO]:"Running scheduled task to check live stream status and subscriptions =>>>>>>>>>>>>>>>>"
+
+2025-07-01T16:30:00.549Z [INFO]:"check all streams status if any of user has active subscription =>>>>>>>>>>>>>>>>"
+

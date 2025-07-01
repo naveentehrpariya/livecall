@@ -1,9 +1,12 @@
 const catchAsync  = require("../utils/catchAsync");
 const Feature = require("../db/Feature");
 const Testimonial = require("../db/Testimonial");
+const JSONerror = require("../utils/jsonErrorHandler");
  
 // FEATUTRES
-exports.addFeature = catchAsync(async (req, res) => {
+exports.addFeature = catchAsync(async (req, res,next) => {
+  try{
+
     const features =  await Feature.find({});
     // if (features && features.length == 4) {
     //   return res.status(200).json({ status: false, message: 'You can add only 4 features items.' });
@@ -18,6 +21,9 @@ exports.addFeature = catchAsync(async (req, res) => {
         status: true,
         message: 'Feature added successfully.'
     });
+  } catch(err){
+    JSONerror(res, err, next);
+  }
 });
 
 exports.editFeature = catchAsync(async (req, res) => {
